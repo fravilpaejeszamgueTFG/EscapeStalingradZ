@@ -20,8 +20,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) USceneComponent* DefaultSceneRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) class UInstancedStaticMeshComponent* instancedMesh;
@@ -34,6 +32,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = variables) FVector meshSize = FVector(100, 100, 1);
 
 	//functions
-	UFUNCTION(BlueprintCallable) void SpawnGrid(FVector center, FVector tileSize, FVector2D numOfTiles);
+	UFUNCTION(BlueprintCallable) 
+		void SpawnGrid(FVector center, FVector tileSize, FVector2D numOfTiles);
+	UFUNCTION() 
+		FVector GetCursorLocationOnGrid();
+	UFUNCTION() 
+		FIntPoint GetTileIndexFromLocation(FVector location);
+	UFUNCTION(BlueprintCallable)
+		FIntPoint GetTileIndexUnderCursor();
 
 };
