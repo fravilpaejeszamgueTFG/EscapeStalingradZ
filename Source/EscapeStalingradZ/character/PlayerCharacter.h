@@ -46,6 +46,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) USceneComponent* DefaultSceneRoot;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) class UStaticMeshComponent* mesh;
+
+	//Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AvailableCharacter) TEnumAsByte<AvailableCharacter> characterChosen;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int health = 4;
@@ -64,5 +68,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<Weapon> readyWeapon;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<Weapon> readySecondaryWeapon;
 
+	//Funciones
 	void SetPreferredWeaponByCharacter();
 };

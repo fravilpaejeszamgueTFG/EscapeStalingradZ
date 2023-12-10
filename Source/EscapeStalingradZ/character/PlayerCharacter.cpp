@@ -2,12 +2,18 @@
 
 
 #include "PlayerCharacter.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(FName("DefaultSceneRoot"));
+	SetRootComponent(DefaultSceneRoot);
+
+	mesh = CreateDefaultSubobject<UStaticMeshComponent>("InstancedMesh");
+	mesh->SetupAttachment(DefaultSceneRoot);
 
 }
 
