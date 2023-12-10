@@ -31,6 +31,9 @@ void AGrid::BeginPlay()
 
 void AGrid::SpawnGrid(FVector center, FVector tileSize, FVector2D numOfTiles)
 {
+	if (gridTiles.Num() > 0) {
+		gridTiles.Reset();
+	}
 	instancedMesh->ClearInstances();
 	centerOfGrid = center;
 	tileScale = tileSize;
@@ -41,6 +44,8 @@ void AGrid::SpawnGrid(FVector center, FVector tileSize, FVector2D numOfTiles)
 			FTransform transform = FTransform(FRotator(0, 0, 0),
 				gridBottomLeftCornerLocation + tileSize * FVector(i, j, 0) + FVector(0,0,0), tileScale / meshSize);
 			instancedMesh->AddInstanceWorldSpace(transform);
+			FIntPoint index = FIntPoint(i, j);
+			ChangeTileData(index, FTileData(index,TileType::Normal,false,false));
 		}
 	}
 }
@@ -66,4 +71,14 @@ FIntPoint AGrid::GetTileIndexFromLocation(FVector location)
 FIntPoint AGrid::GetTileIndexUnderCursor()
 {
 	return GetTileIndexFromLocation(GetCursorLocationOnGrid());
+}
+
+void AGrid::ChangeTileData(FIntPoint index, FTileData data)
+{
+	if (gridTiles.Contains(index)) {
+		gridTiles[index] = data;
+	}
+	else {
+		gridTiles.Add(index, data);
+	}
 }
