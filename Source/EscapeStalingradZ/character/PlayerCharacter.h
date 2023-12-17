@@ -4,20 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EscapeStalingradZ/weapon/Weapon.h"
 #include "PlayerCharacter.generated.h"
-
-UENUM()
-enum Weapon
-{
-	None     UMETA(DisplayName = "None"),
-	MP40     UMETA(DisplayName = "MP-40"),
-	Nagant   UMETA(DisplayName = "Nagant"),
-	MG34     UMETA(DisplayName = "MG34"),
-	Axe      UMETA(DisplayName = "Axe"),
-	Knife    UMETA(DisplayName = "Knife"),
-	Luger     UMETA(DisplayName = "Luger"),
-
-};
 
 UENUM()
 enum AvailableCharacter
@@ -60,13 +48,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int medkit = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int mp = 4;
 
-	UPROPERTY(VisibleAnywhere, Category = Weapon) TEnumAsByte<Weapon> PreferredWeapon;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<Weapon> weapon1;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<Weapon> weapon2;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<Weapon> weapon3;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<Weapon> weapon4;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<Weapon> readyWeapon;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<Weapon> readySecondaryWeapon;
+	UPROPERTY(VisibleAnywhere, Category = Weapon) TEnumAsByte<EWeapon> PreferredWeapon;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<EWeapon> weapon1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<EWeapon> weapon2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<EWeapon> weapon3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<EWeapon> weapon4;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) class UWeapon* readyWeapon;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) class UWeapon* readySecondaryWeapon;
 
 	//Funciones
 	void SetPreferredWeaponByCharacter();
