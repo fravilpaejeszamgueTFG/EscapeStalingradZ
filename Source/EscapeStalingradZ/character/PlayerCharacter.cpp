@@ -15,6 +15,9 @@ APlayerCharacter::APlayerCharacter()
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>("InstancedMesh");
 	mesh->SetupAttachment(DefaultSceneRoot);
 
+	readyWeapon = CreateDefaultSubobject<UWeapon>("readyWeapon");
+	readySecondaryWeapon = CreateDefaultSubobject<UWeapon>("readySecondaryWeapon");
+
 }
 
 // Called when the game starts or when spawned
@@ -35,16 +38,16 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::SetPreferredWeaponByCharacter()
 {
 	if (characterChosen == AvailableCharacter::Becker) {
-		PreferredWeapon = Weapon::MP40;
+		PreferredWeapon = EWeapon::MP40;
 	} 
 	else if(characterChosen == AvailableCharacter::Dasha) {
-		PreferredWeapon = Weapon::Nagant;
+		PreferredWeapon = EWeapon::Nagant;
 	}
 	else if (characterChosen == AvailableCharacter::Katyusha) {
-		PreferredWeapon = Weapon::MG34;
+		PreferredWeapon = EWeapon::MG34;
 	}
 	else {
-		PreferredWeapon = Weapon::Axe;
+		PreferredWeapon = EWeapon::Axe;
 	}
 }
 
