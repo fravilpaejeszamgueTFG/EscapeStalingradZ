@@ -18,6 +18,14 @@ enum TileType
 	Exit	   UMETA(DisplayName = "Exit")
 };
 
+UENUM()
+enum TileState
+{
+	Hovered     UMETA(DisplayName = "Hovered"),
+	Selected	   UMETA(DisplayName = "Selected"),
+	isNeighbor		UMETA(DisplayName = "isNeighbor"),
+};
+
 USTRUCT(BlueprintType)
 struct FTileData
 {
@@ -30,21 +38,21 @@ public:
 		TEnumAsByte<TileType>  type;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
 		bool  poisoned;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
+		//class AActor* actor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
-		bool  occupied;
+		TArray<TEnumAsByte<TileState>> states;
 
 	FTileData() { 
 		type = TileType::Normal;
 		poisoned = false;
-		occupied = false;
 	};
 
-	FTileData(FIntPoint index, TileType type, bool poisoned, bool occupied)
+	FTileData(FIntPoint index, TileType type, bool poisoned)
 	{
 		this->index = index;
 		this->type = type;
 		this->poisoned = poisoned;
-		this->occupied = occupied;
 	}
 };
 
@@ -73,6 +81,11 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = variables) FVector gridBottomLeftCornerLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = variables) FVector meshSize = FVector(100, 100, 1);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = variables) TMap<FIntPoint, FTileData> gridTiles;
+	//colores de casillas
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileNoneColor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileHoveredColor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileSelectedColor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileNeighborColor;
 
 	//functions
 	UFUNCTION(BlueprintCallable) 
@@ -85,5 +98,17 @@ public:
 		FIntPoint GetTileIndexUnderCursor();
 	UFUNCTION(BlueprintCallable)
 		void ChangeTileData(FIntPoint index, FTileData data);
+	UFUNCTION(BlueprintCallable)
+		void AddTileState(FIntPoint index, TileState state);
+	UFUNCTION(BlueprintCallable)
+		void RemoveTileState(FIntPoint index, TileState state);
+	UFUNCTION(BlueprintCallable)
+		void UpdateTileVisual(FIntPoint index);
+	UFUNCTION(BlueprintCallable)
+		FLinearColor GetColorFromState(TArray<TEnumAsByte<TileState>> states);
+	UFUNCTION(BlueprintCallable)
+		TArray<FIntPoint> GetTileNeighbors(FIntPoint index);
+	UFUNCTION()
+		void UpdateTileNeighbors(FIntPoint index, bool isadding);
 
 };
