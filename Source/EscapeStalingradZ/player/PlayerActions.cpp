@@ -4,6 +4,8 @@
 #include "PlayerActions.h"
 #include "Kismet/GameplayStatics.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
+#include "actions/Command.h"
+#include "actions/ActionMovementForward.h"
 
 // Sets default values
 APlayerActions::APlayerActions()
@@ -24,7 +26,7 @@ void APlayerActions::BeginPlay()
 
 void APlayerActions::Tick(float DeltaTime)
 {
-    if (grid != nullptr) {
+    if (grid != nullptr && command != nullptr) {
         UpdateHoveredTile();
     }
 }
@@ -32,24 +34,18 @@ void APlayerActions::Tick(float DeltaTime)
 void APlayerActions::LeftMouseClick()
 {
     if (grid != nullptr) {
-        if (selectedTile != FIntPoint(-1, -1)) {
-            grid->RemoveTileState(selectedTile, TileState::Selected);
-            grid->UpdateTileNeighbors(selectedTile, false);
-        }
         UpdateHoveredTile();
         selectedTile = hoveredTile;
-        grid->AddTileState(selectedTile, TileState::Selected);
-        grid->UpdateTileNeighbors(selectedTile, true);
+        if (command != nullptr) {
+            command->Action(grid, actionTile, selectedTile);
+            command = nullptr;
+        }
     }
 }
 
 void APlayerActions::RightMouseClick()
 {
     if (grid != nullptr) {
-        if (selectedTile != FIntPoint(-1, -1)) {
-            grid->RemoveTileState(selectedTile, TileState::Selected);
-            grid->UpdateTileNeighbors(selectedTile, false);
-        }
         selectedTile = FIntPoint(-1, -1);
     }
 }
@@ -57,10 +53,15 @@ void APlayerActions::RightMouseClick()
 void APlayerActions::UpdateHoveredTile()
 {
     FIntPoint index = grid->GetTileIndexUnderCursor();
+    if (index.X < 0 || index.Y < 0) {
+        index = FIntPoint(-1, -1);
+    }
     if (index != hoveredTile) {
         grid->RemoveTileState(hoveredTile, TileState::Hovered);
-        grid->AddTileState(index, TileState::Hovered);
         hoveredTile = index;
+        if (index != FIntPoint(-1, -1) && grid->gridTiles[index].states.Contains(TileState::isReachable)) {
+            grid->AddTileState(index, TileState::Hovered);
+        }
     }
 }
 

@@ -24,6 +24,7 @@ enum TileState
 	Hovered     UMETA(DisplayName = "Hovered"),
 	Selected	   UMETA(DisplayName = "Selected"),
 	isNeighbor		UMETA(DisplayName = "isNeighbor"),
+	isReachable		UMETA(DisplayName = "isReachable"),
 };
 
 USTRUCT(BlueprintType)
@@ -38,8 +39,8 @@ public:
 		TEnumAsByte<TileType>  type;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
 		bool  poisoned;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
-		//class AActor* actor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
+		class AActor* actor = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
 		TArray<TEnumAsByte<TileState>> states;
 
@@ -86,6 +87,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileHoveredColor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileSelectedColor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileNeighborColor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileReachableColor;
 
 	//functions
 	UFUNCTION(BlueprintCallable) 
@@ -110,5 +112,12 @@ public:
 		TArray<FIntPoint> GetTileNeighbors(FIntPoint index);
 	UFUNCTION()
 		void UpdateTileNeighbors(FIntPoint index, bool isadding);
+	UFUNCTION(BlueprintCallable)
+		void SetPlayerStartLocation(class APlayerCharacter* character);
+	FIntPoint GetStartIndex();
+	FVector GetLocationByIndex(FIntPoint index);
+
+	UFUNCTION(BlueprintCallable)
+		TArray<FIntPoint> GetTilesForward(FIntPoint index, FVector forwardVector, int num_casillas);
 
 };
