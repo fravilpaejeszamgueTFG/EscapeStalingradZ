@@ -28,6 +28,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Grid) class AGrid* grid;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Tile) FIntPoint hoveredTile;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Tile) FIntPoint selectedTile = FIntPoint(-1,-1);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Tile) FIntPoint actionTile = FIntPoint(-1, -1);
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Command) class UCommand* command;
 
 	UFUNCTION()
 		void LeftMouseClick();

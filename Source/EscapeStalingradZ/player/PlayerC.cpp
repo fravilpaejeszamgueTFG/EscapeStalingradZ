@@ -2,7 +2,8 @@
 
 
 #include "PlayerC.h"
-
+#include "Components/WidgetComponent.h"
+#include "EscapeStalingradZ/widget/WMovimiento.h"
 
 // Called when the game starts or when spawned
 void APlayerC::BeginPlay()
@@ -11,5 +12,11 @@ void APlayerC::BeginPlay()
 
 	bShowMouseCursor = true;
 
+	if (MovementClass) {
+		Movement = CreateWidget<UWMovimiento>(GetWorld(), MovementClass);
+		if (Movement != nullptr) {
+			Movement->AddToViewport();
+		}
+	}
 }
 

@@ -5,6 +5,7 @@
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "EscapeStalingradZ/utilities/UtilitiesESZ.h"
+#include "EscapeStalingradZ/character/PlayerCharacter.h"
 
 // Sets default values
 AGrid::AGrid()
@@ -129,7 +130,7 @@ void AGrid::RemoveTileState(FIntPoint index, TileState state)
 void AGrid::UpdateTileVisual(FIntPoint index)
 {
 	FLinearColor color = GetColorFromState(gridTiles[index].states);
-	int i = index.X * numberOfTiles.X + index.Y;
+	int i = index.X * numberOfTiles.Y + index.Y;
 	instancedMesh->SetCustomDataValue(i,0,color.R, true);
 	instancedMesh->SetCustomDataValue(i,1,color.G, true);
 	instancedMesh->SetCustomDataValue(i,2,color.B, true);
@@ -141,10 +142,13 @@ FLinearColor AGrid::GetColorFromState(TArray<TEnumAsByte<TileState>> states)
 		if (states.Contains(TileState::Selected)) {
 			return tileSelectedColor;
 		}
-		else if (states.Contains(TileState::Hovered)) {
+		if (states.Contains(TileState::Hovered)) {
 			return tileHoveredColor;
 		}
-		else if (states.Contains(TileState::isNeighbor)) {
+		if (states.Contains(TileState::isReachable)) {
+			return tileReachableColor;
+		}
+		if (states.Contains(TileState::isNeighbor)) {
 			return tileNeighborColor;
 		}
 	}
@@ -160,4 +164,33 @@ void AGrid::ChangeTileData(FIntPoint index, FTileData data)
 	else {
 		gridTiles.Add(index, data);
 	}
+}
+
+void AGrid::SetPlayerStartLocation(APlayerCharacter* character)
+{
+	FIntPoint index = GetStartIndex();
+	FVector location = GetLocationByIndex(index);
+	character->SetActorLocation(location);
+	gridTiles[index].actor = character;
+}
+
+FIntPoint AGrid::GetStartIndex()
+{
+	//TO-DO
+	return FIntPoint(7, 6);
+}
+
+FVector AGrid::GetLocationByIndex(FIntPoint index)
+{
+	return FVector(gridBottomLeftCornerLocation + tileScale * FVector(index.X, index.Y, 0));
+}
+
+TArray<FIntPoint> AGrid::GetTilesForward(FIntPoint index, FVector forwardVector, int numCasillas)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	for (int i = 1; i <= numCasillas; i++) {
+		FIntPoint forward = FIntPoint(round(forwardVector.X) * i, round(forwardVector.Y) * i);
+		list.Add(index + forward);
+	}
+	return list;
 }
