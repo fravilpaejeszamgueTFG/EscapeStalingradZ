@@ -25,6 +25,7 @@ enum TileState
 	Selected	   UMETA(DisplayName = "Selected"),
 	isNeighbor		UMETA(DisplayName = "isNeighbor"),
 	isReachable		UMETA(DisplayName = "isReachable"),
+	isInAoF			UMETA(DisplayName = "isInAoF"),
 };
 
 USTRUCT(BlueprintType)
@@ -88,6 +89,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileSelectedColor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileNeighborColor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileReachableColor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileAoFColor;
 
 	//functions
 	UFUNCTION(BlueprintCallable) 
@@ -114,10 +116,20 @@ public:
 		void UpdateTileNeighbors(FIntPoint index, bool isadding);
 	UFUNCTION(BlueprintCallable)
 		void SetPlayerStartLocation(class APlayerCharacter* character);
-	FIntPoint GetStartIndex();
-	FVector GetLocationByIndex(FIntPoint index);
+	UFUNCTION()
+		FIntPoint GetStartIndex();
+	UFUNCTION()
+		FVector GetLocationByIndex(FIntPoint index);
 
 	UFUNCTION(BlueprintCallable)
 		TArray<FIntPoint> GetTilesForward(FIntPoint index, FVector forwardVector, int num_casillas);
 
+	UFUNCTION()
+		void SetTilesForAttack(FIntPoint index, FVector forwardVector, FVector rightVector);
+	UFUNCTION()
+		TArray<FIntPoint> GetTilesAoF(FIntPoint index, FVector forwardVector, FVector rightVector);
+	UFUNCTION()
+		int GetDistanceAoF(FIntPoint index, FVector forwardVector);
+	UFUNCTION()
+		TArray<FIntPoint> GetAdjacentForward(FIntPoint index, int iterator, FVector rightVector);
 };

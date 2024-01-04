@@ -60,4 +60,5 @@ public:
 
 	//Funciones
 	void SetPreferredWeaponByCharacter();
+	UFUNCTION() void getArcOfFire();
 };

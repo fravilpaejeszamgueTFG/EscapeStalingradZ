@@ -148,6 +148,9 @@ FLinearColor AGrid::GetColorFromState(TArray<TEnumAsByte<TileState>> states)
 		if (states.Contains(TileState::isReachable)) {
 			return tileReachableColor;
 		}
+		if (states.Contains(TileState::isInAoF)) {
+			return tileAoFColor;
+		}
 		if (states.Contains(TileState::isNeighbor)) {
 			return tileNeighborColor;
 		}
@@ -189,8 +192,69 @@ TArray<FIntPoint> AGrid::GetTilesForward(FIntPoint index, FVector forwardVector,
 {
 	TArray<FIntPoint> list = TArray<FIntPoint>();
 	for (int i = 1; i <= numCasillas; i++) {
+		FIntPoint forward = index + FIntPoint(round(forwardVector.X) * i, round(forwardVector.Y) * i);
+		if (forward.X >= 0 && forward.X < numberOfTiles.X && forward.Y >= 0 && forward.Y < numberOfTiles.Y) {
+			list.Add(forward);
+		}
+	}
+	return list;
+}
+
+void AGrid::SetTilesForAttack(FIntPoint index, FVector forwardVector, FVector rightVector)
+{
+	TArray<FIntPoint> list = GetTilesAoF(index, forwardVector, rightVector);
+	for (FIntPoint j : list) {
+		AddTileState(j, TileState::isInAoF);
+	}
+}
+
+TArray<FIntPoint> AGrid::GetTilesAoF(FIntPoint index, FVector forwardVector, FVector rightVector)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	int distanceForAoF = GetDistanceAoF(index, forwardVector);
+	for (int i = 1; i <= distanceForAoF; i++) {
 		FIntPoint forward = FIntPoint(round(forwardVector.X) * i, round(forwardVector.Y) * i);
+		TArray<FIntPoint> adjacentForward = GetAdjacentForward(index + forward, i, rightVector);
 		list.Add(index + forward);
+		list.Append(adjacentForward);
+	}
+	return list;
+}
+
+int AGrid::GetDistanceAoF(FIntPoint index, FVector forwardVector)
+{
+	int var;
+	UE_LOG(LogTemp, Warning, TEXT("El vector al que está mirando es este: %s"), *forwardVector.ToString());
+	if (round(forwardVector.X) == 1) {
+		var = numberOfTiles.X - index.X - 1;
+		UE_LOG(LogTemp, Warning, TEXT("Dice que hay %d casillas delante mirando hacia eje X"), var);
+		return numberOfTiles.X - index.X - 1;
+	}
+	else if (round(forwardVector.X) == -1) {
+		var = index.X;
+		UE_LOG(LogTemp, Warning, TEXT("Dice que hay %d casillas delante mirando hacia eje X al reves"), var);
+		return index.X;
+	}
+	else if (round(forwardVector.Y) == 1) {
+		var = numberOfTiles.Y - index.Y - 1;
+		UE_LOG(LogTemp, Warning, TEXT("Dice que hay %d casillas delante mirando hacia eje Y"), var);
+		return numberOfTiles.Y - index.Y - 1;
+	}
+	else {
+		var = index.Y;
+		UE_LOG(LogTemp, Warning, TEXT("Dice que hay %d casillas delante mirando hacia eje Y al reves"), var);
+		return index.Y;
+	}
+}
+
+TArray<FIntPoint> AGrid::GetAdjacentForward(FIntPoint index, int iterator, FVector rightVector)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	for (int i = 1; i <= iterator; i++) {
+		TArray<FIntPoint> right = GetTilesForward(index, rightVector, i);
+		TArray<FIntPoint> left = GetTilesForward(index, -rightVector, i);
+		list.Append(right);
+		list.Append(left);
 	}
 	return list;
 }

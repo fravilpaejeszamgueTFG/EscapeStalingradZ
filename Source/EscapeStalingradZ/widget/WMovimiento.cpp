@@ -3,6 +3,7 @@
 
 #include "WMovimiento.h"
 #include "buttons/MovementForward.h"
+#include "buttons/Attack.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/player/actions/Command.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementForward.h"
@@ -20,6 +21,7 @@ void UWMovimiento::NativeConstruct()
 	Super::NativeConstruct();
 
 	buttonForward->OnClicked.AddDynamic(this, &UWMovimiento::OnClickForward);
+	buttonAttack->OnClicked.AddDynamic(this, &UWMovimiento::OnClickAttack);
 }
 
 void UWMovimiento::OnClickForward()
@@ -28,4 +30,9 @@ void UWMovimiento::OnClickForward()
     command->Execute(grid, character);
 	actions->command = NewObject<UActionMovementForward>(actions);
 	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+}
+
+void UWMovimiento::OnClickAttack()
+{
+	character->getArcOfFire();
 }
