@@ -229,26 +229,16 @@ TArray<FIntPoint> AGrid::GetTilesAoF(FIntPoint index, FVector forwardVector, FVe
 
 int AGrid::GetDistanceAoF(FIntPoint index, FVector forwardVector)
 {
-	int var;
-	UE_LOG(LogTemp, Warning, TEXT("El vector al que está mirando es este: %s"), *forwardVector.ToString());
 	if (round(forwardVector.X) == 1) {
-		var = numberOfTiles.X - index.X - 1;
-		UE_LOG(LogTemp, Warning, TEXT("Dice que hay %d casillas delante mirando hacia eje X"), var);
 		return numberOfTiles.X - index.X - 1;
 	}
 	else if (round(forwardVector.X) == -1) {
-		var = index.X;
-		UE_LOG(LogTemp, Warning, TEXT("Dice que hay %d casillas delante mirando hacia eje X al reves"), var);
 		return index.X;
 	}
 	else if (round(forwardVector.Y) == 1) {
-		var = numberOfTiles.Y - index.Y - 1;
-		UE_LOG(LogTemp, Warning, TEXT("Dice que hay %d casillas delante mirando hacia eje Y"), var);
 		return numberOfTiles.Y - index.Y - 1;
 	}
 	else {
-		var = index.Y;
-		UE_LOG(LogTemp, Warning, TEXT("Dice que hay %d casillas delante mirando hacia eje Y al reves"), var);
 		return index.Y;
 	}
 }
