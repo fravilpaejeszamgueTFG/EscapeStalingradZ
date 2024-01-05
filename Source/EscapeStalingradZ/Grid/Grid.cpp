@@ -134,6 +134,12 @@ void AGrid::UpdateTileVisual(FIntPoint index)
 	instancedMesh->SetCustomDataValue(i,0,color.R, true);
 	instancedMesh->SetCustomDataValue(i,1,color.G, true);
 	instancedMesh->SetCustomDataValue(i,2,color.B, true);
+	if (color == tileAoFColor) {
+		instancedMesh->SetCustomDataValue(i,3,0.05,true);
+	}
+	else {
+		instancedMesh->SetCustomDataValue(i,3,0,true);
+	}
 }
 
 FLinearColor AGrid::GetColorFromState(TArray<TEnumAsByte<TileState>> states)
@@ -147,6 +153,9 @@ FLinearColor AGrid::GetColorFromState(TArray<TEnumAsByte<TileState>> states)
 		}
 		if (states.Contains(TileState::isReachable)) {
 			return tileReachableColor;
+		}
+		if (states.Contains(TileState::isInAoF)) {
+			return tileAoFColor;
 		}
 		if (states.Contains(TileState::isNeighbor)) {
 			return tileNeighborColor;
@@ -189,8 +198,59 @@ TArray<FIntPoint> AGrid::GetTilesForward(FIntPoint index, FVector forwardVector,
 {
 	TArray<FIntPoint> list = TArray<FIntPoint>();
 	for (int i = 1; i <= numCasillas; i++) {
+		FIntPoint forward = index + FIntPoint(round(forwardVector.X) * i, round(forwardVector.Y) * i);
+		if (forward.X >= 0 && forward.X < numberOfTiles.X && forward.Y >= 0 && forward.Y < numberOfTiles.Y) {
+			list.Add(forward);
+		}
+	}
+	return list;
+}
+
+void AGrid::SetTilesForAttack(FIntPoint index, FVector forwardVector, FVector rightVector)
+{
+	TArray<FIntPoint> list = GetTilesAoF(index, forwardVector, rightVector);
+	for (FIntPoint j : list) {
+		AddTileState(j, TileState::isInAoF);
+	}
+}
+
+TArray<FIntPoint> AGrid::GetTilesAoF(FIntPoint index, FVector forwardVector, FVector rightVector)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	int distanceForAoF = GetDistanceAoF(index, forwardVector);
+	for (int i = 1; i <= distanceForAoF; i++) {
 		FIntPoint forward = FIntPoint(round(forwardVector.X) * i, round(forwardVector.Y) * i);
+		TArray<FIntPoint> adjacentForward = GetAdjacentForward(index + forward, i, rightVector);
 		list.Add(index + forward);
+		list.Append(adjacentForward);
+	}
+	return list;
+}
+
+int AGrid::GetDistanceAoF(FIntPoint index, FVector forwardVector)
+{
+	if (round(forwardVector.X) == 1) {
+		return numberOfTiles.X - index.X - 1;
+	}
+	else if (round(forwardVector.X) == -1) {
+		return index.X;
+	}
+	else if (round(forwardVector.Y) == 1) {
+		return numberOfTiles.Y - index.Y - 1;
+	}
+	else {
+		return index.Y;
+	}
+}
+
+TArray<FIntPoint> AGrid::GetAdjacentForward(FIntPoint index, int iterator, FVector rightVector)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	for (int i = 1; i <= iterator; i++) {
+		TArray<FIntPoint> right = GetTilesForward(index, rightVector, i);
+		TArray<FIntPoint> left = GetTilesForward(index, -rightVector, i);
+		list.Append(right);
+		list.Append(left);
 	}
 	return list;
 }

@@ -3,6 +3,7 @@
 
 #include "PlayerCharacter.h"
 #include "Components/StaticMeshComponent.h"
+#include "EscapeStalingradZ/Grid/Grid.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -49,5 +50,13 @@ void APlayerCharacter::SetPreferredWeaponByCharacter()
 	else {
 		PreferredWeapon = EWeapon::Axe;
 	}
+}
+
+void APlayerCharacter::getArcOfFire()
+{
+	FVector forwardVector = GetActorForwardVector();
+	FVector rightVector = GetActorRightVector();
+	FIntPoint index = grid->GetTileIndexFromLocation(GetActorLocation());
+	grid->SetTilesForAttack(index, forwardVector, rightVector);
 }
 

@@ -22,6 +22,8 @@ public:
 
 	UPROPERTY(meta = (BindWidget))
 		class UMovementForward* buttonForward;
+	UPROPERTY(meta = (BindWidget))
+		class UAttack* buttonAttack;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Grid) class AGrid* grid;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerCharacter* character;
@@ -29,5 +31,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Command) class UCommand* command;
 
 	UFUNCTION() void OnClickForward();
+	UFUNCTION() void OnClickAttack();
 	
 };
