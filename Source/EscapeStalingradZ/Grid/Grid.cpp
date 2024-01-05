@@ -134,6 +134,12 @@ void AGrid::UpdateTileVisual(FIntPoint index)
 	instancedMesh->SetCustomDataValue(i,0,color.R, true);
 	instancedMesh->SetCustomDataValue(i,1,color.G, true);
 	instancedMesh->SetCustomDataValue(i,2,color.B, true);
+	if (color == tileAoFColor) {
+		instancedMesh->SetCustomDataValue(i,3,0.05,true);
+	}
+	else {
+		instancedMesh->SetCustomDataValue(i,3,0,true);
+	}
 }
 
 FLinearColor AGrid::GetColorFromState(TArray<TEnumAsByte<TileState>> states)
