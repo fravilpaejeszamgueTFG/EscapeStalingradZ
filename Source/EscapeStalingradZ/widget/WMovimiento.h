@@ -23,6 +23,10 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UMovementForward* buttonForward;
 	UPROPERTY(meta = (BindWidget))
+		class UMovementLateral* buttonLateral;
+	UPROPERTY(meta = (BindWidget))
+		class UMovementBackward* buttonBackward;
+	UPROPERTY(meta = (BindWidget))
 		class UAttack* buttonAttack;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Grid) class AGrid* grid;
@@ -32,5 +36,7 @@ public:
 
 	UFUNCTION() void OnClickForward();
 	UFUNCTION() void OnClickAttack();
+	UFUNCTION() void OnClickLateral();
+	UFUNCTION() void OnClickBackward();
 	
 };
