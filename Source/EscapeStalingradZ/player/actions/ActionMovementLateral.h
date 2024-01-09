@@ -18,7 +18,5 @@ public:
 	virtual void Execute(class AGrid* grid, class APlayerCharacter* character) override;
 
 	virtual void Action(class AGrid* grid, FIntPoint tile, FIntPoint destinyTile) override;
-
-	UPROPERTY(VisibleAnywhere) TArray<FIntPoint> indices;
 	
 };
