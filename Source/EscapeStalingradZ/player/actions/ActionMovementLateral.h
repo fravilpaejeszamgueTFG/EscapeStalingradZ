@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Command.h"
-#include "ActionMovementForward.generated.h"
+#include "ActionMovementLateral.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ESCAPESTALINGRADZ_API UActionMovementForward : public UCommand
+class ESCAPESTALINGRADZ_API UActionMovementLateral : public UCommand
 {
 	GENERATED_BODY()
 

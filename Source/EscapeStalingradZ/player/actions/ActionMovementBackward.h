@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Command.h"
-#include "ActionMovementForward.generated.h"
+#include "ActionMovementBackward.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ESCAPESTALINGRADZ_API UActionMovementForward : public UCommand
+class ESCAPESTALINGRADZ_API UActionMovementBackward : public UCommand
 {
 	GENERATED_BODY()
 
@@ -18,5 +18,5 @@ public:
 	virtual void Execute(class AGrid* grid, class APlayerCharacter* character) override;
 
 	virtual void Action(class AGrid* grid, FIntPoint tile, FIntPoint destinyTile) override;
-	
+
 };
