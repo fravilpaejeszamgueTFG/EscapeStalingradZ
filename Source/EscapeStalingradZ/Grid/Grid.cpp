@@ -220,9 +220,8 @@ TArray<FIntPoint> AGrid::GetTilesForward(FIntPoint index, FVector forwardVector,
 	return list;
 }
 
-void AGrid::SetTilesForAttack(FIntPoint index, FVector forwardVector, FVector rightVector)
+void AGrid::SetTilesForAttack(TArray<FIntPoint> list)
 {
-	TArray<FIntPoint> list = GetTilesAoF(index, forwardVector, rightVector);
 	for (FIntPoint j : list) {
 		AddTileState(j, TileState::isInAoF);
 	}
@@ -260,12 +259,10 @@ int AGrid::GetDistanceAoF(FIntPoint index, FVector forwardVector)
 TArray<FIntPoint> AGrid::GetAdjacentForward(FIntPoint index, int iterator, FVector rightVector)
 {
 	TArray<FIntPoint> list = TArray<FIntPoint>();
-	for (int i = 1; i <= iterator; i++) {
-		TArray<FIntPoint> right = GetTilesForward(index, rightVector, i);
-		TArray<FIntPoint> left = GetTilesForward(index, -rightVector, i);
-		list.Append(right);
-		list.Append(left);
-	}
+	TArray<FIntPoint> right = GetTilesForward(index, rightVector, iterator);
+	TArray<FIntPoint> left = GetTilesForward(index, -rightVector, iterator);
+	list.Append(right);
+	list.Append(left);
 	return list;
 }
 
@@ -287,8 +284,31 @@ TArray<FIntPoint> AGrid::GetTilesLoF(FIntPoint start, FIntPoint end)
 		}
 	}
 	list.Remove(start);
-	particleLoF->Activate(true);
-	particleLoF->SetBeamSourcePoint(0,Start + FVector(0,0,1),0);
-	particleLoF->SetBeamTargetPoint(0,End + FVector(0, 0, 1),0);
+	return list;
+}
+
+void AGrid::SetParticleLoF(FVector start, FVector end)
+{
+	particleLoF->Activate();
+	particleLoF->SetBeamSourcePoint(0, start + FVector(0, 0, 1), 0);
+	particleLoF->SetBeamTargetPoint(0, end + FVector(0, 0, 1), 0);
+}
+
+void AGrid::DeActivateParticleLoF()
+{
+	particleLoF->Deactivate();
+}
+
+TArray<FIntPoint> AGrid::GetTilesWithZombies(TArray<FIntPoint> AoF)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	for (FIntPoint index : AoF) {
+		if (gridTiles[index].actor != nullptr) {
+			AZombie* zombie = Cast<AZombie>(gridTiles[index].actor);
+			if (zombie != nullptr) {
+				list.Add(index);
+			}
+		}
+	}
 	return list;
 }

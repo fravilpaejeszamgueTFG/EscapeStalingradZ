@@ -129,7 +129,7 @@ public:
 		TArray<FIntPoint> GetTilesForward(FIntPoint index, FVector forwardVector, int num_casillas);
 
 	UFUNCTION()
-		void SetTilesForAttack(FIntPoint index, FVector forwardVector, FVector rightVector);
+		void SetTilesForAttack(TArray<FIntPoint> list);
 	UFUNCTION()
 		TArray<FIntPoint> GetTilesAoF(FIntPoint index, FVector forwardVector, FVector rightVector);
 	UFUNCTION()
@@ -138,4 +138,10 @@ public:
 		TArray<FIntPoint> GetAdjacentForward(FIntPoint index, int iterator, FVector rightVector);
 	UFUNCTION(BlueprintCallable)
 		TArray<FIntPoint> GetTilesLoF(FIntPoint start, FIntPoint end);
+	UFUNCTION(BlueprintCallable)
+		void SetParticleLoF(FVector start, FVector end);
+	UFUNCTION(BlueprintCallable)
+		void DeActivateParticleLoF();
+	UFUNCTION()
+		TArray<FIntPoint> GetTilesWithZombies(TArray<FIntPoint> AoF);
 };

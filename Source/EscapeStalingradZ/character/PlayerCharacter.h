@@ -17,6 +17,25 @@ enum AvailableCharacter
 
 };
 
+USTRUCT(BlueprintType)
+struct FTilesLoF
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
+		TArray<FIntPoint> tilesLoF;
+
+	FTilesLoF()
+	{
+	};
+
+	FTilesLoF(TArray<FIntPoint> tiles)
+	{
+		this->tilesLoF = tiles;
+	}
+};
+
 UCLASS()
 class ESCAPESTALINGRADZ_API APlayerCharacter : public AActor
 {
@@ -57,6 +76,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<EWeapon> weapon4;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) class UWeapon* readyWeapon;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) class UWeapon* readySecondaryWeapon;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = variables) TArray<FIntPoint> AoF;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = variables) TMap<FIntPoint,FTilesLoF> LoFs;
 
 	//Funciones
 	void SetPreferredWeaponByCharacter();
