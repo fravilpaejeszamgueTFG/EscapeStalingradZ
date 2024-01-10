@@ -75,6 +75,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) USceneComponent* DefaultSceneRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) class UInstancedStaticMeshComponent* instancedMesh;
+	//particula para LoF
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true")) class UParticleSystemComponent* particleLoF;
 
 	//variables
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = variables) FVector centerOfGrid;
@@ -116,9 +118,11 @@ public:
 		void UpdateTileNeighbors(FIntPoint index, bool isadding);
 	UFUNCTION(BlueprintCallable)
 		void SetPlayerStartLocation(class APlayerCharacter* character);
+	UFUNCTION(BlueprintCallable)
+		void SetZombieStartLocation(class AZombie* zombie);
 	UFUNCTION()
 		FIntPoint GetStartIndex();
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		FVector GetLocationByIndex(FIntPoint index);
 
 	UFUNCTION(BlueprintCallable)
@@ -132,4 +136,6 @@ public:
 		int GetDistanceAoF(FIntPoint index, FVector forwardVector);
 	UFUNCTION()
 		TArray<FIntPoint> GetAdjacentForward(FIntPoint index, int iterator, FVector rightVector);
+	UFUNCTION(BlueprintCallable)
+		TArray<FIntPoint> GetTilesLoF(FIntPoint start, FIntPoint end);
 };

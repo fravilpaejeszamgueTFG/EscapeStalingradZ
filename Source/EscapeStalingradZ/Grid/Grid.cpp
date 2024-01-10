@@ -6,6 +6,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "EscapeStalingradZ/utilities/UtilitiesESZ.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
+#include "EscapeStalingradZ/zombies/Zombie.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 AGrid::AGrid()
@@ -18,6 +20,10 @@ AGrid::AGrid()
 
 	instancedMesh = CreateDefaultSubobject<UInstancedStaticMeshComponent>("InstancedMesh");
 	instancedMesh->SetupAttachment(DefaultSceneRoot);
+
+	particleLoF = CreateDefaultSubobject<UParticleSystemComponent>("particleLoF");
+	particleLoF->SetupAttachment(DefaultSceneRoot);
+	particleLoF->bAutoActivate = false;
 
 	instancedMesh->NumCustomDataFloats = 4;
 
@@ -183,6 +189,14 @@ void AGrid::SetPlayerStartLocation(APlayerCharacter* character)
 	gridTiles[index].actor = character;
 }
 
+void AGrid::SetZombieStartLocation(AZombie* zombie)
+{
+	FIntPoint index = zombie->startIndex;
+	FVector location = GetLocationByIndex(index);
+	zombie->SetActorLocation(location);
+	gridTiles[index].actor = zombie;
+}
+
 FIntPoint AGrid::GetStartIndex()
 {
 	//TO-DO
@@ -252,5 +266,29 @@ TArray<FIntPoint> AGrid::GetAdjacentForward(FIntPoint index, int iterator, FVect
 		list.Append(right);
 		list.Append(left);
 	}
+	return list;
+}
+
+TArray<FIntPoint> AGrid::GetTilesLoF(FIntPoint start, FIntPoint end)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	if (!gridTiles[end].states.Contains(TileState::isInAoF)) {
+		return list;
+	}
+	FVector Start = GetLocationByIndex(start);
+	FVector End = GetLocationByIndex(end);
+	FVector vector = End - Start;
+	FVector vectorNormal = vector.GetSafeNormal();
+	for (int i = 1; i < vector.Size() - 10; i++) {
+		FIntPoint index = GetTileIndexFromLocation(Start + (i * vectorNormal));
+		if (!list.Contains(index)) {
+			//TO-DO Cuando haya bloqueo de paredes parar el bucle y devolver lista vacia.
+			list.Add(index);
+		}
+	}
+	list.Remove(start);
+	particleLoF->Activate(true);
+	particleLoF->SetBeamSourcePoint(0,Start + FVector(0,0,1),0);
+	particleLoF->SetBeamTargetPoint(0,End + FVector(0, 0, 1),0);
 	return list;
 }
