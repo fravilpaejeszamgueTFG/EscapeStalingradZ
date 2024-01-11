@@ -11,6 +11,7 @@
 #include "EscapeStalingradZ/player/actions/ActionMovementForward.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementLateral.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementBackward.h"
+#include "EscapeStalingradZ/player/actions/ActionNormalFire.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/player/PlayerActions.h"
 
@@ -28,6 +29,7 @@ void UWMovimiento::NativeConstruct()
 	buttonLateral->OnClicked.AddDynamic(this, &UWMovimiento::OnClickLateral);
 	buttonBackward->OnClicked.AddDynamic(this, &UWMovimiento::OnClickBackward);
 	buttonAttack->OnClicked.AddDynamic(this, &UWMovimiento::OnClickAttack);
+	buttonNormalFire->OnClicked.AddDynamic(this, &UWMovimiento::OnClickNormalFire);
 }
 
 void UWMovimiento::OnClickForward()
@@ -56,5 +58,13 @@ void UWMovimiento::OnClickBackward()
 	command = NewObject<UActionMovementBackward>(this);
 	command->Execute(grid, character);
 	actions->command = NewObject<UActionMovementBackward>(actions);
+	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+}
+
+void UWMovimiento::OnClickNormalFire()
+{
+	command = NewObject<UActionNormalFire>(this);
+	command->Execute(grid, character);
+	actions->command = NewObject<UActionNormalFire>(actions);
 	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }

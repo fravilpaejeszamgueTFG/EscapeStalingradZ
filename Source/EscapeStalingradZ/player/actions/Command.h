@@ -17,4 +17,5 @@ class ESCAPESTALINGRADZ_API UCommand : public UObject
 public:
 	UFUNCTION(BlueprintCallable) virtual void Execute(class AGrid* grid, class APlayerCharacter* character);
 	UFUNCTION(BlueprintCallable) virtual void Action(class AGrid* grid, FIntPoint tile, FIntPoint destinyTile);
+	UFUNCTION(BlueprintCallable) virtual bool NeedLoF();
 };

@@ -220,6 +220,21 @@ TArray<FIntPoint> AGrid::GetTilesForward(FIntPoint index, FVector forwardVector,
 	return list;
 }
 
+TArray<FIntPoint> AGrid::GetTilesForwardMovement(FIntPoint index, FVector forwardVector, int numCasillas)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	for (int i = 1; i <= numCasillas; i++) {
+		FIntPoint forward = index + FIntPoint(round(forwardVector.X) * i, round(forwardVector.Y) * i);
+		if (forward.X >= 0 && forward.X < numberOfTiles.X && forward.Y >= 0 && forward.Y < numberOfTiles.Y) {
+			if (gridTiles[forward].actor != nullptr) {
+				break;
+			}
+			list.Add(forward);
+		}
+	}
+	return list;
+}
+
 void AGrid::SetTilesForAttack(TArray<FIntPoint> list)
 {
 	for (FIntPoint j : list) {
@@ -287,16 +302,20 @@ TArray<FIntPoint> AGrid::GetTilesLoF(FIntPoint start, FIntPoint end)
 	return list;
 }
 
-void AGrid::SetParticleLoF(FVector start, FVector end)
+void AGrid::SetParticleLoF(FIntPoint start, FIntPoint end)
 {
-	particleLoF->Activate();
-	particleLoF->SetBeamSourcePoint(0, start + FVector(0, 0, 1), 0);
-	particleLoF->SetBeamTargetPoint(0, end + FVector(0, 0, 1), 0);
+	if (!particleLoF->IsActive()) {
+		particleLoF->Activate();
+	}
+	particleLoF->SetVisibility(true);
+	particleLoF->SetBeamSourcePoint(0, GetLocationByIndex(start) + FVector(0, 0, 1), 0);
+	particleLoF->SetBeamTargetPoint(0, GetLocationByIndex(end) + FVector(0, 0, 1), 0);
 }
 
 void AGrid::DeActivateParticleLoF()
 {
-	particleLoF->Deactivate();
+	//particleLoF->Deactivate();
+	particleLoF->SetVisibility(false);
 }
 
 TArray<FIntPoint> AGrid::GetTilesWithZombies(TArray<FIntPoint> AoF)

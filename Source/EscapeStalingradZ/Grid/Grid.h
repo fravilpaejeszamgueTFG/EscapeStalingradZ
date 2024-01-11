@@ -127,7 +127,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		TArray<FIntPoint> GetTilesForward(FIntPoint index, FVector forwardVector, int num_casillas);
-
+	UFUNCTION(BlueprintCallable)
+		TArray<FIntPoint> GetTilesForwardMovement(FIntPoint index, FVector forwardVector, int num_casillas);
 	UFUNCTION()
 		void SetTilesForAttack(TArray<FIntPoint> list);
 	UFUNCTION()
@@ -139,7 +140,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		TArray<FIntPoint> GetTilesLoF(FIntPoint start, FIntPoint end);
 	UFUNCTION(BlueprintCallable)
-		void SetParticleLoF(FVector start, FVector end);
+		void SetParticleLoF(FIntPoint start, FIntPoint end);
 	UFUNCTION(BlueprintCallable)
 		void DeActivateParticleLoF();
 	UFUNCTION()

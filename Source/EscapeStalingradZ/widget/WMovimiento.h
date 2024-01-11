@@ -28,6 +28,8 @@ public:
 		class UMovementBackward* buttonBackward;
 	UPROPERTY(meta = (BindWidget))
 		class UAttack* buttonAttack;
+	UPROPERTY(meta = (BindWidget))
+		class UAttack* buttonNormalFire;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Grid) class AGrid* grid;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerCharacter* character;
@@ -38,5 +40,6 @@ public:
 	UFUNCTION() void OnClickAttack();
 	UFUNCTION() void OnClickLateral();
 	UFUNCTION() void OnClickBackward();
+	UFUNCTION() void OnClickNormalFire();
 	
 };

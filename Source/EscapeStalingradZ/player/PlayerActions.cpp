@@ -6,6 +6,7 @@
 #include "EscapeStalingradZ/Grid/Grid.h"
 #include "actions/Command.h"
 #include "actions/ActionMovementForward.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 APlayerActions::APlayerActions()
@@ -57,10 +58,16 @@ void APlayerActions::UpdateHoveredTile()
         index = FIntPoint(-1, -1);
     }
     if (index != hoveredTile) {
+        if (grid->particleLoF->IsVisible()) {
+            grid->DeActivateParticleLoF();
+        }
         grid->RemoveTileState(hoveredTile, TileState::Hovered);
         hoveredTile = index;
         if (index != FIntPoint(-1, -1) && grid->gridTiles[index].states.Contains(TileState::isReachable)) {
             grid->AddTileState(index, TileState::Hovered);
+            if (command != nullptr && command->NeedLoF()) {
+                grid->SetParticleLoF(actionTile, index);
+            }
         }
     }
 }
