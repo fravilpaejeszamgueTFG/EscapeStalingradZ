@@ -79,6 +79,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) TEnumAsByte<EWeapon> weapon4;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) class UWeapon* readyWeapon;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) class UWeapon* readySecondaryWeapon;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon) bool useReadyWeapon = true;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = variables) TArray<FIntPoint> AoF;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = variables) TMap<FIntPoint,FTilesLoF> LoFs;
 
@@ -86,4 +87,7 @@ public:
 	void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
 	UFUNCTION() int getDistanceLoF(TArray<FIntPoint> tiles, FIntPoint index);
+	UFUNCTION() void AttackZombieHandToHand(class AZombie* zombie, FIntPoint tileZombie);
+	UFUNCTION() int GetDistanceAttackHandToHand();
+	UFUNCTION() TArray<FIntPoint> GetIndexHandToHand2Range();
 };

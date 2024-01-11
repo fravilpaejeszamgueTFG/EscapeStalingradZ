@@ -4,6 +4,7 @@
 #include "PlayerCharacter.h"
 #include "Components/StaticMeshComponent.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
+#include "EscapeStalingradZ/zombies/Zombie.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -91,6 +92,55 @@ int APlayerCharacter::getDistanceLoF(TArray<FIntPoint> tiles, FIntPoint index)
 		}
 	}
 	return cont;
+}
+
+void APlayerCharacter::AttackZombieHandToHand(AZombie* zombie, FIntPoint tileZombie)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Zombie: %s, posición: %s"), *zombie->GetName(), *tileZombie.ToString());
+	//TO-DO se implementara en scoring a hit
+}
+
+int APlayerCharacter::GetDistanceAttackHandToHand()
+{
+	if (useReadyWeapon) {
+		if (readyWeapon->multipleRange == 0) {
+			return readyWeapon->pointBlankRange;
+		}
+	}
+	else {
+		if (readySecondaryWeapon->multipleRange == 0) {
+			return readySecondaryWeapon->pointBlankRange;
+		}
+	}
+	return 1;
+}
+
+TArray<FIntPoint> APlayerCharacter::GetIndexHandToHand2Range()
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	for (FIntPoint i : grid->GetTileNeighbors(grid->GetTileIndexFromLocation(GetActorLocation()))) {
+		AZombie* zombie = Cast<AZombie>(grid->gridTiles[i].actor);
+		if (zombie != nullptr) {
+			list.Add(i);
+		}
+	}
+	int cont = 2;
+	if (list.Num() > 0) {
+		cont = 1;
+	}
+	for (auto iter = LoFs.begin(); iter != LoFs.end(); ++iter) {
+		if (iter.Value().distance > 0 && iter.Value().distance <= cont) {
+			if (iter.Value().distance < cont) {
+				list.Empty();
+				list.AddUnique(iter.Key());
+				cont = iter.Value().distance;
+			}
+			else {
+				list.AddUnique(iter.Key());
+			}
+		}
+	}
+	return list;
 }
 
 

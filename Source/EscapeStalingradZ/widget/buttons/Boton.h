@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Components/Button.h"
-#include "MovementLateral.generated.h"
+#include "Boton.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ESCAPESTALINGRADZ_API UMovementLateral : public UButton
+class ESCAPESTALINGRADZ_API UBoton : public UButton
 {
 	GENERATED_BODY()
 	

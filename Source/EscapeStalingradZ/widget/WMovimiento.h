@@ -21,15 +21,17 @@ public:
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(meta = (BindWidget))
-		class UMovementForward* buttonForward;
+		class UBoton* buttonForward;
 	UPROPERTY(meta = (BindWidget))
-		class UMovementLateral* buttonLateral;
+		class UBoton* buttonLateral;
 	UPROPERTY(meta = (BindWidget))
-		class UMovementBackward* buttonBackward;
+		class UBoton* buttonBackward;
 	UPROPERTY(meta = (BindWidget))
-		class UAttack* buttonAttack;
+		class UBoton* buttonAttack;
 	UPROPERTY(meta = (BindWidget))
-		class UAttack* buttonNormalFire;
+		class UBoton* buttonNormalFire;
+	UPROPERTY(meta = (BindWidget))
+		class UBoton* buttonHandToHand;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Grid) class AGrid* grid;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerCharacter* character;
@@ -41,5 +43,6 @@ public:
 	UFUNCTION() void OnClickLateral();
 	UFUNCTION() void OnClickBackward();
 	UFUNCTION() void OnClickNormalFire();
+	UFUNCTION() void OnClickHandToHand();
 	
 };

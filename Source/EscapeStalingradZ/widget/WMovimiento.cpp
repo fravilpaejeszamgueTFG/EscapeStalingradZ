@@ -2,16 +2,14 @@
 
 
 #include "WMovimiento.h"
-#include "buttons/MovementForward.h"
-#include "buttons/MovementLateral.h"
-#include "buttons/MovementBackward.h"
-#include "buttons/Attack.h"
+#include "buttons/Boton.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/player/actions/Command.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementForward.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementLateral.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementBackward.h"
 #include "EscapeStalingradZ/player/actions/ActionNormalFire.h"
+#include "EscapeStalingradZ/player/actions/ActionHandToHand.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/player/PlayerActions.h"
 
@@ -30,6 +28,7 @@ void UWMovimiento::NativeConstruct()
 	buttonBackward->OnClicked.AddDynamic(this, &UWMovimiento::OnClickBackward);
 	buttonAttack->OnClicked.AddDynamic(this, &UWMovimiento::OnClickAttack);
 	buttonNormalFire->OnClicked.AddDynamic(this, &UWMovimiento::OnClickNormalFire);
+	buttonHandToHand->OnClicked.AddDynamic(this, &UWMovimiento::OnClickHandToHand);
 }
 
 void UWMovimiento::OnClickForward()
@@ -68,3 +67,11 @@ void UWMovimiento::OnClickNormalFire()
 	actions->command = NewObject<UActionNormalFire>(actions);
 	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
+void UWMovimiento::OnClickHandToHand()
+{
+	command = NewObject<UActionHandToHand>(this);
+	command->Execute(grid, character);
+	actions->command = NewObject<UActionHandToHand>(actions);
+	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+}
+
