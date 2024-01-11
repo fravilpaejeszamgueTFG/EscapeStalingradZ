@@ -57,6 +57,14 @@ void APlayerCharacter::getArcOfFire()
 	FVector forwardVector = GetActorForwardVector();
 	FVector rightVector = GetActorRightVector();
 	FIntPoint index = grid->GetTileIndexFromLocation(GetActorLocation());
-	grid->SetTilesForAttack(index, forwardVector, rightVector);
+	AoF = grid->GetTilesAoF(index, forwardVector, rightVector);
+	grid->SetTilesForAttack(AoF);
+	TArray<FIntPoint> listZombies = grid->GetTilesWithZombies(AoF);
+	for (FIntPoint i : listZombies) {
+		TArray<FIntPoint> list = grid->GetTilesLoF(index,i);
+		if (list.Num() > 0) {
+			LoFs.Add(i, FTilesLoF(list));
+		}
+	}
 }
 
