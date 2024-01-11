@@ -63,8 +63,35 @@ void APlayerCharacter::getArcOfFire()
 	for (FIntPoint i : listZombies) {
 		TArray<FIntPoint> list = grid->GetTilesLoF(index,i);
 		if (list.Num() > 0) {
-			LoFs.Add(i, FTilesLoF(list));
+			int d = getDistanceLoF(list, index);
+			LoFs.Add(i, FTilesLoF(list, d));
 		}
 	}
 }
+
+int APlayerCharacter::getDistanceLoF(TArray<FIntPoint> tiles, FIntPoint index)
+{
+	int cont = 0;
+	for (int i = 0; i < tiles.Num(); i++) {
+		if (i == 0) {
+			if ((tiles[i].X != index.X) && (tiles[i].Y != index.Y)) {
+				cont += 2;
+			}
+			else {
+				cont++;
+			}
+		}
+		else {
+			if ((tiles[i].X != tiles[i-1].X) && (tiles[i].Y != tiles[i-1].Y)) {
+				cont += 2;
+			}
+			else {
+				cont++;
+			}
+		}
+	}
+	return cont;
+}
+
+
 

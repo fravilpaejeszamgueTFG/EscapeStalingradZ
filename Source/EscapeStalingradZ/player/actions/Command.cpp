@@ -16,3 +16,8 @@ void UCommand::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTile)
 
 }
 
+bool UCommand::NeedLoF()
+{
+    return false;
+}
+

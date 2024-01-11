@@ -23,16 +23,19 @@ struct FTilesLoF
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileLoF)
 		TArray<FIntPoint> tilesLoF;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileLoF)
+		int distance;
 
 	FTilesLoF()
 	{
 	};
 
-	FTilesLoF(TArray<FIntPoint> tiles)
+	FTilesLoF(TArray<FIntPoint> tiles, int d)
 	{
 		this->tilesLoF = tiles;
+		this->distance = d;
 	}
 };
 
@@ -82,4 +85,5 @@ public:
 	//Funciones
 	void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
+	UFUNCTION() int getDistanceLoF(TArray<FIntPoint> tiles, FIntPoint index);
 };
