@@ -17,6 +17,25 @@ enum AvailableCharacter
 
 };
 
+UENUM()
+enum MovementType
+{
+	Stationary     UMETA(DisplayName = "Stationary"),
+	Walking     UMETA(DisplayName = "Walking"),
+	Running   UMETA(DisplayName = "Running"),
+
+};
+
+UENUM()
+enum CoveringType
+{
+	NONE     UMETA(DisplayName = "NONE"),
+	CStationary     UMETA(DisplayName = "CStationary"),
+	Walked   UMETA(DisplayName = "Walked"),
+	Ran     UMETA(DisplayName = "Ran"),
+
+};
+
 USTRUCT(BlueprintType)
 struct FTilesLoF
 {
@@ -70,6 +89,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int medkit = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int mp = 4;
 
+	UPROPERTY(EditAnywhere) FIntPoint startIndex = FIntPoint(7, 6);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Grid) class AGrid* grid;
 
 	UPROPERTY(VisibleAnywhere, Category = Weapon) TEnumAsByte<EWeapon> PreferredWeapon;
@@ -82,6 +103,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon) bool useReadyWeapon = true;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = variables) TArray<FIntPoint> AoF;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = variables) TMap<FIntPoint,FTilesLoF> LoFs;
+	UPROPERTY(VisibleAnywhere, Category = Movement) TEnumAsByte<MovementType> typeOfMovement;
+	UPROPERTY(VisibleAnywhere, Category = Covering) TEnumAsByte<CoveringType> typeOfCovering;
 
 	//Funciones
 	void SetPreferredWeaponByCharacter();
@@ -90,4 +113,9 @@ public:
 	UFUNCTION() void AttackZombieHandToHand(class AZombie* zombie, FIntPoint tileZombie);
 	UFUNCTION() int GetDistanceAttackHandToHand();
 	UFUNCTION() TArray<FIntPoint> GetIndexHandToHand2Range();
+	UFUNCTION() int GetNumberOfHitModifiersLoF(FIntPoint tileZombie);
+	UFUNCTION() int GetNumberOfHitModifiersAttack(class AZombie* zombie);
+	UFUNCTION() int GetPrimaryHitHandToHand();
+	UFUNCTION() int GetPrimaryHitAndMultipleFire(FIntPoint tileZombie);
+	UFUNCTION() void FriendlyFire(FIntPoint tileZombie);
 };

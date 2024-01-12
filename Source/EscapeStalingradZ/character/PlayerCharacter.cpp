@@ -96,8 +96,24 @@ int APlayerCharacter::getDistanceLoF(TArray<FIntPoint> tiles, FIntPoint index)
 
 void APlayerCharacter::AttackZombieHandToHand(AZombie* zombie, FIntPoint tileZombie)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Zombie: %s, posición: %s"), *zombie->GetName(), *tileZombie.ToString());
-	//TO-DO se implementara en scoring a hit
+	int mod = GetNumberOfHitModifiersAttack(zombie);
+	int die = FMath::RandRange(1, 12);
+	int finalHit = mod + GetPrimaryHitHandToHand();
+	UE_LOG(LogTemp, Warning, TEXT("dado: %d, finalHit: %d, modificador: %d"), die, finalHit, mod);
+	if (die >= finalHit) {
+		if (die >= finalHit + 3) {
+			zombie->health--;
+			UE_LOG(LogTemp, Warning, TEXT("muerto"));
+		}
+		else {
+			zombie->isStunned = true;
+			UE_LOG(LogTemp, Warning, TEXT("estuneado"));
+		}
+	}
+	if (die == 2) {
+		FriendlyFire(tileZombie);
+	}
+	//TO-DO mejorar dados
 }
 
 int APlayerCharacter::GetDistanceAttackHandToHand()
@@ -143,5 +159,96 @@ TArray<FIntPoint> APlayerCharacter::GetIndexHandToHand2Range()
 	return list;
 }
 
+int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
+{
+	int res = 0;
+	if (LoFs.Find(tileZombie) != nullptr) {
+		for (FIntPoint index : LoFs.Find(tileZombie)->tilesLoF) {
+			if (grid->gridTiles[index].actor != nullptr) {
+				res += 2;
+			}
+		}
+	}
+	//TO-DO
+	if (res >= 4) {
+		return 4;
+	}
+	return res;
+}
 
+int APlayerCharacter::GetNumberOfHitModifiersAttack(AZombie* zombie)
+{
+	int res = 0;
+	if (zombie->isStunned) {
+		res -= 3;
+	}
+	//TO-DO spread fire
+	if (typeOfCovering == CoveringType::Walked) {
+		res += 2;
+	}
+	else if (typeOfCovering == CoveringType::Ran) {
+		res += 4;
+	}
+	else if (typeOfCovering == CoveringType::NONE) {
+		if (typeOfMovement == MovementType::Stationary) {
+			res -= 2;
+		}
+		else if (typeOfMovement == MovementType::Running) {
+			res += 2;
+		}
+	}
+	if (!useReadyWeapon) {
+		res += 2;
+	}
 
+	return res;
+}
+
+int APlayerCharacter::GetPrimaryHitHandToHand()
+{
+	if (useReadyWeapon) {
+		return readyWeapon->hand2handHit;
+	}
+	else {
+		return readySecondaryWeapon->hand2handHit;
+	}
+}
+
+int APlayerCharacter::GetPrimaryHitAndMultipleFire(FIntPoint tileZombie)
+{
+	int res = 0;
+	int pb = 0;
+	int rm = 0;
+	if (useReadyWeapon) {
+		res = readyWeapon->primaryHit;
+		pb = readyWeapon->pointBlankRange;
+		rm = readyWeapon->multipleRange;
+	}
+	else {
+		res = readySecondaryWeapon->primaryHit;
+		pb = readySecondaryWeapon->pointBlankRange;
+		rm = readySecondaryWeapon->multipleRange;
+	}
+	if (LoFs.Find(tileZombie) != nullptr) {
+		if (LoFs.Find(tileZombie)->distance > pb) {
+			for (int i = pb; i < LoFs.Find(tileZombie)->distance; i += rm) {
+				res++;
+			}
+		}
+	}
+	return res;
+}
+
+void APlayerCharacter::FriendlyFire(FIntPoint tileZombie)
+{
+	if (LoFs.Find(tileZombie) != nullptr) {
+		for (FIntPoint index : LoFs.Find(tileZombie)->tilesLoF) {
+			APlayerCharacter* chara = Cast<APlayerCharacter>(grid->gridTiles[index].actor);
+			if (chara != nullptr) {
+				chara->health--;
+				UE_LOG(LogTemp, Warning, TEXT("fuego amigo"));
+				break;
+			}
+		}
+	}
+}

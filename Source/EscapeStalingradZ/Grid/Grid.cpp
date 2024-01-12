@@ -183,7 +183,7 @@ void AGrid::ChangeTileData(FIntPoint index, FTileData data)
 
 void AGrid::SetPlayerStartLocation(APlayerCharacter* character)
 {
-	FIntPoint index = GetStartIndex();
+	FIntPoint index = character->startIndex;
 	FVector location = GetLocationByIndex(index);
 	character->SetActorLocation(location);
 	gridTiles[index].actor = character;
