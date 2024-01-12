@@ -167,6 +167,9 @@ int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 			if (grid->gridTiles[index].actor != nullptr) {
 				res += 2;
 			}
+			if (grid->gridTiles[index].type == TileType::Fire) {
+				res++;
+			}
 		}
 	}
 	//TO-DO
