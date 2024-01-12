@@ -226,7 +226,7 @@ TArray<FIntPoint> AGrid::GetTilesForwardMovement(FIntPoint index, FVector forwar
 	for (int i = 1; i <= numCasillas; i++) {
 		FIntPoint forward = index + FIntPoint(round(forwardVector.X) * i, round(forwardVector.Y) * i);
 		if (forward.X >= 0 && forward.X < numberOfTiles.X && forward.Y >= 0 && forward.Y < numberOfTiles.Y) {
-			if (gridTiles[forward].actor != nullptr) {
+			if (gridTiles[forward].actor != nullptr || gridTiles[forward].type==TileType::Fire) {
 				break;
 			}
 			list.Add(forward);

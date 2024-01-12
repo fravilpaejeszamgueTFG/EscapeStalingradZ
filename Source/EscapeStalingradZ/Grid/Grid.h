@@ -84,7 +84,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = variables) FVector2D numberOfTiles = FVector2D(8,8);
 	UPROPERTY(VisibleAnywhere, Category = variables) FVector gridBottomLeftCornerLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = variables) FVector meshSize = FVector(100, 100, 1);
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = variables) TMap<FIntPoint, FTileData> gridTiles;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = variables) TMap<FIntPoint, FTileData> gridTiles;
 	//colores de casillas
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileNoneColor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileHoveredColor;
