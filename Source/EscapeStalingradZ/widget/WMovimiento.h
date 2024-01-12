@@ -27,6 +27,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UBoton* buttonBackward;
 	UPROPERTY(meta = (BindWidget))
+		class UBoton* buttonDiagonal;
+	UPROPERTY(meta = (BindWidget))
 		class UBoton* buttonAttack;
 	UPROPERTY(meta = (BindWidget))
 		class UBoton* buttonNormalFire;
@@ -42,6 +44,7 @@ public:
 	UFUNCTION() void OnClickAttack();
 	UFUNCTION() void OnClickLateral();
 	UFUNCTION() void OnClickBackward();
+	UFUNCTION() void OnClickDiagonal();
 	UFUNCTION() void OnClickNormalFire();
 	UFUNCTION() void OnClickHandToHand();
 	

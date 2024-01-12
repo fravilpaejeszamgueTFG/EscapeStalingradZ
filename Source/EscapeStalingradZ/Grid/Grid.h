@@ -139,6 +139,8 @@ public:
 		TArray<FIntPoint> GetAdjacentForward(FIntPoint index, int iterator, FVector rightVector);
 	UFUNCTION(BlueprintCallable)
 		TArray<FIntPoint> GetTilesLoF(FIntPoint start, FIntPoint end);
+	UFUNCTION()
+		TArray<FIntPoint> GetTilesDiagonals(FIntPoint index, FVector forwardVector, FVector rightVector, int numCasillas);
 	UFUNCTION(BlueprintCallable)
 		void SetParticleLoF(FIntPoint start, FIntPoint end);
 	UFUNCTION(BlueprintCallable)
