@@ -40,6 +40,7 @@ public:
 	UPROPERTY(VisibleAnywhere) int dmg = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) int mp = 1; //Setear
 	UPROPERTY(EditAnywhere) FIntPoint startIndex = FIntPoint(5,1);
+	UPROPERTY(VisibleAnywhere) bool isStunned = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Grid) class AGrid* grid;
 
