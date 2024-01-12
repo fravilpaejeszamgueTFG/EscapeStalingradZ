@@ -125,9 +125,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		FVector GetLocationByIndex(FIntPoint index);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 		TArray<FIntPoint> GetTilesForward(FIntPoint index, FVector forwardVector, int num_casillas);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 		TArray<FIntPoint> GetTilesForwardMovement(FIntPoint index, FVector forwardVector, int num_casillas);
 	UFUNCTION()
 		void SetTilesForAttack(TArray<FIntPoint> list);
@@ -141,6 +141,8 @@ public:
 		TArray<FIntPoint> GetTilesLoF(FIntPoint start, FIntPoint end);
 	UFUNCTION()
 		TArray<FIntPoint> GetTilesDiagonals(FIntPoint index, FVector forwardVector, FVector rightVector, int numCasillas);
+	UFUNCTION()
+		TArray<FIntPoint> GetTilesRotation(FIntPoint index, FVector forwardVector, FVector rightVector, int mp);
 	UFUNCTION(BlueprintCallable)
 		void SetParticleLoF(FIntPoint start, FIntPoint end);
 	UFUNCTION(BlueprintCallable)
