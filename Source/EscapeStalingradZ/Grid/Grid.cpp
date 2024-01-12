@@ -302,6 +302,23 @@ TArray<FIntPoint> AGrid::GetTilesLoF(FIntPoint start, FIntPoint end)
 	return list;
 }
 
+TArray<FIntPoint> AGrid::GetTilesDiagonals(FIntPoint index, FVector forwardVector, FVector rightVector, int numCasillas)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	for (int i = 1; i <= numCasillas; i++) {
+		FIntPoint forward = FIntPoint(round(forwardVector.X) * i, round(forwardVector.Y) * i);
+		FIntPoint right = FIntPoint(round(rightVector.X) * i, round(rightVector.Y) * i);
+		FIntPoint tile = index + forward + right;
+		if (tile.X >= 0 && tile.X < numberOfTiles.X && tile.Y >= 0 && tile.Y < numberOfTiles.Y) {
+			if (gridTiles[tile].actor != nullptr) {
+				break;
+			}
+			list.Add(tile);
+		}
+	}
+	return list;
+}
+
 void AGrid::SetParticleLoF(FIntPoint start, FIntPoint end)
 {
 	if (!particleLoF->IsActive()) {
