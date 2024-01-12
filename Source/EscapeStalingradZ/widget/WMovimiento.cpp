@@ -8,6 +8,7 @@
 #include "EscapeStalingradZ/player/actions/ActionMovementForward.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementLateral.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementBackward.h"
+#include "EscapeStalingradZ/player/actions/ActionMovementRotation.h"
 #include "EscapeStalingradZ/player/actions/ActionDiagonalMovement.h"
 #include "EscapeStalingradZ/player/actions/ActionNormalFire.h"
 #include "EscapeStalingradZ/player/actions/ActionHandToHand.h"
@@ -28,6 +29,7 @@ void UWMovimiento::NativeConstruct()
 	buttonLateral->OnClicked.AddDynamic(this, &UWMovimiento::OnClickLateral);
 	buttonBackward->OnClicked.AddDynamic(this, &UWMovimiento::OnClickBackward);
 	buttonDiagonal->OnClicked.AddDynamic(this, &UWMovimiento::OnClickDiagonal);
+	buttonRotation->OnClicked.AddDynamic(this, &UWMovimiento::OnClickRotation);
 	buttonAttack->OnClicked.AddDynamic(this, &UWMovimiento::OnClickAttack);
 	buttonNormalFire->OnClicked.AddDynamic(this, &UWMovimiento::OnClickNormalFire);
 	buttonHandToHand->OnClicked.AddDynamic(this, &UWMovimiento::OnClickHandToHand);
@@ -67,6 +69,14 @@ void UWMovimiento::OnClickDiagonal()
 	command = NewObject<UActionDiagonalMovement>(this);
 	command->Execute(grid, character);
 	actions->command = NewObject<UActionDiagonalMovement>(actions);
+	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+}
+
+void UWMovimiento::OnClickRotation()
+{
+	command = NewObject<UActionMovementRotation>(this);
+	command->Execute(grid, character);
+	actions->command = NewObject<UActionMovementRotation>(actions);
 	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 

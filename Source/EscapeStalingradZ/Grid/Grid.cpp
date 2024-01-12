@@ -319,6 +319,28 @@ TArray<FIntPoint> AGrid::GetTilesDiagonals(FIntPoint index, FVector forwardVecto
 	return list;
 }
 
+TArray<FIntPoint> AGrid::GetTilesRotation(FIntPoint index, FVector forwardVector, FVector rightVector, int mp)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	if (mp >= 2) {
+		FIntPoint behind = index + FIntPoint(round(-forwardVector.X), round(-forwardVector.Y));
+		if (behind.X >= 0 && behind.X < numberOfTiles.X && behind.Y >= 0 && behind.Y < numberOfTiles.Y) {
+			list.Add(behind);
+		}
+	}
+	if (mp >= 1) {
+		FIntPoint left = index + FIntPoint(round(-rightVector.X), round(-rightVector.Y));
+		if (left.X >= 0 && left.X < numberOfTiles.X && left.Y >= 0 && left.Y < numberOfTiles.Y) {
+			list.Add(left);
+		}
+		FIntPoint right = index + FIntPoint(round(rightVector.X), round(rightVector.Y));
+		if (right.X >= 0 && right.X < numberOfTiles.X && right.Y >= 0 && right.Y < numberOfTiles.Y) {
+			list.Add(right);
+		}
+	}
+	return list;
+}
+
 void AGrid::SetParticleLoF(FIntPoint start, FIntPoint end)
 {
 	if (!particleLoF->IsActive()) {
