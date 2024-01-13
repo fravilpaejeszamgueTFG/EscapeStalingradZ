@@ -166,6 +166,7 @@ TArray<FIntPoint> APlayerCharacter::GetIndexHandToHand2Range()
 int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 {
 	int res = 0;
+	FIntPoint backward = FIntPoint(0, 0);
 	if (LoFs.Find(tileZombie) != nullptr) {
 		for (FIntPoint index : LoFs.Find(tileZombie)->tilesLoF) {
 			if (grid->gridTiles[index].actor != nullptr) {
@@ -173,16 +174,30 @@ int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 			}
 			if (grid->gridTiles[index].types.Contains(TileType::Fire)) {
 				res++;
-			} else if (LoFs.Find(tileZombie)->tilesLoF[0]!=index && grid->gridTiles[index].types.Contains(TileType::Hinder)) {
-				res += 2; //TO-CHECK
+			} else if (LoFs.Find(tileZombie)->tilesLoF[0]!=index) {
+				if (grid->gridTiles[index].types.Contains(TileType::Hinder)) {
+					res += 2; //TO-CHECK
+				}
+				if (index.X != backward.X && index.Y != backward.Y) { //TO-CHECK, solo ocurre en diagonales
+					FIntPoint forward = GetFowardIndexInDiagonal(index, backward); 
+					FIntPoint right = GetFowardIndexInDiagonal(backward, index); 
+					if (!grid->CanMoveDiagonal(index, forward, right, backward)) {
+						res += 2; //TO-CHECK
+					}
+				}
 			}
-			//TO-DO
+			if (res >= 4) {
+				return 4;
+			}
+			backward = index;
 		}
 	}	
-	if (res >= 4) {
-		return 4;
-	}
 	return res;
+}
+
+FIntPoint APlayerCharacter::GetFowardIndexInDiagonal(FIntPoint start, FIntPoint end)
+{
+	return FIntPoint(end.X, start.Y);
 }
 
 int APlayerCharacter::GetNumberOfHitModifiersAttack(AZombie* zombie)
