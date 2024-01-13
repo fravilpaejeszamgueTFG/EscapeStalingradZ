@@ -30,7 +30,7 @@ AGridModifier::AGridModifier()
 void AGridModifier::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorldTimerManager().SetTimer(modifierTimer, this, &AGridModifier::ActivateCollision, 1, false);
+	GetWorldTimerManager().SetTimer(modifierTimer, this, &AGridModifier::ActivateCollision, 0.6, false);
 	OnActorBeginOverlap.AddDynamic(this, &AGridModifier::OnOverlap);
 }
 

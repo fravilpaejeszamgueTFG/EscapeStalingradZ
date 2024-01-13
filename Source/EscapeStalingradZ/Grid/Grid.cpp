@@ -230,6 +230,12 @@ TArray<FIntPoint> AGrid::GetTilesForwardMovement(FIntPoint index, FVector forwar
 			if (gridTiles[forward].actor != nullptr || gridTiles[forward].types.Contains(TileType::Fire)) {
 				break;
 			}
+			if (gridTiles[forward].walls.Num() > 0) {
+				FIntPoint backward = index + FIntPoint(round(forwardVector.X) * (i - 1), round(forwardVector.Y) * (i - 1));
+				if (gridTiles[forward].walls.Contains(backward)) {
+					break;
+				}
+			}
 			if (gridTiles[forward].types.Contains(TileType::Hinder)) {
 				cont++;
 			}
@@ -301,7 +307,14 @@ TArray<FIntPoint> AGrid::GetTilesLoF(FIntPoint start, FIntPoint end)
 	for (int i = 1; i < vector.Size() - 10; i++) {
 		FIntPoint index = GetTileIndexFromLocation(Start + (i * vectorNormal));
 		if (!list.Contains(index)) {
-			//TO-DO Cuando haya bloqueo de paredes parar el bucle y devolver lista vacia.
+			//TO-DO Añadir puertas cerradas tambien.
+			if (gridTiles[index].walls.Num() > 0) {
+				for (FIntPoint j : list) {
+					if (gridTiles[index].walls.Contains(j)) {
+						return TArray<FIntPoint>();
+					}
+				}
+			}
 			list.Add(index);
 		}
 	}
@@ -320,6 +333,21 @@ TArray<FIntPoint> AGrid::GetTilesDiagonals(FIntPoint index, FVector forwardVecto
 		if (tile.X >= 0 && tile.X < numberOfTiles.X && tile.Y >= 0 && tile.Y < numberOfTiles.Y) {
 			if (gridTiles[tile].actor != nullptr || gridTiles[tile].types.Contains(TileType::Fire)) {
 				break;
+			}
+			FIntPoint fw = FIntPoint(round(rightVector.X), round(rightVector.Y));
+			FIntPoint rw = FIntPoint(round(forwardVector.X), round(forwardVector.Y));
+			forward = tile - fw;
+			FIntPoint backward = tile - fw - rw;
+			if (gridTiles[forward].walls.Num() > 0) {
+				if (gridTiles[forward].walls.Contains(backward) || gridTiles[forward].walls.Contains(tile)) {
+					break;
+				}
+			}
+			right = tile - rw;
+			if (gridTiles[right].walls.Num() > 0) {
+				if (gridTiles[right].walls.Contains(backward) || gridTiles[right].walls.Contains(tile)) {
+					break;
+				}
 			}
 			if (gridTiles[tile].types.Contains(TileType::Hinder)) {
 				cont++;
