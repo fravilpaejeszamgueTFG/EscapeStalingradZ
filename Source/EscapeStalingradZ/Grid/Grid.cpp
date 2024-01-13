@@ -230,6 +230,12 @@ TArray<FIntPoint> AGrid::GetTilesForwardMovement(FIntPoint index, FVector forwar
 			if (gridTiles[forward].actor != nullptr || gridTiles[forward].types.Contains(TileType::Fire)) {
 				break;
 			}
+			if (gridTiles[forward].walls.Num() > 0) {
+				FIntPoint backward = index + FIntPoint(round(forwardVector.X) * (i - 1), round(forwardVector.Y) * (i - 1));
+				if (gridTiles[forward].walls.Contains(backward)) {
+					break;
+				}
+			}
 			if (gridTiles[forward].types.Contains(TileType::Hinder)) {
 				cont++;
 			}
@@ -320,6 +326,24 @@ TArray<FIntPoint> AGrid::GetTilesDiagonals(FIntPoint index, FVector forwardVecto
 		if (tile.X >= 0 && tile.X < numberOfTiles.X && tile.Y >= 0 && tile.Y < numberOfTiles.Y) {
 			if (gridTiles[tile].actor != nullptr || gridTiles[tile].types.Contains(TileType::Fire)) {
 				break;
+			}
+			FIntPoint fw = FIntPoint(round(rightVector.X), round(rightVector.Y));
+			FIntPoint rw = FIntPoint(round(forwardVector.X), round(forwardVector.Y));
+			forward = tile - fw;
+			FIntPoint backward = tile - fw - rw;
+			UE_LOG(LogTemp, Warning, TEXT("backward %s"), *backward.ToString());
+			UE_LOG(LogTemp, Warning, TEXT("forward %s"), *forward.ToString());
+			if (gridTiles[forward].walls.Num() > 0) {
+				if (gridTiles[forward].walls.Contains(backward) || gridTiles[forward].walls.Contains(tile)) {
+					break;
+				}
+			}
+			right = tile - rw;
+			UE_LOG(LogTemp, Warning, TEXT("right %s"), *right.ToString());
+			if (gridTiles[right].walls.Num() > 0) {
+				if (gridTiles[right].walls.Contains(backward) || gridTiles[right].walls.Contains(tile)) {
+					break;
+				}
 			}
 			if (gridTiles[tile].types.Contains(TileType::Hinder)) {
 				cont++;

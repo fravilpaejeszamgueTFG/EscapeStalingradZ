@@ -44,6 +44,8 @@ public:
 		class AActor* actor = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
 		TArray<TEnumAsByte<TileState>> states;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
+		TArray<FIntPoint> walls;
 
 	FTileData() { 
 		poisoned = false;
