@@ -220,16 +220,23 @@ TArray<FIntPoint> AGrid::GetTilesForward(FIntPoint index, FVector forwardVector,
 	return list;
 }
 
-TArray<FIntPoint> AGrid::GetTilesForwardMovement(FIntPoint index, FVector forwardVector, int numCasillas)
+TArray<FIntPoint> AGrid::GetTilesForwardMovement(FIntPoint index, FVector forwardVector, int numCasillas, int mp, int cost)
 {
 	TArray<FIntPoint> list = TArray<FIntPoint>();
+	int cont = 0;
 	for (int i = 1; i <= numCasillas; i++) {
 		FIntPoint forward = index + FIntPoint(round(forwardVector.X) * i, round(forwardVector.Y) * i);
 		if (forward.X >= 0 && forward.X < numberOfTiles.X && forward.Y >= 0 && forward.Y < numberOfTiles.Y) {
-			if (gridTiles[forward].actor != nullptr || gridTiles[forward].type==TileType::Fire) {
+			if (gridTiles[forward].actor != nullptr || gridTiles[forward].types.Contains(TileType::Fire)) {
 				break;
 			}
-			list.Add(forward);
+			if (gridTiles[forward].types.Contains(TileType::Hinder)) {
+				cont++;
+			}
+			if (i * cost + cont <= mp) {
+				list.Add(forward);
+			}
+			
 		}
 	}
 	return list;
@@ -302,18 +309,24 @@ TArray<FIntPoint> AGrid::GetTilesLoF(FIntPoint start, FIntPoint end)
 	return list;
 }
 
-TArray<FIntPoint> AGrid::GetTilesDiagonals(FIntPoint index, FVector forwardVector, FVector rightVector, int numCasillas)
+TArray<FIntPoint> AGrid::GetTilesDiagonals(FIntPoint index, FVector forwardVector, FVector rightVector, int numCasillas, int mp)
 {
 	TArray<FIntPoint> list = TArray<FIntPoint>();
+	int cont = 0;
 	for (int i = 1; i <= numCasillas; i++) {
 		FIntPoint forward = FIntPoint(round(forwardVector.X) * i, round(forwardVector.Y) * i);
 		FIntPoint right = FIntPoint(round(rightVector.X) * i, round(rightVector.Y) * i);
 		FIntPoint tile = index + forward + right;
 		if (tile.X >= 0 && tile.X < numberOfTiles.X && tile.Y >= 0 && tile.Y < numberOfTiles.Y) {
-			if (gridTiles[tile].actor != nullptr) {
+			if (gridTiles[tile].actor != nullptr || gridTiles[tile].types.Contains(TileType::Fire)) {
 				break;
 			}
-			list.Add(tile);
+			if (gridTiles[tile].types.Contains(TileType::Hinder)) {
+				cont++;
+			}
+			if (i * 2 + cont <= mp) {
+				list.Add(tile);
+			}
 		}
 	}
 	return list;

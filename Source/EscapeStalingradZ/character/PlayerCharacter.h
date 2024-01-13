@@ -107,7 +107,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Covering) TEnumAsByte<CoveringType> typeOfCovering;
 
 	//Funciones
-	void SetPreferredWeaponByCharacter();
+	UFUNCTION() void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
 	UFUNCTION() int getDistanceLoF(TArray<FIntPoint> tiles, FIntPoint index);
 	UFUNCTION() void AttackZombieHandToHand(class AZombie* zombie, FIntPoint tileZombie);
