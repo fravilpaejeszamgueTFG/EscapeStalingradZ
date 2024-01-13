@@ -13,8 +13,8 @@ void UActionDiagonalMovement::Execute(AGrid* grid, APlayerCharacter* character)
 		FVector forwardVector = character->GetActorForwardVector();
 		FVector rightVector = character->GetActorRightVector();
 		int numCasillas = (character->mp)/2;
-		TArray<FIntPoint> indices = grid->GetTilesDiagonals(indice, forwardVector, rightVector, numCasillas);
-		indices.Append(grid->GetTilesDiagonals(indice, forwardVector,-rightVector, numCasillas));
+		TArray<FIntPoint> indices = grid->GetTilesDiagonals(indice, forwardVector, rightVector, numCasillas, character->mp);
+		indices.Append(grid->GetTilesDiagonals(indice, forwardVector,-rightVector, numCasillas, character->mp));
 		for (FIntPoint l : indices) {
 			grid->AddTileState(l, TileState::isReachable);
 		}
@@ -30,25 +30,39 @@ void UActionDiagonalMovement::Action(AGrid* grid, FIntPoint tile, FIntPoint dest
 		FVector rightVector = character->GetActorRightVector();
 		if (character != nullptr) {
 			int numCasillas = (character->mp) / 2;
-			TArray<FIntPoint> indicesright = grid->GetTilesDiagonals(tile, forwardVector, rightVector, numCasillas);
-			TArray<FIntPoint> indicesleft = grid->GetTilesDiagonals(tile, forwardVector, -rightVector, numCasillas);
+			TArray<FIntPoint> indicesright = grid->GetTilesDiagonals(tile, forwardVector, rightVector, numCasillas, character->mp);
+			TArray<FIntPoint> indicesleft = grid->GetTilesDiagonals(tile, forwardVector, -rightVector, numCasillas, character->mp);
 			if (destinyTile != FIntPoint(-1, -1)) {
 				if (grid->gridTiles[destinyTile].states.Contains(TileState::isReachable)) {
 					grid->RemoveTileState(destinyTile, TileState::Hovered);
 					grid->gridTiles[tile].actor = nullptr;
 					grid->gridTiles[destinyTile].actor = character;
 					character->SetActorLocation(grid->GetLocationByIndex(destinyTile));
+					int cont = 0;
+					bool tileRight = false;
 					for (int i = 0; i < indicesright.Num(); i++) {
+						if (grid->gridTiles[indicesright[i]].types.Contains(TileType::Hinder)) {
+							cont++;
+						}
 						if (indicesright[i] == destinyTile) {
 							character->mp -= (i + 1) * 2;
+							tileRight = true;
+							break;
 						}
 					}
-					for (int i = 0; i < indicesleft.Num(); i++) {
-						if (indicesleft[i] == destinyTile) {
-							character->mp -= (i + 1) * 2;
+					if (!tileRight) {
+						cont = 0;
+						for (int i = 0; i < indicesleft.Num(); i++) {
+							if (grid->gridTiles[indicesleft[i]].types.Contains(TileType::Hinder)) {
+								cont++;
+							}
+							if (indicesleft[i] == destinyTile) {
+								character->mp -= (i + 1) * 2;
+								break;
+							}
 						}
 					}
-
+					character->mp -= cont;
 				}
 			}
 			for (FIntPoint i : indicesright) {

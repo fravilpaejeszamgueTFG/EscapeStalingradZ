@@ -44,7 +44,8 @@ void AGridModifier::OnOverlap(AActor* me, AActor* other)
 	AGrid* grid = Cast<AGrid>(other);
 	if (grid != nullptr) {
 		FIntPoint index = grid->GetTileIndexFromLocation(GetActorLocation());
-		grid->gridTiles[index].type = type;
+		grid->gridTiles[index].types.Remove(TileType::Normal);
+		grid->gridTiles[index].types.Add(type);
 		Destroy();
 	}
 }

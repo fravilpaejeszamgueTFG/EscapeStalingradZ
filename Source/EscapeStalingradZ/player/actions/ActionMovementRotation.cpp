@@ -11,6 +11,9 @@ void UActionMovementRotation::Execute(AGrid* grid, APlayerCharacter* character)
 		FIntPoint indice = grid->GetTileIndexFromLocation(character->GetActorLocation());
 		grid->AddTileState(indice, TileState::Selected);
 		int mp = character->mp;
+		if (character->typeOfMovement == MovementType::Running) {
+			mp = (character->mp)/2;
+		}
 		FVector forwardVector = character->GetActorForwardVector();
 		FVector rightVector = character->GetActorRightVector();
 		TArray<FIntPoint> indices = grid->GetTilesRotation(indice, forwardVector, rightVector, mp);
@@ -27,6 +30,9 @@ void UActionMovementRotation::Action(AGrid* grid, FIntPoint tile, FIntPoint dest
 		APlayerCharacter* character = Cast<APlayerCharacter>(grid->gridTiles[tile].actor);
 		if (character != nullptr) {
 			int mp = character->mp;
+			if (character->typeOfMovement == MovementType::Running) {
+				mp = (character->mp) / 2;
+			}
 			FVector forwardVector = character->GetActorForwardVector();
 			FVector rightVector = character->GetActorRightVector();
 			TArray<FIntPoint> indices = grid->GetTilesRotation(tile, forwardVector, rightVector, mp);
@@ -47,11 +53,15 @@ void UActionMovementRotation::Action(AGrid* grid, FIntPoint tile, FIntPoint dest
 
 void UActionMovementRotation::CheckMP(APlayerCharacter* character, FVector oldFV, FVector newFV)
 {
+	int cost = 1;
+	if (character->typeOfMovement == MovementType::Running) {
+		cost = 2;
+	}
 	if (round(oldFV.X) == -round(newFV.X) || round(oldFV.Y) == -round(newFV.Y)) {
-		character-> mp -= 2;
+		character-> mp -= 2 * cost;
 	}
 	else {
-		character-> mp--;
+		character-> mp-= cost;
 	}
 }
 

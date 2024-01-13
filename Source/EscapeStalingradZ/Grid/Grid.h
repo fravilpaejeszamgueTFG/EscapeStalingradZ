@@ -37,7 +37,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
 		FIntPoint index;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
-		TEnumAsByte<TileType>  type;
+		TArray<TEnumAsByte<TileType>>  types;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
 		bool  poisoned;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
@@ -46,14 +46,13 @@ public:
 		TArray<TEnumAsByte<TileState>> states;
 
 	FTileData() { 
-		type = TileType::Normal;
 		poisoned = false;
 	};
 
 	FTileData(FIntPoint index, TileType type, bool poisoned)
 	{
 		this->index = index;
-		this->type = type;
+		this->types.Add(type);
 		this->poisoned = poisoned;
 	}
 };
@@ -128,7 +127,7 @@ public:
 	UFUNCTION()
 		TArray<FIntPoint> GetTilesForward(FIntPoint index, FVector forwardVector, int num_casillas);
 	UFUNCTION()
-		TArray<FIntPoint> GetTilesForwardMovement(FIntPoint index, FVector forwardVector, int num_casillas);
+		TArray<FIntPoint> GetTilesForwardMovement(FIntPoint index, FVector forwardVector, int num_casillas, int mp, int cost);
 	UFUNCTION()
 		void SetTilesForAttack(TArray<FIntPoint> list);
 	UFUNCTION()
@@ -140,7 +139,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		TArray<FIntPoint> GetTilesLoF(FIntPoint start, FIntPoint end);
 	UFUNCTION()
-		TArray<FIntPoint> GetTilesDiagonals(FIntPoint index, FVector forwardVector, FVector rightVector, int numCasillas);
+		TArray<FIntPoint> GetTilesDiagonals(FIntPoint index, FVector forwardVector, FVector rightVector, int numCasillas, int mp);
 	UFUNCTION()
 		TArray<FIntPoint> GetTilesRotation(FIntPoint index, FVector forwardVector, FVector rightVector, int mp);
 	UFUNCTION(BlueprintCallable)

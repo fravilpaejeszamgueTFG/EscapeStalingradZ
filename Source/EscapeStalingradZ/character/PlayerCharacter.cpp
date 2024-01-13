@@ -167,8 +167,10 @@ int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 			if (grid->gridTiles[index].actor != nullptr) {
 				res += 2;
 			}
-			if (grid->gridTiles[index].type == TileType::Fire) {
+			if (grid->gridTiles[index].types.Contains(TileType::Fire)) {
 				res++;
+			}else if (LoFs.Find(tileZombie)->tilesLoF[0]!=index && grid->gridTiles[index].types.Contains(TileType::Hinder)) {
+				res += 2;
 			}
 		}
 	}
