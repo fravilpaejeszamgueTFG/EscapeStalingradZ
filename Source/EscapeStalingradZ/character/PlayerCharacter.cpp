@@ -58,6 +58,10 @@ void APlayerCharacter::getArcOfFire()
 	FVector forwardVector = GetActorForwardVector();
 	FVector rightVector = GetActorRightVector();
 	FIntPoint index = grid->GetTileIndexFromLocation(GetActorLocation());
+	LoFs.Empty();
+	for (FIntPoint i : AoF) {
+		grid->RemoveTileState(i, TileState::isInAoF);
+	}
 	AoF = grid->GetTilesAoF(index, forwardVector, rightVector);
 	grid->SetTilesForAttack(AoF);
 	TArray<FIntPoint> listZombies = grid->GetTilesWithZombies(AoF);
@@ -169,12 +173,12 @@ int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 			}
 			if (grid->gridTiles[index].types.Contains(TileType::Fire)) {
 				res++;
-			}else if (LoFs.Find(tileZombie)->tilesLoF[0]!=index && grid->gridTiles[index].types.Contains(TileType::Hinder)) {
-				res += 2;
+			} else if (LoFs.Find(tileZombie)->tilesLoF[0]!=index && grid->gridTiles[index].types.Contains(TileType::Hinder)) {
+				res += 2; //TO-CHECK
 			}
+			//TO-DO
 		}
-	}
-	//TO-DO
+	}	
 	if (res >= 4) {
 		return 4;
 	}

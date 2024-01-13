@@ -307,7 +307,14 @@ TArray<FIntPoint> AGrid::GetTilesLoF(FIntPoint start, FIntPoint end)
 	for (int i = 1; i < vector.Size() - 10; i++) {
 		FIntPoint index = GetTileIndexFromLocation(Start + (i * vectorNormal));
 		if (!list.Contains(index)) {
-			//TO-DO Cuando haya bloqueo de paredes parar el bucle y devolver lista vacia.
+			//TO-DO Añadir puertas cerradas tambien.
+			if (gridTiles[index].walls.Num() > 0) {
+				for (FIntPoint j : list) {
+					if (gridTiles[index].walls.Contains(j)) {
+						return TArray<FIntPoint>();
+					}
+				}
+			}
 			list.Add(index);
 		}
 	}
@@ -331,15 +338,12 @@ TArray<FIntPoint> AGrid::GetTilesDiagonals(FIntPoint index, FVector forwardVecto
 			FIntPoint rw = FIntPoint(round(forwardVector.X), round(forwardVector.Y));
 			forward = tile - fw;
 			FIntPoint backward = tile - fw - rw;
-			UE_LOG(LogTemp, Warning, TEXT("backward %s"), *backward.ToString());
-			UE_LOG(LogTemp, Warning, TEXT("forward %s"), *forward.ToString());
 			if (gridTiles[forward].walls.Num() > 0) {
 				if (gridTiles[forward].walls.Contains(backward) || gridTiles[forward].walls.Contains(tile)) {
 					break;
 				}
 			}
 			right = tile - rw;
-			UE_LOG(LogTemp, Warning, TEXT("right %s"), *right.ToString());
 			if (gridTiles[right].walls.Num() > 0) {
 				if (gridTiles[right].walls.Contains(backward) || gridTiles[right].walls.Contains(tile)) {
 					break;
