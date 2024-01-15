@@ -34,18 +34,20 @@ struct FTileData
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
+	UPROPERTY(VisibleAnywhere, Category = TileData)
 		FIntPoint index;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
+	UPROPERTY(VisibleAnywhere, Category = TileData)
 		TArray<TEnumAsByte<TileType>>  types;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
+	UPROPERTY(VisibleAnywhere, Category = TileData)
 		bool  poisoned;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
+	UPROPERTY(VisibleAnywhere, Category = TileData)
 		class AActor* actor = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
+	UPROPERTY(VisibleAnywhere, Category = TileData)
 		TArray<TEnumAsByte<TileState>> states;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TileData)
+	UPROPERTY(VisibleAnywhere, Category = TileData)
 		TArray<FIntPoint> walls;
+	UPROPERTY(VisibleAnywhere, Category = TileData)
+		TMap<FIntPoint, bool> doors; //si bool = true -> puerta cerrada, si bool = false -> puerta abierta
 
 	FTileData() { 
 		poisoned = false;
@@ -150,4 +152,8 @@ public:
 		void DeActivateParticleLoF();
 	UFUNCTION()
 		TArray<FIntPoint> GetTilesWithZombies(TArray<FIntPoint> AoF);
+	UFUNCTION()
+		bool GetDoorIsClosed(FIntPoint index, FIntPoint other);
+	UFUNCTION()
+		bool CanMoveDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, FIntPoint backward);
 };
