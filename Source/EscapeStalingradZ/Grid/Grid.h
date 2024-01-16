@@ -96,6 +96,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileReachableColor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileAoFColor;
 
+	//actores
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = characters) TArray<FIntPoint> charactersIndex;
+
 	//functions
 	UFUNCTION(BlueprintCallable) 
 		void SpawnGrid(FVector center, FVector tileSize, FVector2D numOfTiles);
@@ -156,4 +159,8 @@ public:
 		bool GetDoorIsClosed(FIntPoint index, FIntPoint other);
 	UFUNCTION()
 		bool CanMoveDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, FIntPoint backward);
+	UFUNCTION()
+		bool CanShootDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, FIntPoint backward);
+	UFUNCTION()
+		void deleteStatesFromTiles();
 };

@@ -9,7 +9,6 @@ void UActionDiagonalMovement::Execute(AGrid* grid, APlayerCharacter* character)
 {
 	if (grid != nullptr && character != nullptr) {
 		FIntPoint indice = grid->GetTileIndexFromLocation(character->GetActorLocation());
-		grid->AddTileState(indice, TileState::Selected);
 		FVector forwardVector = character->GetActorForwardVector();
 		FVector rightVector = character->GetActorRightVector();
 		int numCasillas = (character->mp)/2;
@@ -24,7 +23,6 @@ void UActionDiagonalMovement::Execute(AGrid* grid, APlayerCharacter* character)
 void UActionDiagonalMovement::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTile)
 {
 	if (grid != nullptr && tile != FIntPoint(-1, -1)) {
-		grid->RemoveTileState(tile, TileState::Selected);
 		APlayerCharacter* character = Cast<APlayerCharacter>(grid->gridTiles[tile].actor);
 		FVector forwardVector = character->GetActorForwardVector();
 		FVector rightVector = character->GetActorRightVector();
@@ -35,6 +33,8 @@ void UActionDiagonalMovement::Action(AGrid* grid, FIntPoint tile, FIntPoint dest
 			if (destinyTile != FIntPoint(-1, -1)) {
 				if (grid->gridTiles[destinyTile].states.Contains(TileState::isReachable)) {
 					grid->RemoveTileState(destinyTile, TileState::Hovered);
+					grid->RemoveTileState(tile, TileState::Selected);
+					grid->AddTileState(destinyTile, TileState::Selected);
 					grid->gridTiles[tile].actor = nullptr;
 					grid->gridTiles[destinyTile].actor = character;
 					character->SetActorLocation(grid->GetLocationByIndex(destinyTile));

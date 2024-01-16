@@ -36,10 +36,14 @@ public:
 		class UBoton* buttonNormalFire;
 	UPROPERTY(meta = (BindWidget))
 		class UBoton* buttonHandToHand;
+	UPROPERTY(meta = (BindWidget))
+		class UBoton* endTurn;
+
+	UPROPERTY(VisibleAnywhere) class ATurn* turn;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Grid) class AGrid* grid;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerCharacter* character;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerActions* actions;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerC* controller;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Command) class UCommand* command;
 
 	UFUNCTION() void OnClickForward();
@@ -50,5 +54,8 @@ public:
 	UFUNCTION() void OnClickRotation();
 	UFUNCTION() void OnClickNormalFire();
 	UFUNCTION() void OnClickHandToHand();
+	UFUNCTION() void EndTurn();
+
+	UFUNCTION() void CreateEndTurnWidget(class ATurn* turnEnd);
 	
 };
