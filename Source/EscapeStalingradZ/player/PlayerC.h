@@ -18,11 +18,23 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+public:
+	APlayerC();
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = movement)
 		class UWMovimiento* Movement;
 
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<UWMovimiento> MovementClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = actions) class UPlayerActions* actions;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerCharacter* playerchara;
+
+	UFUNCTION() void LeftMouseClick();
+
+	UFUNCTION() void SetMovementWidget();
+
+	UFUNCTION() void HideMovementWidget();
 	
 };

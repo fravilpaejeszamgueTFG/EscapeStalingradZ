@@ -14,6 +14,8 @@
 #include "EscapeStalingradZ/player/actions/ActionHandToHand.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/player/PlayerActions.h"
+#include "EscapeStalingradZ/player/PlayerC.h"
+#include "EscapeStalingradZ/turn/Turn.h"
 
 
 UWMovimiento::UWMovimiento(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -33,14 +35,15 @@ void UWMovimiento::NativeConstruct()
 	buttonAttack->OnClicked.AddDynamic(this, &UWMovimiento::OnClickAttack);
 	buttonNormalFire->OnClicked.AddDynamic(this, &UWMovimiento::OnClickNormalFire);
 	buttonHandToHand->OnClicked.AddDynamic(this, &UWMovimiento::OnClickHandToHand);
+	endTurn->OnClicked.AddDynamic(this, &UWMovimiento::EndTurn);
 }
 
 void UWMovimiento::OnClickForward()
 {
 	command = NewObject<UActionMovementForward>(this);
     command->Execute(grid, character);
-	actions->command = NewObject<UActionMovementForward>(actions);
-	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+	controller->actions->command = NewObject<UActionMovementForward>(controller->actions);
+	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
 void UWMovimiento::OnClickAttack()
@@ -52,46 +55,60 @@ void UWMovimiento::OnClickLateral()
 {
 	command = NewObject<UActionMovementLateral>(this);
 	command->Execute(grid, character);
-	actions->command = NewObject<UActionMovementLateral>(actions);
-	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+	controller->actions->command = NewObject<UActionMovementLateral>(controller->actions);
+	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
 void UWMovimiento::OnClickBackward()
 {
 	command = NewObject<UActionMovementBackward>(this);
 	command->Execute(grid, character);
-	actions->command = NewObject<UActionMovementBackward>(actions);
-	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+	controller->actions->command = NewObject<UActionMovementBackward>(controller->actions);
+	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
 void UWMovimiento::OnClickDiagonal()
 {
 	command = NewObject<UActionDiagonalMovement>(this);
 	command->Execute(grid, character);
-	actions->command = NewObject<UActionDiagonalMovement>(actions);
-	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+	controller->actions->command = NewObject<UActionDiagonalMovement>(controller->actions);
+	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
 void UWMovimiento::OnClickRotation()
 {
 	command = NewObject<UActionMovementRotation>(this);
 	command->Execute(grid, character);
-	actions->command = NewObject<UActionMovementRotation>(actions);
-	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+	controller->actions->command = NewObject<UActionMovementRotation>(controller->actions);
+	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
 void UWMovimiento::OnClickNormalFire()
 {
 	command = NewObject<UActionNormalFire>(this);
 	command->Execute(grid, character);
-	actions->command = NewObject<UActionNormalFire>(actions);
-	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+	controller->actions->command = NewObject<UActionNormalFire>(controller->actions);
+	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 void UWMovimiento::OnClickHandToHand()
 {
 	command = NewObject<UActionHandToHand>(this);
 	command->Execute(grid, character);
-	actions->command = NewObject<UActionHandToHand>(actions);
-	actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+	controller->actions->command = NewObject<UActionHandToHand>(controller->actions);
+	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+}
+
+void UWMovimiento::EndTurn()
+{
+	if (turn != nullptr) {
+		grid->deleteStatesFromTiles();
+		turn->nextCharacter();
+		controller->actions->command = nullptr;
+	}
+}
+
+void UWMovimiento::CreateEndTurnWidget(ATurn* turnEnd)
+{
+	turn = turnEnd;
 }
 

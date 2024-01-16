@@ -9,7 +9,6 @@ void UActionMovementRotation::Execute(AGrid* grid, APlayerCharacter* character)
 {
 	if (grid != nullptr && character != nullptr) {
 		FIntPoint indice = grid->GetTileIndexFromLocation(character->GetActorLocation());
-		grid->AddTileState(indice, TileState::Selected);
 		int mp = character->mp;
 		if (character->typeOfMovement == MovementType::Running) {
 			mp = (character->mp)/2;
@@ -26,7 +25,6 @@ void UActionMovementRotation::Execute(AGrid* grid, APlayerCharacter* character)
 void UActionMovementRotation::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTile)
 {
 	if (grid != nullptr && tile != FIntPoint(-1, -1)) {
-		grid->RemoveTileState(tile, TileState::Selected);
 		APlayerCharacter* character = Cast<APlayerCharacter>(grid->gridTiles[tile].actor);
 		if (character != nullptr) {
 			int mp = character->mp;

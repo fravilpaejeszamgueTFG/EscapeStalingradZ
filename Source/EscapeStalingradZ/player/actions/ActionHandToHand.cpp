@@ -11,7 +11,6 @@ void UActionHandToHand::Execute(AGrid* grid, APlayerCharacter* character)
 {
 	if (grid != nullptr && character != nullptr) {
 		FIntPoint indice = grid->GetTileIndexFromLocation(character->GetActorLocation());
-		grid->AddTileState(indice, TileState::Selected);
 		TArray<FIntPoint> indices;
 		if (character->GetDistanceAttackHandToHand() == 1) {
 			indices = grid->GetTileNeighbors(indice);
@@ -30,7 +29,6 @@ void UActionHandToHand::Execute(AGrid* grid, APlayerCharacter* character)
 void UActionHandToHand::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTile)
 {
 	if (grid != nullptr && tile != FIntPoint(-1, -1)) {
-		grid->RemoveTileState(tile, TileState::Selected);
 		APlayerCharacter* character = Cast<APlayerCharacter>(grid->gridTiles[tile].actor);
 		if (character != nullptr) {
 			if (destinyTile != FIntPoint(-1, -1)) {

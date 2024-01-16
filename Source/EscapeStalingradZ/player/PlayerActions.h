@@ -6,14 +6,14 @@
 #include "GameFramework/Actor.h"
 #include "PlayerActions.generated.h"
 
-UCLASS()
-class ESCAPESTALINGRADZ_API APlayerActions : public AActor
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+class ESCAPESTALINGRADZ_API UPlayerActions : public UActorComponent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APlayerActions();
+	UPlayerActions();
 
 protected:
 	// Called when the game starts or when spawned
@@ -22,7 +22,7 @@ protected:
 public:	
 
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	//variables
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Grid) class AGrid* grid;

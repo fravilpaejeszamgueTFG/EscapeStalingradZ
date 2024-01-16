@@ -9,7 +9,6 @@ void UActionMovementLateral::Execute(AGrid* grid, APlayerCharacter* character)
 {
 	if (grid != nullptr && character != nullptr) {
 		FIntPoint indice = grid->GetTileIndexFromLocation(character->GetActorLocation());
-		grid->AddTileState(indice, TileState::Selected);
 		int numCasillas = (character->mp)/2;
 		TArray<FIntPoint> indices = grid->GetTilesForwardMovement(indice, character->GetActorRightVector(), numCasillas, character->mp, 2);
 		indices.Append(grid->GetTilesForwardMovement(indice, -(character->GetActorRightVector()), numCasillas, character->mp, 2));
@@ -22,7 +21,6 @@ void UActionMovementLateral::Execute(AGrid* grid, APlayerCharacter* character)
 void UActionMovementLateral::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTile)
 {
 	if (grid != nullptr && tile != FIntPoint(-1, -1)) {
-		grid->RemoveTileState(tile, TileState::Selected);
 		APlayerCharacter* character = Cast<APlayerCharacter>(grid->gridTiles[tile].actor);
 		if (character != nullptr) {
 			int numCasillas = (character->mp)/2;
@@ -31,6 +29,8 @@ void UActionMovementLateral::Action(AGrid* grid, FIntPoint tile, FIntPoint desti
 			if (destinyTile != FIntPoint(-1, -1)) {
 				if (grid->gridTiles[destinyTile].states.Contains(TileState::isReachable)) {
 					grid->RemoveTileState(destinyTile, TileState::Hovered);
+					grid->RemoveTileState(tile, TileState::Selected);
+					grid->AddTileState(destinyTile, TileState::Selected);
 					grid->gridTiles[tile].actor = nullptr;
 					grid->gridTiles[destinyTile].actor = character;
 					character->SetActorLocation(grid->GetLocationByIndex(destinyTile));

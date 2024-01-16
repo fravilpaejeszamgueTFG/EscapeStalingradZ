@@ -8,6 +8,8 @@
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/zombies/Zombie.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "EscapeStalingradZ/player/PlayerC.h"
+#include "EscapeStalingradZ/player/PlayerActions.h"
 
 // Sets default values
 AGrid::AGrid()
@@ -35,6 +37,11 @@ void AGrid::BeginPlay()
 	Super::BeginPlay();
 
 	SpawnGrid(GetActorLocation(), tileScale, numberOfTiles);
+
+	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (player != nullptr && player->actions!=nullptr) {
+		player->actions->grid = this;
+	}
 	
 }
 
@@ -187,6 +194,7 @@ void AGrid::SetPlayerStartLocation(APlayerCharacter* character)
 	FVector location = GetLocationByIndex(index);
 	character->SetActorLocation(location);
 	gridTiles[index].actor = character;
+	charactersIndex.Add(index);
 }
 
 void AGrid::SetZombieStartLocation(AZombie* zombie)
@@ -313,26 +321,35 @@ TArray<FIntPoint> AGrid::GetTilesLoF(FIntPoint start, FIntPoint end)
 	FVector End = GetLocationByIndex(end);
 	FVector vector = End - Start;
 	FVector vectorNormal = vector.GetSafeNormal();
+	FIntPoint lastIndex = FIntPoint(-1, -1);
 	for (int i = 1; i < vector.Size() - 10; i++) {
 		FIntPoint index = GetTileIndexFromLocation(Start + (i * vectorNormal));
 		if (!list.Contains(index)) {
-			if (gridTiles[index].walls.Num() > 0) {
-				for (FIntPoint j : list) {
-					if (gridTiles[index].walls.Contains(j)) {
-						return TArray<FIntPoint>();
-					}
+			if (lastIndex != FIntPoint(-1, -1) && lastIndex.X !=index.X && lastIndex.Y != index.Y) {
+				if (!CanShootDiagonal(lastIndex, FIntPoint(lastIndex.X, index.Y), FIntPoint(index.X, lastIndex.Y), index)) {
+					return TArray<FIntPoint>();
 				}
 			}
-			if (gridTiles[index].doors.Num() > 0) {
-				for (FIntPoint j : list) {
-					if (gridTiles[index].doors.Contains(j)) {
-						if (gridTiles[index].doors[j]) {
+			else {
+				if (gridTiles[index].walls.Num() > 0) {
+					for (FIntPoint j : list) {
+						if (gridTiles[index].walls.Contains(j)) {
 							return TArray<FIntPoint>();
-						}	
+						}
+					}
+				}
+				if (gridTiles[index].doors.Num() > 0) {
+					for (FIntPoint j : list) {
+						if (gridTiles[index].doors.Contains(j)) {
+							if (gridTiles[index].doors[j]) {
+								return TArray<FIntPoint>();
+							}
+						}
 					}
 				}
 			}
 			list.Add(index);
+			lastIndex = index;
 		}
 	}
 	list.Remove(start);
@@ -451,6 +468,70 @@ bool AGrid::CanMoveDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, 
 	}
 	if (GetDoorIsClosed(forward, backward) || GetDoorIsClosed(forward, tile)
 		|| GetDoorIsClosed(right, backward) || GetDoorIsClosed(right, tile)) {
+		return false;
+	}
+	return true;
+}
+
+void AGrid::deleteStatesFromTiles()
+{
+	for (auto& index : gridTiles)
+	{
+		if (index.Value.states.Num() > 0) {
+			index.Value.states.Empty();
+			UpdateTileVisual(index.Key);
+		}
+	}
+}
+
+bool AGrid::CanShootDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, FIntPoint backward)
+{
+	int res = 0;
+	bool f = false;
+	bool r = false;
+	//comprobar que hay pared/puerta en las casillas adyacentes, pero no con la misma
+	if (gridTiles[forward].walls.Num() > 0) {
+		if (gridTiles[forward].walls.Contains(backward)) {
+			f = true;
+		}
+	}
+	if (GetDoorIsClosed(forward, backward)) {
+		f = true;
+	}
+	//forward-backward
+	if (gridTiles[right].walls.Num() > 0) {
+		if (gridTiles[right].walls.Contains(tile)) {
+			r = true;
+		}
+	}
+	if (GetDoorIsClosed(right, tile)) {
+		r = true;
+	}
+	//right-tile
+	if (f && r) {
+		return false;
+	}
+	f = false;
+	r = false;
+	if (gridTiles[forward].walls.Num() > 0) {
+		if (gridTiles[forward].walls.Contains(tile)) {
+			f = true;
+		}
+	}
+	if (GetDoorIsClosed(forward, tile)) {
+		f = true;
+	}
+	//forward-tile
+	if (gridTiles[right].walls.Num() > 0) {
+		if (gridTiles[right].walls.Contains(backward)) {
+			r = true;
+		}
+	}
+	if (GetDoorIsClosed(right, backward)) {
+		r = true;
+	}
+	//right-backward
+	if (f && r) {
 		return false;
 	}
 	return true;
