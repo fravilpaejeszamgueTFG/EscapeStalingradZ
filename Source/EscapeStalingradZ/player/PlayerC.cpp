@@ -3,7 +3,7 @@
 
 #include "PlayerC.h"
 #include "Components/WidgetComponent.h"
-#include "EscapeStalingradZ/widget/WMovimiento.h"
+#include "EscapeStalingradZ/widget/WSelectMovementType.h"
 #include "PlayerActions.h"
 
 
@@ -36,14 +36,12 @@ void APlayerC::SetMovementWidget()
 	if (MovementClass) {
 		if (Movement != nullptr) {
 			Movement->character = playerchara;
-			Movement->controller = this;
 			Movement->SetVisibility(ESlateVisibility::Visible);
 		}
 		else {
-			Movement = CreateWidget<UWMovimiento>(GetWorld(), MovementClass);
+			Movement = CreateWidget<UWSelectMovementType>(GetWorld(), MovementClass);
 			if (Movement != nullptr) {
 				Movement->character = playerchara;
-				Movement->controller = this;
 				Movement->AddToViewport();
 			}
 		}
@@ -52,5 +50,5 @@ void APlayerC::SetMovementWidget()
 
 void APlayerC::HideMovementWidget()
 {
-	Movement->SetVisibility(ESlateVisibility::Collapsed);
+	Movement->SetVisibility(ESlateVisibility::Hidden);
 }

@@ -22,10 +22,10 @@ public:
 	APlayerC();
 
 	UPROPERTY(VisibleAnywhere, Category = movement)
-		class UWMovimiento* Movement;
+		class UWSelectMovementType* Movement;
 
 	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<UWMovimiento> MovementClass;
+		TSubclassOf<UWSelectMovementType> MovementClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = actions) class UPlayerActions* actions;
 

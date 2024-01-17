@@ -10,7 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "WSelectCharacterTurn.h"
-#include "WMovimiento.h"
+#include "WSelectMovementType.h"
 
 UCharacterButton::UCharacterButton(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -38,7 +38,7 @@ void UCharacterButton::OnClick()
 			player->playerchara = character;
 			turn->selectedCharacter = character;
 			player->SetMovementWidget();
-			player->Movement->CreateEndTurnWidget(turn);
+			player->Movement->turn = turn;
 		}
 		selectCharacter->onClickButton();
 	}
