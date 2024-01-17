@@ -55,7 +55,6 @@ public:
 	UFUNCTION() void OnClickNormalFire();
 	UFUNCTION() void OnClickHandToHand();
 	UFUNCTION() void EndTurn();
-
-	UFUNCTION() void CreateEndTurnWidget(class ATurn* turnEnd);
+	UFUNCTION() void DisableButtonByMovementType(enum MovementType type);
 	
 };

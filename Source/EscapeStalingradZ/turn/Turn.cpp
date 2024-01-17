@@ -8,7 +8,7 @@
 #include "EscapeStalingradZ/player/PlayerActions.h"
 #include "Kismet/GameplayStatics.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
-#include "EscapeStalingradZ/widget/WMovimiento.h"
+#include "EscapeStalingradZ/widget/WSelectMovementType.h"
 
 // Sets default values
 ATurn::ATurn()
@@ -42,10 +42,6 @@ void ATurn::SetCharacters(TArray<FIntPoint> charactersList)
 void ATurn::nextCharacter()
 {
 	if (selectedCharacter != nullptr) {
-		APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-		if (player != nullptr) {
-			player->HideMovementWidget();
-		}
 		charactersToStartTurn.Remove(selectedCharacter);
 		SetNextCharacter();
 	}
@@ -65,7 +61,7 @@ void ATurn::SetNextCharacter()
 			player->playerchara = selectedCharacter;
 			player->SetMovementWidget();
 			grid->AddTileState(tile, TileState::Selected);
-			player->Movement->CreateEndTurnWidget(this);
+			player->Movement->turn = this;
 		}
 	}
 	else {

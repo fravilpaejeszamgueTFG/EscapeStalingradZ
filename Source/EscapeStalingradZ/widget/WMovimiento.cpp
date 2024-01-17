@@ -16,6 +16,7 @@
 #include "EscapeStalingradZ/player/PlayerActions.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "EscapeStalingradZ/turn/Turn.h"
+#include "Kismet/GameplayStatics.h"
 
 
 UWMovimiento::UWMovimiento(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -36,6 +37,11 @@ void UWMovimiento::NativeConstruct()
 	buttonNormalFire->OnClicked.AddDynamic(this, &UWMovimiento::OnClickNormalFire);
 	buttonHandToHand->OnClicked.AddDynamic(this, &UWMovimiento::OnClickHandToHand);
 	endTurn->OnClicked.AddDynamic(this, &UWMovimiento::EndTurn);
+
+	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (player != nullptr) {
+		controller = player;
+	}
 }
 
 void UWMovimiento::OnClickForward()
@@ -105,10 +111,28 @@ void UWMovimiento::EndTurn()
 		turn->nextCharacter();
 		controller->actions->command = nullptr;
 	}
+	SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UWMovimiento::CreateEndTurnWidget(ATurn* turnEnd)
+void UWMovimiento::DisableButtonByMovementType(MovementType type)
 {
-	turn = turnEnd;
+	if (type == MovementType::Running) {
+		buttonLateral->SetVisibility(ESlateVisibility::Hidden);
+		buttonBackward->SetVisibility(ESlateVisibility::Hidden);
+		buttonDiagonal->SetVisibility(ESlateVisibility::Visible);
+		buttonForward->SetVisibility(ESlateVisibility::Visible);
+	}
+	else if (type == MovementType::Stationary) {
+		buttonLateral->SetVisibility(ESlateVisibility::Hidden);
+		buttonBackward->SetVisibility(ESlateVisibility::Hidden);
+		buttonDiagonal->SetVisibility(ESlateVisibility::Hidden);
+		buttonForward->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else {
+		buttonLateral->SetVisibility(ESlateVisibility::Visible);
+		buttonBackward->SetVisibility(ESlateVisibility::Visible);
+		buttonDiagonal->SetVisibility(ESlateVisibility::Visible);
+		buttonForward->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
