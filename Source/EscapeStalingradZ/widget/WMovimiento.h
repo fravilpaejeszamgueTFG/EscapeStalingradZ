@@ -41,10 +41,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere) class ATurn* turn;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Grid) class AGrid* grid;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerCharacter* character;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerC* controller;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Command) class UCommand* command;
+	UPROPERTY(VisibleAnywhere, Category = Grid) class AGrid* grid;
+	UPROPERTY(VisibleAnywhere, Category = Character) class APlayerCharacter* character;
+	UPROPERTY(VisibleAnywhere, Category = Character) class APlayerC* controller;
+	UPROPERTY(VisibleAnywhere, Category = Command) class UCommand* command;
 
 	UFUNCTION() void OnClickForward();
 	UFUNCTION() void OnClickAttack();

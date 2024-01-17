@@ -28,10 +28,10 @@ public:
 		class UBoton* buttonStationary;
 
 	UPROPERTY(VisibleAnywhere)
-		class UWMovimiento* actionWidget;
+		class UWActions* actionWidget;
 
 	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<UWMovimiento> actionWidgetClass;
+		TSubclassOf<UWActions> actionWidgetClass;
 
 	UPROPERTY(VisibleAnywhere)
 		class APlayerCharacter* character;
