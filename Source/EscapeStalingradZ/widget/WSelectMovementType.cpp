@@ -2,7 +2,7 @@
 
 
 #include "WSelectMovementType.h"
-#include "WMovimiento.h"
+#include "WActions.h"
 #include "buttons/Boton.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 
@@ -53,7 +53,7 @@ void UWSelectMovementType::CreateOrSetVisibleActionWidget(MovementType type)
 			actionWidget->SetVisibility(ESlateVisibility::Visible);
 		}
 		else {
-			actionWidget = CreateWidget<UWMovimiento>(GetWorld(), actionWidgetClass);
+			actionWidget = CreateWidget<UWActions>(GetWorld(), actionWidgetClass);
 			if (actionWidget != nullptr) {
 				actionWidget->character = character;
 				actionWidget->turn = turn;
