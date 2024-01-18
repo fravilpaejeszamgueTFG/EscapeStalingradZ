@@ -6,6 +6,7 @@
 #include "buttons/Boton.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementRotation.h"
+#include "EscapeStalingradZ/player/actions/ActionOpenCloseDoor.h"
 #include "EscapeStalingradZ/player/actions/Command.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/player/PlayerActions.h"
@@ -22,6 +23,7 @@ void UWOtherActions::NativeConstruct()
 
 
 	buttonRotation->OnClicked.AddDynamic(this, &UWOtherActions::OnClickRotation);
+	buttonOpenCloseDoor->OnClicked.AddDynamic(this, &UWOtherActions::OnClickOpenCloseDoor);
 	goBack->OnClicked.AddDynamic(this, &UWOtherActions::GoBack);
 
 	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
@@ -36,6 +38,15 @@ void UWOtherActions::OnClickRotation()
 	command = NewObject<UActionMovementRotation>(this);
 	command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionMovementRotation>(controller->actions);
+	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+}
+
+void UWOtherActions::OnClickOpenCloseDoor()
+{
+	grid->deleteStatesFromTilesButSelected();
+	command = NewObject<UActionOpenCloseDoor>(this);
+	command->Execute(grid, character);
+	controller->actions->command = NewObject<UActionOpenCloseDoor>(controller->actions);
 	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
