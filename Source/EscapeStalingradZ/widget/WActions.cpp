@@ -47,6 +47,7 @@ void UWActions::OnClickMovement()
 				movementWidget->character = character;
 				movementWidget->turn = turn;
 				movementWidget->grid = grid;
+				movementWidget->actions = this;
 				movementWidget->DisableButtonByMovementType(movementType);
 				movementWidget->AddToViewport();
 			}

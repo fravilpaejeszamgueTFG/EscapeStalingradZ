@@ -163,4 +163,6 @@ public:
 		bool CanShootDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, FIntPoint backward);
 	UFUNCTION()
 		void deleteStatesFromTiles();
+	UFUNCTION()
+		void deleteStatesFromTilesButSelected();
 };
