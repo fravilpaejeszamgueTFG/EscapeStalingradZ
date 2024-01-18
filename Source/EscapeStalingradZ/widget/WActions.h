@@ -36,10 +36,10 @@ public:
 	TSubclassOf<UWMovimiento> movementWidgetClass;
 
 	UPROPERTY(VisibleAnywhere)
-	class UWMovimiento* combatWidget;
+	class UWCombat* combatWidget;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UWMovimiento> combatWidgetClass;
+	TSubclassOf<UWCombat> combatWidgetClass;
 
 	UPROPERTY(VisibleAnywhere)
 	class UWMovimiento* actionWidget;
