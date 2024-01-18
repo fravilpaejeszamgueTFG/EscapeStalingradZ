@@ -23,6 +23,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UBoton* buttonRotation;
 	UPROPERTY(meta = (BindWidget))
+	class UBoton* buttonOpenCloseDoor;
+	UPROPERTY(meta = (BindWidget))
 	class UBoton* goBack;
 
 	UPROPERTY(VisibleAnywhere) class ATurn* turn;
@@ -34,5 +36,6 @@ public:
 	UPROPERTY(VisibleAnywhere) class UWActions* actions;
 
 	UFUNCTION() void OnClickRotation();
+	UFUNCTION() void OnClickOpenCloseDoor();
 	UFUNCTION() void GoBack();
 };

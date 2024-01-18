@@ -96,6 +96,24 @@ TArray<FIntPoint> AGrid::GetTileNeighbors(FIntPoint index)
 	return list;
 }
 
+TArray<FIntPoint> AGrid::GetFrontTiles(FIntPoint index, FVector forwardVector, FVector rightVector)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	FIntPoint forward = index + FIntPoint(round(forwardVector.X), round(forwardVector.Y));
+	FIntPoint right = index + FIntPoint(round(rightVector.X), round(rightVector.Y));
+	FIntPoint left = index - FIntPoint(round(rightVector.X), round(rightVector.Y));
+	if (forward.X >= 0 && forward.X < numberOfTiles.X && forward.Y >= 0 && forward.Y < numberOfTiles.Y) {
+		list.Add(forward);
+	}
+	if (right.X >= 0 && right.X < numberOfTiles.X && right.Y >= 0 && right.Y < numberOfTiles.Y) {
+		list.Add(right);
+	}
+	if (left.X >= 0 && left.X < numberOfTiles.X && left.Y >= 0 && left.Y < numberOfTiles.Y) {
+		list.Add(left);
+	}
+	return list;
+}
+
 FIntPoint AGrid::GetTileIndexFromLocation(FVector location)
 {
 	FVector v = UtilitiesESZ::SnapVectorToVector(location - gridBottomLeftCornerLocation, tileScale)/tileScale;

@@ -121,6 +121,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		TArray<FIntPoint> GetTileNeighbors(FIntPoint index);
 	UFUNCTION()
+		TArray<FIntPoint> GetFrontTiles(FIntPoint index, FVector forwardVector, FVector rightVector);
+	UFUNCTION()
 		void UpdateTileNeighbors(FIntPoint index, bool isadding);
 	UFUNCTION(BlueprintCallable)
 		void SetPlayerStartLocation(class APlayerCharacter* character);
