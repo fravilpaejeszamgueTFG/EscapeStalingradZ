@@ -2,6 +2,7 @@
 
 
 #include "WMovimiento.h"
+#include "WActions.h"
 #include "buttons/Boton.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/player/actions/Command.h"
@@ -36,7 +37,7 @@ void UWMovimiento::NativeConstruct()
 	buttonAttack->OnClicked.AddDynamic(this, &UWMovimiento::OnClickAttack);
 	buttonNormalFire->OnClicked.AddDynamic(this, &UWMovimiento::OnClickNormalFire);
 	buttonHandToHand->OnClicked.AddDynamic(this, &UWMovimiento::OnClickHandToHand);
-	endTurn->OnClicked.AddDynamic(this, &UWMovimiento::EndTurn);
+	goBack->OnClicked.AddDynamic(this, &UWMovimiento::GoBack);
 
 	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	if (player != nullptr) {
@@ -46,6 +47,7 @@ void UWMovimiento::NativeConstruct()
 
 void UWMovimiento::OnClickForward()
 {
+	grid->deleteStatesFromTilesButSelected();
 	command = NewObject<UActionMovementForward>(this);
     command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionMovementForward>(controller->actions);
@@ -59,6 +61,7 @@ void UWMovimiento::OnClickAttack()
 
 void UWMovimiento::OnClickLateral()
 {
+	grid->deleteStatesFromTilesButSelected();
 	command = NewObject<UActionMovementLateral>(this);
 	command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionMovementLateral>(controller->actions);
@@ -67,6 +70,7 @@ void UWMovimiento::OnClickLateral()
 
 void UWMovimiento::OnClickBackward()
 {
+	grid->deleteStatesFromTilesButSelected();
 	command = NewObject<UActionMovementBackward>(this);
 	command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionMovementBackward>(controller->actions);
@@ -75,6 +79,7 @@ void UWMovimiento::OnClickBackward()
 
 void UWMovimiento::OnClickDiagonal()
 {
+	grid->deleteStatesFromTilesButSelected();
 	command = NewObject<UActionDiagonalMovement>(this);
 	command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionDiagonalMovement>(controller->actions);
@@ -83,6 +88,7 @@ void UWMovimiento::OnClickDiagonal()
 
 void UWMovimiento::OnClickRotation()
 {
+	grid->deleteStatesFromTilesButSelected();
 	command = NewObject<UActionMovementRotation>(this);
 	command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionMovementRotation>(controller->actions);
@@ -104,14 +110,13 @@ void UWMovimiento::OnClickHandToHand()
 	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
-void UWMovimiento::EndTurn()
+void UWMovimiento::GoBack()
 {
-	if (turn != nullptr) {
-		grid->deleteStatesFromTiles();
-		turn->nextCharacter();
-		controller->actions->command = nullptr;
-	}
+	grid->deleteStatesFromTilesButSelected();
+	controller->actions->command = nullptr;
 	SetVisibility(ESlateVisibility::Hidden);
+	actions->SetVisibility(ESlateVisibility::Visible);
+
 }
 
 void UWMovimiento::DisableButtonByMovementType(MovementType type)

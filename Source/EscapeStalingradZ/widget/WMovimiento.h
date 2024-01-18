@@ -37,7 +37,7 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UBoton* buttonHandToHand;
 	UPROPERTY(meta = (BindWidget))
-		class UBoton* endTurn;
+		class UBoton* goBack;
 
 	UPROPERTY(VisibleAnywhere) class ATurn* turn;
 
@@ -45,6 +45,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Character) class APlayerCharacter* character;
 	UPROPERTY(VisibleAnywhere, Category = Character) class APlayerC* controller;
 	UPROPERTY(VisibleAnywhere, Category = Command) class UCommand* command;
+	UPROPERTY(VisibleAnywhere) class UWActions* actions;
 
 	UFUNCTION() void OnClickForward();
 	UFUNCTION() void OnClickAttack();
@@ -54,7 +55,7 @@ public:
 	UFUNCTION() void OnClickRotation();
 	UFUNCTION() void OnClickNormalFire();
 	UFUNCTION() void OnClickHandToHand();
-	UFUNCTION() void EndTurn();
+	UFUNCTION() void GoBack();
 	UFUNCTION() void DisableButtonByMovementType(enum MovementType type);
 	
 };
