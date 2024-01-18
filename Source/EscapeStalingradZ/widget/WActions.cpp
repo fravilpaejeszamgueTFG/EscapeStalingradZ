@@ -4,6 +4,7 @@
 #include "WActions.h"
 #include "WMovimiento.h"
 #include "WCombat.h"
+#include "WOtherActions.h"
 #include "buttons/Boton.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
@@ -81,6 +82,23 @@ void UWActions::OnClickCombat()
 
 void UWActions::OnClickActions()
 {
+	if (actionWidgetClass) {
+		if (actionWidget != nullptr) {
+			actionWidget->character = character;
+			actionWidget->SetVisibility(ESlateVisibility::Visible);
+		}
+		else {
+			actionWidget = CreateWidget<UWOtherActions>(GetWorld(), actionWidgetClass);
+			if (actionWidget != nullptr) {
+				actionWidget->character = character;
+				actionWidget->turn = turn;
+				actionWidget->grid = grid;
+				actionWidget->actions = this;
+				actionWidget->AddToViewport();
+			}
+		}
+		SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void UWActions::EndTurn()

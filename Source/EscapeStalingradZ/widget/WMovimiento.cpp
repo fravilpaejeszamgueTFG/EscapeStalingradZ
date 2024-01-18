@@ -9,7 +9,6 @@
 #include "EscapeStalingradZ/player/actions/ActionMovementForward.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementLateral.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementBackward.h"
-#include "EscapeStalingradZ/player/actions/ActionMovementRotation.h"
 #include "EscapeStalingradZ/player/actions/ActionDiagonalMovement.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/player/PlayerActions.h"
@@ -30,7 +29,6 @@ void UWMovimiento::NativeConstruct()
 	buttonLateral->OnClicked.AddDynamic(this, &UWMovimiento::OnClickLateral);
 	buttonBackward->OnClicked.AddDynamic(this, &UWMovimiento::OnClickBackward);
 	buttonDiagonal->OnClicked.AddDynamic(this, &UWMovimiento::OnClickDiagonal);
-	buttonRotation->OnClicked.AddDynamic(this, &UWMovimiento::OnClickRotation);
 	goBack->OnClicked.AddDynamic(this, &UWMovimiento::GoBack);
 
 	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
@@ -72,15 +70,6 @@ void UWMovimiento::OnClickDiagonal()
 	command = NewObject<UActionDiagonalMovement>(this);
 	command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionDiagonalMovement>(controller->actions);
-	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
-}
-
-void UWMovimiento::OnClickRotation()
-{
-	grid->deleteStatesFromTilesButSelected();
-	command = NewObject<UActionMovementRotation>(this);
-	command->Execute(grid, character);
-	controller->actions->command = NewObject<UActionMovementRotation>(controller->actions);
 	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
