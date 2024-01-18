@@ -11,12 +11,9 @@
 #include "EscapeStalingradZ/player/actions/ActionMovementBackward.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementRotation.h"
 #include "EscapeStalingradZ/player/actions/ActionDiagonalMovement.h"
-#include "EscapeStalingradZ/player/actions/ActionNormalFire.h"
-#include "EscapeStalingradZ/player/actions/ActionHandToHand.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/player/PlayerActions.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
-#include "EscapeStalingradZ/turn/Turn.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -34,9 +31,6 @@ void UWMovimiento::NativeConstruct()
 	buttonBackward->OnClicked.AddDynamic(this, &UWMovimiento::OnClickBackward);
 	buttonDiagonal->OnClicked.AddDynamic(this, &UWMovimiento::OnClickDiagonal);
 	buttonRotation->OnClicked.AddDynamic(this, &UWMovimiento::OnClickRotation);
-	buttonAttack->OnClicked.AddDynamic(this, &UWMovimiento::OnClickAttack);
-	buttonNormalFire->OnClicked.AddDynamic(this, &UWMovimiento::OnClickNormalFire);
-	buttonHandToHand->OnClicked.AddDynamic(this, &UWMovimiento::OnClickHandToHand);
 	goBack->OnClicked.AddDynamic(this, &UWMovimiento::GoBack);
 
 	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
@@ -52,11 +46,6 @@ void UWMovimiento::OnClickForward()
     command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionMovementForward>(controller->actions);
 	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
-}
-
-void UWMovimiento::OnClickAttack()
-{
-	character->getArcOfFire();
 }
 
 void UWMovimiento::OnClickLateral()
@@ -92,21 +81,6 @@ void UWMovimiento::OnClickRotation()
 	command = NewObject<UActionMovementRotation>(this);
 	command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionMovementRotation>(controller->actions);
-	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
-}
-
-void UWMovimiento::OnClickNormalFire()
-{
-	command = NewObject<UActionNormalFire>(this);
-	command->Execute(grid, character);
-	controller->actions->command = NewObject<UActionNormalFire>(controller->actions);
-	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
-}
-void UWMovimiento::OnClickHandToHand()
-{
-	command = NewObject<UActionHandToHand>(this);
-	command->Execute(grid, character);
-	controller->actions->command = NewObject<UActionHandToHand>(controller->actions);
 	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
