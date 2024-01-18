@@ -42,10 +42,10 @@ public:
 	TSubclassOf<UWCombat> combatWidgetClass;
 
 	UPROPERTY(VisibleAnywhere)
-	class UWMovimiento* actionWidget;
+	class UWOtherActions* actionWidget;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UWMovimiento> actionWidgetClass;
+	TSubclassOf<UWOtherActions> actionWidgetClass;
 
 	UPROPERTY(VisibleAnywhere)
 	class APlayerCharacter* character;

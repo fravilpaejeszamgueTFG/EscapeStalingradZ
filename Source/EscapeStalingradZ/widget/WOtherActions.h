@@ -4,32 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "WMovimiento.generated.h"
+#include "WOtherActions.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ESCAPESTALINGRADZ_API UWMovimiento : public UUserWidget
+class ESCAPESTALINGRADZ_API UWOtherActions : public UUserWidget
 {
 	GENERATED_BODY()
-
+	
 public:
 
-	UWMovimiento(const FObjectInitializer& ObjectInitializer);
+	UWOtherActions(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(meta = (BindWidget))
-		class UBoton* buttonForward;
+	class UBoton* buttonRotation;
 	UPROPERTY(meta = (BindWidget))
-		class UBoton* buttonLateral;
-	UPROPERTY(meta = (BindWidget))
-		class UBoton* buttonBackward;
-	UPROPERTY(meta = (BindWidget))
-		class UBoton* buttonDiagonal;
-	UPROPERTY(meta = (BindWidget))
-		class UBoton* goBack;
+	class UBoton* goBack;
 
 	UPROPERTY(VisibleAnywhere) class ATurn* turn;
 
@@ -39,11 +33,6 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Command) class UCommand* command;
 	UPROPERTY(VisibleAnywhere) class UWActions* actions;
 
-	UFUNCTION() void OnClickForward();
-	UFUNCTION() void OnClickLateral();
-	UFUNCTION() void OnClickBackward();
-	UFUNCTION() void OnClickDiagonal();
+	UFUNCTION() void OnClickRotation();
 	UFUNCTION() void GoBack();
-	UFUNCTION() void DisableButtonByMovementType(enum MovementType type);
-	
 };
