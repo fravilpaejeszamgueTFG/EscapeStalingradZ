@@ -36,6 +36,5 @@ void UWSelectCharacterTurn::SetCharactersButton(ATurn* turn)
 
 void UWSelectCharacterTurn::onClickButton()
 {
-	charactersList->ClearChildren();
 	SetVisibility(ESlateVisibility::Hidden);
 }

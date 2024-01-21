@@ -33,6 +33,9 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<UWSelectCharacterTurn> turnWidgetClass;
 
+	UPROPERTY(VisibleAnywhere)
+		class AUserHUD* hud;
+
 	UFUNCTION(BlueprintCallable)
 		void SetCharacters(TArray<FIntPoint>  charactersList);
 

@@ -60,7 +60,7 @@ public:
 	class AGrid* grid;
 
 	UPROPERTY(VisibleAnywhere)
-	TEnumAsByte<enum MovementType> movementType;
+	class AUserHUD* hud;
 
 	UFUNCTION() void OnClickMovement();
 	UFUNCTION() void OnClickCombat();

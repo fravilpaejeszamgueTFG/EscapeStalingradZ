@@ -34,6 +34,7 @@ void UWMovimiento::NativeConstruct()
 	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	if (player != nullptr) {
 		controller = player;
+		character = player->playerchara;
 	}
 }
 

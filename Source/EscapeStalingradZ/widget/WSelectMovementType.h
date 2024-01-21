@@ -28,20 +28,16 @@ public:
 		class UBoton* buttonStationary;
 
 	UPROPERTY(VisibleAnywhere)
-		class UWActions* actionWidget;
-
-	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<UWActions> actionWidgetClass;
-
-	UPROPERTY(VisibleAnywhere)
 		class APlayerCharacter* character;
 
 	UPROPERTY(VisibleAnywhere)
 		class ATurn* turn;
 
+	UPROPERTY(VisibleAnywhere)
+		class AUserHUD* hud;
+
 	UFUNCTION() void OnClickRunning();
 	UFUNCTION() void OnClickWalking();
 	UFUNCTION() void OnClickStatic();
-	UFUNCTION() void CreateOrSetVisibleActionWidget(enum MovementType type);
 	
 };
