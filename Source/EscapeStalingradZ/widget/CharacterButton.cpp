@@ -40,6 +40,7 @@ void UCharacterButton::OnClick()
 			player->SetMovementWidget();
 			player->Movement->turn = turn;
 		}
+		character->attacked = false;
 		selectCharacter->onClickButton();
 	}
 }

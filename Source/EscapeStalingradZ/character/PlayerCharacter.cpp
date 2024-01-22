@@ -98,9 +98,42 @@ int APlayerCharacter::getDistanceLoF(TArray<FIntPoint> tiles, FIntPoint index)
 	return cont;
 }
 
+void APlayerCharacter::AttackZombieNormalFire(AZombie* zombie, FIntPoint tileZombie)
+{
+	int mod = GetNumberOfHitModifiersAttack(zombie) + GetNumberOfHitModifiersLoF(tileZombie);
+	int numberOfDices = GetNumberOfDices();
+	TArray<int> dices = TArray<int>();
+	int die = 0;
+	for (int i = 1; i <= numberOfDices; i++) {
+		int nextDie = FMath::RandRange(1, 12);
+		dices.Add(nextDie);
+	}
+	int finalHit = mod + GetPrimaryHitAndMultipleFire(tileZombie);
+	for (int num : dices) {
+		die = num;
+		UE_LOG(LogTemp, Warning, TEXT("dado: %d, finalHit: %d, modificador: %d"), die, finalHit, mod);
+		if (die >= finalHit) {
+			if (die >= finalHit + 3) {
+				zombie->health--;
+				UE_LOG(LogTemp, Warning, TEXT("muerto"));
+				break;
+			}
+			else {
+				zombie->isStunned = true;
+				UE_LOG(LogTemp, Warning, TEXT("estuneado"));
+			}
+		}
+		if (die == 2) {
+			FriendlyFire(tileZombie);
+		}
+	}
+	attacked = true;
+	//TO-DO mejorar dados
+}
+
 void APlayerCharacter::AttackZombieHandToHand(AZombie* zombie, FIntPoint tileZombie)
 {
-	int mod = GetNumberOfHitModifiersAttack(zombie);
+	int mod = GetNumberOfHitModifiersAttack(zombie) + GetNumberOfHitModifiersLoF(tileZombie);
 	int die = FMath::RandRange(1, 12);
 	int finalHit = mod + GetPrimaryHitHandToHand();
 	UE_LOG(LogTemp, Warning, TEXT("dado: %d, finalHit: %d, modificador: %d"), die, finalHit, mod);
@@ -117,6 +150,7 @@ void APlayerCharacter::AttackZombieHandToHand(AZombie* zombie, FIntPoint tileZom
 	if (die == 2) {
 		FriendlyFire(tileZombie);
 	}
+	attacked = true;
 	//TO-DO mejorar dados
 }
 
@@ -169,20 +203,22 @@ int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 	FIntPoint backward = FIntPoint(0, 0);
 	if (LoFs.Find(tileZombie) != nullptr) {
 		for (FIntPoint index : LoFs.Find(tileZombie)->tilesLoF) {
-			if (grid->gridTiles[index].actor != nullptr) {
+			if (index != tileZombie && grid->gridTiles[index].actor != nullptr) {
 				res += 2;
 			}
 			if (grid->gridTiles[index].types.Contains(TileType::Fire)) {
 				res++;
-			} else if (LoFs.Find(tileZombie)->tilesLoF[0]!=index) {
+			}
+			if (LoFs.Find(tileZombie)->tilesLoF[0]!=index) {
 				if (grid->gridTiles[index].types.Contains(TileType::Hinder)) {
-					res += 2; //TO-CHECK
+					res += 2;
 				}
-				if (index.X != backward.X && index.Y != backward.Y) { //TO-CHECK, solo ocurre en diagonales
+				if (index.X != backward.X && index.Y != backward.Y) {
 					FIntPoint forward = GetFowardIndexInDiagonal(index, backward); 
 					FIntPoint right = GetFowardIndexInDiagonal(backward, index); 
+					UE_LOG(LogTemp, Warning, TEXT("es diagonal"));
 					if (!grid->CanMoveDiagonal(index, forward, right, backward)) {
-						res += 2; //TO-CHECK
+						res += 2;
 					}
 				}
 			}
@@ -274,5 +310,15 @@ void APlayerCharacter::FriendlyFire(FIntPoint tileZombie)
 				break;
 			}
 		}
+	}
+}
+
+int APlayerCharacter::GetNumberOfDices()
+{
+	if (useReadyWeapon) {
+		return readyWeapon->rateOfFire;
+	}
+	else {
+		return readySecondaryWeapon->rateOfFire;
 	}
 }

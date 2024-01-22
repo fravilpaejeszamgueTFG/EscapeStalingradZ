@@ -88,6 +88,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int food = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int medkit = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int mp = 4;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Attack) bool attacked = false;
 
 	UPROPERTY(EditAnywhere) FIntPoint startIndex = FIntPoint(7, 6);
 
@@ -110,6 +111,7 @@ public:
 	UFUNCTION() void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
 	UFUNCTION() int getDistanceLoF(TArray<FIntPoint> tiles, FIntPoint index);
+	UFUNCTION() void AttackZombieNormalFire(class AZombie* zombie, FIntPoint tileZombie);
 	UFUNCTION() void AttackZombieHandToHand(class AZombie* zombie, FIntPoint tileZombie);
 	UFUNCTION() int GetDistanceAttackHandToHand();
 	UFUNCTION() TArray<FIntPoint> GetIndexHandToHand2Range();
@@ -119,4 +121,5 @@ public:
 	UFUNCTION() int GetPrimaryHitHandToHand();
 	UFUNCTION() int GetPrimaryHitAndMultipleFire(FIntPoint tileZombie);
 	UFUNCTION() void FriendlyFire(FIntPoint tileZombie);
+	UFUNCTION() int GetNumberOfDices();
 };
