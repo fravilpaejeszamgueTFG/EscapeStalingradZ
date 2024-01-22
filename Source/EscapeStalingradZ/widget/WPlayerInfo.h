@@ -48,8 +48,11 @@ public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 		class UWActions* actionWidget;
 
-	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<UWActions> actionWidgetClass;
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+		class UWObjectives* objectiveWidget;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+		class UWOptions* optionsWidget;
 
 	UPROPERTY(VisibleAnywhere)
 		class ATurn* turn;
@@ -69,6 +72,8 @@ public:
 	UFUNCTION() FText  SetMedKitNumberText();
 	UFUNCTION() ESlateVisibility  SetVisibilitySecondaryWeapon();
 	UFUNCTION() void  UpdateImages();
-	UFUNCTION() void CreateOrSetVisibleActionWidget();
+	UFUNCTION() void SetVisibleActionWidget();
+	UFUNCTION() void SetVisibleOptionsWidget();
+	UFUNCTION() void SetVisibleObjectivesWidget();
 
 };

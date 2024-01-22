@@ -36,7 +36,7 @@ void AUserHUD::CreateOrSetPlayerInfo()
 			PlayerInfoWidget->turn = turn;
 			PlayerInfoWidget->UpdateImages();
 			PlayerInfoWidget->SetVisibility(ESlateVisibility::Visible);
-			PlayerInfoWidget->CreateOrSetVisibleActionWidget();
+			PlayerInfoWidget->SetVisibleActionWidget();
 		}
 		else {
 			PlayerInfoWidget = CreateWidget<UWPlayerInfo>(GetWorld(), PlayerInfoWidgetClass);
@@ -45,7 +45,7 @@ void AUserHUD::CreateOrSetPlayerInfo()
 				PlayerInfoWidget->turn = turn;
 				PlayerInfoWidget->UpdateImages();
 				PlayerInfoWidget->AddToViewport();
-				PlayerInfoWidget->CreateOrSetVisibleActionWidget();
+				PlayerInfoWidget->SetVisibleActionWidget();
 			}
 		}
 	}

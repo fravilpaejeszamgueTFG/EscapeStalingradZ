@@ -6,6 +6,8 @@
 #include "Components/ProgressBar.h"
 #include "Components/Overlay.h"
 #include "WActions.h"
+#include "WObjectives.h"
+#include "WOptions.h"
 
 UWPlayerInfo::UWPlayerInfo(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -26,6 +28,7 @@ void UWPlayerInfo::NativeConstruct()
 	MP->SynchronizeProperties();
 	SecondaryWeapon_Overlay->VisibilityDelegate.BindDynamic(this, &UWPlayerInfo::SetVisibilitySecondaryWeapon);
 	SecondaryWeapon_Overlay->SynchronizeProperties();
+	//TO-DO setear los demas textos y cambiar seteo de vida y overlay para que no ocurra siempre
 	
 }
 
@@ -120,12 +123,26 @@ void UWPlayerInfo::UpdateImages()
 	SetSecondaryWImage();
 }
 
-void UWPlayerInfo::CreateOrSetVisibleActionWidget()
+void UWPlayerInfo::SetVisibleActionWidget()
 {
-	if (actionWidget != nullptr) {
+	if (objectiveWidget != nullptr) {
 		actionWidget->character = character;
 		actionWidget->DisableButtonByMovementType(character->typeOfMovement);
 		actionWidget->turn = turn;
 		actionWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UWPlayerInfo::SetVisibleOptionsWidget()
+{
+	if (optionsWidget != nullptr) {
+		optionsWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UWPlayerInfo::SetVisibleObjectivesWidget()
+{
+	if (objectiveWidget != nullptr) {
+		objectiveWidget->SetVisibility(ESlateVisibility::Visible);
 	}
 }
