@@ -42,7 +42,7 @@ protected:
 
 public:	
 
-	UPROPERTY(EditAnywhere, Category = Weapon) TEnumAsByte<EWeapon> weaponName = EWeapon::None;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon) TEnumAsByte<EWeapon> weaponName = EWeapon::None;
 	UPROPERTY(VisibleAnywhere) int rateOfFire;
 	UPROPERTY(VisibleAnywhere) int primaryHit;
 	UPROPERTY(VisibleAnywhere) int pointBlankRange;

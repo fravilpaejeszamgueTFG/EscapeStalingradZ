@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "EscapeStalingradZ/widget/WSelectMovementType.h"
+#include "EscapeStalingradZ/widget/UserHUD.h"
 
 // Sets default values
 ATurn::ATurn()
@@ -22,7 +23,9 @@ ATurn::ATurn()
 void ATurn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	hud->turn = this;
 }
 
 void ATurn::SetCharacters(TArray<FIntPoint> charactersList)
@@ -65,6 +68,7 @@ void ATurn::SetNextCharacter()
 		}
 	}
 	else {
+		hud->HidePlayerInfo();
 		charactersToStartTurn = characters;
 		endTurnHuman = true;
 		UE_LOG(LogTemp, Warning, TEXT("Turno humano terminado"));

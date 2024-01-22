@@ -12,6 +12,7 @@
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "EscapeStalingradZ/turn/Turn.h"
 #include "Kismet/GameplayStatics.h"
+#include "EscapeStalingradZ/widget/UserHUD.h"
 
 UWActions::UWActions(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -32,7 +33,9 @@ void UWActions::NativeConstruct()
 	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	if (player != nullptr) {
 		controller = player;
+		character = player->playerchara;
 	}
+	hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 }
 
 void UWActions::OnClickMovement()
@@ -40,7 +43,7 @@ void UWActions::OnClickMovement()
 	if (movementWidgetClass) {
 		if (movementWidget != nullptr) {
 			movementWidget->character = character;
-			movementWidget->DisableButtonByMovementType(movementType);
+			movementWidget->DisableButtonByMovementType(character->typeOfMovement);
 			movementWidget->SetVisibility(ESlateVisibility::Visible);
 		}
 		else {
@@ -50,7 +53,7 @@ void UWActions::OnClickMovement()
 				movementWidget->turn = turn;
 				movementWidget->grid = grid;
 				movementWidget->actions = this;
-				movementWidget->DisableButtonByMovementType(movementType);
+				movementWidget->DisableButtonByMovementType(character->typeOfMovement);
 				movementWidget->AddToViewport();
 			}
 		}
@@ -109,11 +112,11 @@ void UWActions::EndTurn()
 		controller->actions->command = nullptr;
 	}
 	SetVisibility(ESlateVisibility::Hidden);
+	hud->HidePlayerInfo();
 }
 
 void UWActions::DisableButtonByMovementType(MovementType type)
 {
-	movementType = type;
 	if (type == MovementType::Running) {
 		buttonMovement->SetVisibility(ESlateVisibility::Visible);
 	}
