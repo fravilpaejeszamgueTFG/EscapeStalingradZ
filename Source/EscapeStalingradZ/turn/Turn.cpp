@@ -57,6 +57,7 @@ void ATurn::SetNextCharacter()
 	}
 	else if (charactersToStartTurn.Num() == 1) {
 		selectedCharacter = charactersToStartTurn[0];
+		selectedCharacter->attacked = false;
 		APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 		if (player != nullptr && player->actions != nullptr) {
 			FIntPoint tile = grid->GetTileIndexFromLocation(selectedCharacter->GetActorLocation());

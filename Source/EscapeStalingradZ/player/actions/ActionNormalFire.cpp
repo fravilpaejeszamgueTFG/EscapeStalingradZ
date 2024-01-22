@@ -4,13 +4,14 @@
 #include "ActionNormalFire.h"
 #include "EscapeStalingradZ/grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
+#include "EscapeStalingradZ/zombies/Zombie.h"
 
 void UActionNormalFire::Execute(AGrid* grid, APlayerCharacter* character)
 {
 	if (grid != nullptr && character != nullptr) {
 		FIntPoint indice = grid->GetTileIndexFromLocation(character->GetActorLocation());
 		TArray<FIntPoint> list = TArray<FIntPoint>();
-		int d = 100000;
+		int d = 100;
 		for (auto iter = character->LoFs.begin(); iter != character->LoFs.end(); ++iter) {
 			if (list.Num() == 0) {
 				list.Add(iter.Key());
@@ -42,6 +43,10 @@ void UActionNormalFire::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTil
 				if (grid->gridTiles[destinyTile].states.Contains(TileState::isReachable)) {
 					grid->RemoveTileState(destinyTile, TileState::Hovered);
 					grid->DeActivateParticleLoF();
+					AZombie* zombie = Cast<AZombie>(grid->gridTiles[destinyTile].actor);
+					if (zombie != nullptr) {
+						character->AttackZombieNormalFire(zombie, destinyTile);
+					}
 					//TO-DO
 				}
 			}
