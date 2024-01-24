@@ -88,7 +88,6 @@ void ATurn::SetNextCharacter()
 		}
 		else {
 			UE_LOG(LogTemp, Warning, TEXT("Empieza turno zombie"));
-			SpawnZombies();
 			zombiesToStartTurn = zombies;
 			SetNextZombie();
 		}
@@ -150,13 +149,14 @@ void ATurn::SetNextZombie()
 {
 	if (zombiesToStartTurn.Num() > 0) {
 		selectedZombie = zombiesToStartTurn[0];
-		//TO-DO
+		//TO-DO hacer acciones de zombies
 		UE_LOG(LogTemp, Warning, TEXT("Turno zombie empieza y acaba, pasa al siguiente"));
 		nextZombie();
 	}
 	else {
 		endTurnZombie = true;
 		selectedZombie = nullptr;
+		SpawnZombies();
 		if (endTurnHuman) {
 			EndTurn();
 		}
@@ -178,12 +178,10 @@ void ATurn::SpawnZombies()
 			zombiesToEnterGrid.Remove(newZombie);
 			newZombie->startIndex = tile;
 			if (grid->gridTiles[tile].actor == nullptr) {
-				UE_LOG(LogTemp, Warning, TEXT("No hay nadie en la casilla"));
 				grid->SetZombieStartLocation(newZombie);
 				zombies.Add(newZombie);
 			}
 			else {
-				UE_LOG(LogTemp, Warning, TEXT("hay alguien en la casilla"));
 				AZombie* zombieInTile = Cast<AZombie>(grid->gridTiles[tile].actor);
 				if (zombieInTile != nullptr) {
 					if (zombiesWaitingToEnterGrid.Contains(tile)) {
@@ -202,16 +200,62 @@ void ATurn::SpawnZombies()
 					}
 				}
 			}
-			
 		}
 	}
 }
 
 void ATurn::StartTurn()
 {
+	if (isFubar) {
+		if (roundNumber == 0) {
+			//TO-DO Hacer tutorial primera ronda (movimientos basicos)
+		}
+		else if (roundNumber == 1) {
+			//TO-DO Hacer tutorial segunda ronda (buscar objeto)
+		}
+		else if (roundNumber == 2) {
+			//TO-DO Hacer tutorial tercera ronda (acciones (rotar,abrir/cerrar puerta))
+		}
+		else if (roundNumber == 3) {
+			//TO-DO Hacer tutorial en cuarta ronda (iniciativa y combate)
+		}
+		else if (roundNumber > 3) {
+			Initiative();
+		}
+	}
+	else {
+		Initiative();
+	}
+}
+
+void ATurn::Initiative()
+{
 	charactersToStartTurn = characters;
 	//empieza jugando el jugador
-	SetNextCharacter();
+	int humanDie = FMath::RandRange(1, 12);
+	int zombieDie = FMath::RandRange(1, 12);
+	int finalZombieDie = zombieDie - 4;
+	for (AZombie* z : zombies) {
+		if (z->typeOfZombie == ZombieType::Alpha) {
+			finalZombieDie += 4;
+			break;
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Dado humano = %d"), humanDie);
+	UE_LOG(LogTemp, Warning, TEXT("Dado zombie = %d"), zombieDie);
+	UE_LOG(LogTemp, Warning, TEXT("Dado zombie final = %d"), finalZombieDie);
+	//TO-DO hacer esto en el dado
+	if (humanDie > finalZombieDie) {
+		//TO-DO Elegir jugador activo (otra interfaz...)
+		SetNextCharacter();
+	}
+	else if (humanDie == finalZombieDie) {
+		StartTurn();
+	}
+	else {
+		zombiesToStartTurn = zombies;
+		SetNextZombie();
+	}
 }
 
 void ATurn::EndTurn()
