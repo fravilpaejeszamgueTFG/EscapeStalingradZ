@@ -56,7 +56,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = zombies) class AZombie* selectedZombie;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = turn) bool endTurnZombie = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = turn) int roundNumber = 0;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Map) bool isFubar = true;
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Map) bool isFubar = true;
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category = turn)
 		TArray<FIntPoint> spawnZombiesTiles; //indica donde poner un zombie en la ronda del indice del array. Si FIntPoint = -1,-1 -> no spawnea.
 
@@ -97,6 +97,9 @@ public:
 
 	UFUNCTION()
 		void StartTurn();
+
+	UFUNCTION()
+		void Initiative();
 
 	UFUNCTION()
 		void EndTurn();

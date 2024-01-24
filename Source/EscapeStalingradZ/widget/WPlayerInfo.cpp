@@ -18,11 +18,11 @@ void UWPlayerInfo::NativeConstruct()
 
 	Super::NativeConstruct();
 
-	HealthBar->PercentDelegate.BindDynamic(this, &UWPlayerInfo::SetHealthBar);;
+	HealthBar->PercentDelegate.BindDynamic(this, &UWPlayerInfo::SetHealthBar);
 	HealthBar->SynchronizeProperties();
-	MPBar->PercentDelegate.BindDynamic(this, &UWPlayerInfo::SetMPBar);;
+	MPBar->PercentDelegate.BindDynamic(this, &UWPlayerInfo::SetMPBar);
 	MPBar->SynchronizeProperties();
-	health->TextDelegate.BindDynamic(this, &UWPlayerInfo::SetHealthText);;
+	health->TextDelegate.BindDynamic(this, &UWPlayerInfo::SetHealthText);
 	health->SynchronizeProperties();
 	MP->TextDelegate.BindDynamic(this, &UWPlayerInfo::SetMPText);
 	MP->SynchronizeProperties();
