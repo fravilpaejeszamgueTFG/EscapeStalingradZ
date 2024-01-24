@@ -5,9 +5,11 @@
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Components/Overlay.h"
+#include "Components/Button.h"
 #include "WActions.h"
 #include "WObjectives.h"
 #include "WOptions.h"
+#include "Styling/SlateTypes.h"
 
 UWPlayerInfo::UWPlayerInfo(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -28,6 +30,9 @@ void UWPlayerInfo::NativeConstruct()
 	MP->SynchronizeProperties();
 	SecondaryWeapon_Overlay->VisibilityDelegate.BindDynamic(this, &UWPlayerInfo::SetVisibilitySecondaryWeapon);
 	SecondaryWeapon_Overlay->SynchronizeProperties();
+
+	ButtonReadyWeapon->OnClicked.AddDynamic(this, &UWPlayerInfo::OnClickReadyWeapon);
+	ButtonSecondaryWeapon->OnClicked.AddDynamic(this, &UWPlayerInfo::OnClickSecondaryWeapon);
 	//TO-DO setear los demas textos y cambiar seteo de vida y overlay para que no ocurra siempre
 	
 }
@@ -129,20 +134,36 @@ void UWPlayerInfo::SetVisibleActionWidget()
 		actionWidget->character = character;
 		actionWidget->DisableButtonByMovementType(character->typeOfMovement);
 		actionWidget->turn = turn;
-		actionWidget->SetVisibility(ESlateVisibility::Visible);
+		actionWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 }
 
 void UWPlayerInfo::SetVisibleOptionsWidget()
 {
 	if (optionsWidget != nullptr) {
-		optionsWidget->SetVisibility(ESlateVisibility::Visible);
+		optionsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 }
 
 void UWPlayerInfo::SetVisibleObjectivesWidget()
 {
 	if (objectiveWidget != nullptr) {
-		objectiveWidget->SetVisibility(ESlateVisibility::Visible);
+		objectiveWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+}
+
+void UWPlayerInfo::OnClickReadyWeapon()
+{
+	if (character != nullptr) {
+		character->useReadyWeapon = true;
+		SetUseReadyWeaponColor();
+	}
+}
+
+void UWPlayerInfo::OnClickSecondaryWeapon()
+{
+	if (character != nullptr) {
+		character->useReadyWeapon = false;
+		SetUseSecondaryWeaponColor();
 	}
 }

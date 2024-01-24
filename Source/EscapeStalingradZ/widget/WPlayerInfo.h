@@ -44,6 +44,10 @@ public:
 		class UImage* SecondaryWeapon_Image;
 	UPROPERTY(meta = (BindWidget))
 		class UOverlay* SecondaryWeapon_Overlay;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+		class UButton* ButtonReadyWeapon;
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+		class UButton* ButtonSecondaryWeapon;
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 		class UWActions* actionWidget;
@@ -75,5 +79,9 @@ public:
 	UFUNCTION() void SetVisibleActionWidget();
 	UFUNCTION() void SetVisibleOptionsWidget();
 	UFUNCTION() void SetVisibleObjectivesWidget();
+	UFUNCTION() void OnClickReadyWeapon();
+	UFUNCTION() void OnClickSecondaryWeapon();
+	UFUNCTION(BlueprintImplementableEvent) void SetUseReadyWeaponColor();
+	UFUNCTION(BlueprintImplementableEvent) void SetUseSecondaryWeaponColor();
 
 };
