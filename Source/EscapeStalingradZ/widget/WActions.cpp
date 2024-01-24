@@ -44,7 +44,7 @@ void UWActions::OnClickMovement()
 		if (movementWidget != nullptr) {
 			movementWidget->character = character;
 			movementWidget->DisableButtonByMovementType(character->typeOfMovement);
-			movementWidget->SetVisibility(ESlateVisibility::Visible);
+			movementWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 		else {
 			movementWidget = CreateWidget<UWMovimiento>(GetWorld(), movementWidgetClass);
@@ -66,7 +66,7 @@ void UWActions::OnClickCombat()
 	if (combatWidgetClass) {
 		if (combatWidget != nullptr) {
 			combatWidget->character = character;
-			combatWidget->SetVisibility(ESlateVisibility::Visible);
+			combatWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 		else {
 			combatWidget = CreateWidget<UWCombat>(GetWorld(), combatWidgetClass);
@@ -88,7 +88,7 @@ void UWActions::OnClickActions()
 	if (actionWidgetClass) {
 		if (actionWidget != nullptr) {
 			actionWidget->character = character;
-			actionWidget->SetVisibility(ESlateVisibility::Visible);
+			actionWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 		else {
 			actionWidget = CreateWidget<UWOtherActions>(GetWorld(), actionWidgetClass);
