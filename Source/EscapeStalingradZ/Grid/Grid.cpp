@@ -394,6 +394,9 @@ TArray<FIntPoint> AGrid::GetTilesDiagonals(FIntPoint index, FVector forwardVecto
 			if (!CanMoveDiagonal(tile, forward, right, backward)) {
 				break;
 			}
+			if (gridTiles[forward].types.Contains(TileType::Fire) || gridTiles[right].types.Contains(TileType::Fire)) {
+				break;
+			}
 			if (gridTiles[tile].types.Contains(TileType::Hinder)) {
 				cont++;
 			}

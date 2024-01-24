@@ -2,6 +2,7 @@
 
 
 #include "Turn.h"
+#include "Components/BoxComponent.h"
 #include "EscapeStalingradZ/grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/widget/WSelectCharacterTurn.h"
@@ -10,12 +11,21 @@
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "EscapeStalingradZ/widget/WSelectMovementType.h"
 #include "EscapeStalingradZ/widget/UserHUD.h"
+#include "EscapeStalingradZ/zombies/Zombie.h"
 
 // Sets default values
 ATurn::ATurn()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+
+	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(FName("DefaultSceneRoot"));
+	SetRootComponent(DefaultSceneRoot);
+
+	boxCollision = CreateDefaultSubobject<UBoxComponent>("boxCollision");
+	boxCollision->SetupAttachment(DefaultSceneRoot);
+
+	SetActorEnableCollision(true);
 
 }
 
@@ -26,6 +36,8 @@ void ATurn::BeginPlay()
 
 	hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	hud->turn = this;
+
+	GetWorldTimerManager().SetTimer(WaitTimer, this, &ATurn::ActivateCollision, 0.6, false);
 }
 
 void ATurn::SetCharacters(TArray<FIntPoint> charactersList)
@@ -37,8 +49,6 @@ void ATurn::SetCharacters(TArray<FIntPoint> charactersList)
 				characters.Add(chara);
 			}
 		}
-		charactersToStartTurn = characters;
-		SetNextCharacter();
 	}
 }
 
@@ -73,6 +83,15 @@ void ATurn::SetNextCharacter()
 		charactersToStartTurn = characters;
 		endTurnHuman = true;
 		UE_LOG(LogTemp, Warning, TEXT("Turno humano terminado"));
+		if (endTurnZombie) {
+			EndTurn();
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("Empieza turno zombie"));
+			SpawnZombies();
+			zombiesToStartTurn = zombies;
+			SetNextZombie();
+		}
 	}
 }
 
@@ -93,5 +112,113 @@ void ATurn::CreateSelectCharacterTurnWidget()
 			}
 		}
 	}
+}
+
+void ATurn::ActivateCollision()
+{
+	TArray<AActor*> z;
+	GetOverlappingActors(z);
+	for (AActor* i : z) {
+		AZombie* zombie = Cast<AZombie>(i);
+		if (zombie != nullptr) {
+			zombie->SetActorEnableCollision(false);
+			zombiesToEnterGrid.Add(zombie);
+		}
+	}
+	if (zombiesToEnterGrid.Num() > 0) {
+		// Shuffle the zombies
+		const int32 NumShuffles = zombiesToEnterGrid.Num() - 1;
+		for (int32 i = 0; i < NumShuffles; ++i)
+		{
+			int32 SwapIdx = FMath::RandRange(i, NumShuffles);
+			zombiesToEnterGrid.Swap(i, SwapIdx);
+		}
+	}
+	SetActorEnableCollision(false);
+	StartTurn();
+}
+
+void ATurn::nextZombie()
+{
+	if (selectedZombie != nullptr) {
+		zombiesToStartTurn.Remove(selectedZombie);
+		SetNextZombie();
+	}
+}
+
+void ATurn::SetNextZombie()
+{
+	if (zombiesToStartTurn.Num() > 0) {
+		selectedZombie = zombiesToStartTurn[0];
+		//TO-DO
+		UE_LOG(LogTemp, Warning, TEXT("Turno zombie empieza y acaba, pasa al siguiente"));
+		nextZombie();
+	}
+	else {
+		endTurnZombie = true;
+		selectedZombie = nullptr;
+		if (endTurnHuman) {
+			EndTurn();
+		}
+		else {
+			charactersToStartTurn = characters;
+			SetNextCharacter();
+			UE_LOG(LogTemp, Warning, TEXT("Empieza turno humano"));
+		}
+	}
+}
+
+void ATurn::SpawnZombies()
+{
+	if (spawnZombiesTiles.Num() > 0) {
+		int numRound = roundNumber % spawnZombiesTiles.Num();
+		FIntPoint tile = spawnZombiesTiles[numRound];
+		if (tile != FIntPoint(-1, -1) && zombiesToEnterGrid.Num() > 0) {
+			AZombie* newZombie = zombiesToEnterGrid[0];
+			zombiesToEnterGrid.Remove(newZombie);
+			newZombie->startIndex = tile;
+			if (grid->gridTiles[tile].actor == nullptr) {
+				UE_LOG(LogTemp, Warning, TEXT("No hay nadie en la casilla"));
+				grid->SetZombieStartLocation(newZombie);
+				zombies.Add(newZombie);
+			}
+			else {
+				UE_LOG(LogTemp, Warning, TEXT("hay alguien en la casilla"));
+				AZombie* zombieInTile = Cast<AZombie>(grid->gridTiles[tile].actor);
+				if (zombieInTile != nullptr) {
+					if (zombiesWaitingToEnterGrid.Contains(tile)) {
+						zombiesWaitingToEnterGrid[tile].zombies.Add(newZombie);
+					}
+					else {
+						TArray<AZombie*> z = TArray<AZombie*>();
+						z.Add(newZombie);
+						zombiesWaitingToEnterGrid.Add(tile, FZombiesWaiting(z));
+					}
+				}
+				else {
+					APlayerCharacter* characterInTile = Cast<APlayerCharacter>(grid->gridTiles[tile].actor);
+					if (characterInTile != nullptr) {
+						//TO-DO quitar vida personaje y que el jugador elija a que casilla lo empuja.
+					}
+				}
+			}
+			
+		}
+	}
+}
+
+void ATurn::StartTurn()
+{
+	charactersToStartTurn = characters;
+	//empieza jugando el jugador
+	SetNextCharacter();
+}
+
+void ATurn::EndTurn()
+{
+	endTurnZombie = false;
+	endTurnHuman = false;
+	roundNumber++;
+	StartTurn();
 }
 

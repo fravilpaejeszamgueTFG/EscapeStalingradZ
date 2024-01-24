@@ -6,6 +6,25 @@
 #include "GameFramework/Actor.h"
 #include "Turn.generated.h"
 
+USTRUCT(BlueprintType)
+struct FZombiesWaiting
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = ZombiesWaiting)
+		TArray<class AZombie*> zombies;
+
+	FZombiesWaiting()
+	{
+	};
+
+	FZombiesWaiting(TArray<class AZombie*> zombiesw)
+	{
+		this->zombies = zombiesw;
+	}
+};
+
 UCLASS()
 class ESCAPESTALINGRADZ_API ATurn : public AActor
 {
@@ -21,11 +40,25 @@ protected:
 
 public:	
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) USceneComponent* DefaultSceneRoot;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) class UBoxComponent* boxCollision;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Grid) class AGrid* grid;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = characters) TArray<class APlayerCharacter*> characters;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = characters) TArray<class APlayerCharacter*> charactersToStartTurn;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = characters) class APlayerCharacter* selectedCharacter;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = turn) bool endTurnHuman = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = zombies) TArray<class AZombie*> zombies;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = zombies) TArray<class AZombie*> zombiesToStartTurn;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = zombies) TArray<class AZombie*> zombiesDied;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = zombies) TArray<class AZombie*> zombiesToEnterGrid;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = zombies) TMap<FIntPoint, FZombiesWaiting> zombiesWaitingToEnterGrid;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = zombies) class AZombie* selectedZombie;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = turn) bool endTurnZombie = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = turn) int roundNumber = 0;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Map) bool isFubar = true;
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category = turn)
+		TArray<FIntPoint> spawnZombiesTiles; //indica donde poner un zombie en la ronda del indice del array. Si FIntPoint = -1,-1 -> no spawnea.
 
 	UPROPERTY(VisibleAnywhere)
 		class UWSelectCharacterTurn* turnWidget;
@@ -47,5 +80,25 @@ public:
 
 	UFUNCTION()
 		void CreateSelectCharacterTurnWidget();
+
+	FTimerHandle WaitTimer;
+
+	UFUNCTION()
+		void ActivateCollision();
+
+	UFUNCTION()
+		void nextZombie();
+
+	UFUNCTION()
+		void SetNextZombie();
+
+	UFUNCTION()
+		void SpawnZombies();
+
+	UFUNCTION()
+		void StartTurn();
+
+	UFUNCTION()
+		void EndTurn();
 
 };
