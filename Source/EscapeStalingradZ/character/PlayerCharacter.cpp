@@ -111,20 +111,31 @@ void APlayerCharacter::AttackZombieNormalFire(AZombie* zombie, FIntPoint tileZom
 	int finalHit = mod + GetPrimaryHitAndMultipleFire(tileZombie);
 	for (int num : dices) {
 		die = num;
-		UE_LOG(LogTemp, Warning, TEXT("dado: %d, finalHit: %d, modificador: %d"), die, finalHit, mod);
-		if (die >= finalHit) {
-			if (die >= finalHit + 3) {
-				zombie->health--;
-				UE_LOG(LogTemp, Warning, TEXT("muerto"));
+		//Comprobar ammo con cada dado
+		if (die == 1) {
+			ammo--;
+			UE_LOG(LogTemp, Warning, TEXT("Se me ha encasquillao"));
+			if (ammo <= 0) {
+				UE_LOG(LogTemp, Warning, TEXT("Sin balas. Perfecto"));
 				break;
 			}
-			else {
-				zombie->isStunned = true;
-				UE_LOG(LogTemp, Warning, TEXT("estuneado"));
-			}
 		}
-		if (die == 2) {
-			FriendlyFire(tileZombie);
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("dado: %d, finalHit: %d, modificador: %d"), die, finalHit, mod);
+			if (die >= finalHit) {
+				if (die >= finalHit + 3) {
+					zombie->health--;
+					UE_LOG(LogTemp, Warning, TEXT("muerto"));
+					break;
+				}
+				else {
+					zombie->isStunned = true;
+					UE_LOG(LogTemp, Warning, TEXT("estuneado"));
+				}
+			}
+			if (die == 2) {
+				FriendlyFire(tileZombie);
+			}
 		}
 	}
 	attacked = true;

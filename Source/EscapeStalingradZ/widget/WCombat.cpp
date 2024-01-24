@@ -26,6 +26,13 @@ void UWCombat::NativeConstruct()
 	buttonHandToHand->OnClicked.AddDynamic(this, &UWCombat::OnClickHandToHand);
 	goBack->OnClicked.AddDynamic(this, &UWCombat::GoBack);
 
+	buttonNormalFire->bIsEnabledDelegate.BindDynamic(this, &UWCombat::CanFireWeapon);
+	buttonNormalFire->SynchronizeProperties();
+	buttonSpreadFire->bIsEnabledDelegate.BindDynamic(this, &UWCombat::CanFireWeapon);
+	buttonSpreadFire->SynchronizeProperties();
+
+
+
 	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	if (player != nullptr) {
 		controller = player;
@@ -59,4 +66,17 @@ void UWCombat::GoBack()
 	controller->actions->command = nullptr;
 	SetVisibility(ESlateVisibility::Hidden);
 	actions->SetVisibility(ESlateVisibility::Visible);
+}
+
+bool UWCombat::CanFireWeapon()
+{
+	if (character != nullptr && character->ammo>0) {
+		if (character->useReadyWeapon && character->readyWeapon->multipleRange > 0) {
+			return true;
+		}
+		if (!character->useReadyWeapon && character->readySecondaryWeapon->multipleRange > 0) {
+			return true;
+		}
+	}
+	return false;
 }
