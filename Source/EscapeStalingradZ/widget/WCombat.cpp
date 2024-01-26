@@ -26,9 +26,9 @@ void UWCombat::NativeConstruct()
 	buttonHandToHand->OnClicked.AddDynamic(this, &UWCombat::OnClickHandToHand);
 	goBack->OnClicked.AddDynamic(this, &UWCombat::GoBack);
 
-	buttonNormalFire->bIsEnabledDelegate.BindDynamic(this, &UWCombat::CanFireWeapon);
+	buttonNormalFire->VisibilityDelegate.BindDynamic(this, &UWCombat::CanFireWeapon);
 	buttonNormalFire->SynchronizeProperties();
-	buttonSpreadFire->bIsEnabledDelegate.BindDynamic(this, &UWCombat::CanFireWeapon);
+	buttonSpreadFire->VisibilityDelegate.BindDynamic(this, &UWCombat::CanFireWeapon);
 	buttonSpreadFire->SynchronizeProperties();
 
 
@@ -68,15 +68,15 @@ void UWCombat::GoBack()
 	actions->SetVisibility(ESlateVisibility::Visible);
 }
 
-bool UWCombat::CanFireWeapon()
+ESlateVisibility UWCombat::CanFireWeapon()
 {
 	if (character != nullptr && character->ammo>0) {
 		if (character->useReadyWeapon && character->readyWeapon->multipleRange > 0) {
-			return true;
+			return ESlateVisibility::Visible;
 		}
 		if (!character->useReadyWeapon && character->readySecondaryWeapon->multipleRange > 0) {
-			return true;
+			return ESlateVisibility::Visible;
 		}
 	}
-	return false;
+	return ESlateVisibility::Hidden;
 }
