@@ -42,6 +42,6 @@ public:
 	UFUNCTION() void OnClickHandToHand();
 	UFUNCTION() void GoBack();
 
-	UFUNCTION() bool CanFireWeapon();
+	UFUNCTION() ESlateVisibility CanFireWeapon();
 
 };
