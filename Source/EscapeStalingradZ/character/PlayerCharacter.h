@@ -116,7 +116,7 @@ public:
 	UFUNCTION() int GetDistanceAttackHandToHand();
 	UFUNCTION() TArray<FIntPoint> GetIndexHandToHand2Range();
 	UFUNCTION() int GetNumberOfHitModifiersLoF(FIntPoint tileZombie);
-	UFUNCTION() FIntPoint GetFowardIndexInDiagonal(FIntPoint start, FIntPoint end);
+	UFUNCTION() FIntPoint GetForwardIndexInDiagonal(FIntPoint start, FIntPoint end);
 	UFUNCTION() int GetNumberOfHitModifiersAttack(class AZombie* zombie);
 	UFUNCTION() int GetPrimaryHitHandToHand();
 	UFUNCTION() int GetPrimaryHitAndMultipleFire(FIntPoint tileZombie);

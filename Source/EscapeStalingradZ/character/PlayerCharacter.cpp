@@ -225,8 +225,8 @@ int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 					res += 2;
 				}
 				if (index.X != backward.X && index.Y != backward.Y) {
-					FIntPoint forward = GetFowardIndexInDiagonal(index, backward); 
-					FIntPoint right = GetFowardIndexInDiagonal(backward, index); 
+					FIntPoint forward = GetForwardIndexInDiagonal(index, backward); 
+					FIntPoint right = GetForwardIndexInDiagonal(backward, index); 
 					UE_LOG(LogTemp, Warning, TEXT("es diagonal"));
 					if (!grid->CanMoveDiagonal(index, forward, right, backward)) {
 						res += 2;
@@ -242,7 +242,7 @@ int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 	return res;
 }
 
-FIntPoint APlayerCharacter::GetFowardIndexInDiagonal(FIntPoint start, FIntPoint end)
+FIntPoint APlayerCharacter::GetForwardIndexInDiagonal(FIntPoint start, FIntPoint end)
 {
 	return FIntPoint(end.X, start.Y);
 }
