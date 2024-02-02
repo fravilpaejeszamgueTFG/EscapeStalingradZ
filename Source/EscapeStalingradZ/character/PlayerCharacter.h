@@ -107,6 +107,12 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Movement) TEnumAsByte<MovementType> typeOfMovement;
 	UPROPERTY(VisibleAnywhere, Category = Covering) TEnumAsByte<CoveringType> typeOfCovering;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+		TSubclassOf<class UWDicesCombat> DicesCombatWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
+		class UWDicesCombat* DicesCombatWidget;
+
 	//Funciones
 	UFUNCTION() void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
@@ -122,4 +128,6 @@ public:
 	UFUNCTION() int GetPrimaryHitAndMultipleFire(FIntPoint tileZombie);
 	UFUNCTION() void FriendlyFire(FIntPoint tileZombie);
 	UFUNCTION() int GetNumberOfDices();
+	UFUNCTION() void CreateOrSetDicesCombatWidget(class AZombie* zombie, TArray<int> dice, int targetDie, bool isHandToHand);
+	UFUNCTION() void FriendlyFireGivenZombie(class AZombie* zombie);
 };

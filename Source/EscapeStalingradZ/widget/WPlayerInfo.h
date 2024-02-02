@@ -84,4 +84,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent) void SetUseReadyWeaponColor();
 	UFUNCTION(BlueprintImplementableEvent) void SetUseSecondaryWeaponColor();
 
+	UFUNCTION()
+		void HidePlayerInfoDuringCombat(class AZombie* zombie);
+	UFUNCTION()
+		void UnhidePlayerInfoDuringCombat();
+
 };

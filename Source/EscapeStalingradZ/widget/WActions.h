@@ -66,6 +66,7 @@ public:
 	UFUNCTION() void OnClickCombat();
 	UFUNCTION() void OnClickActions();
 	UFUNCTION() void EndTurn();
+	UFUNCTION() void HideWidgets();
 	UFUNCTION() void DisableButtonByMovementType(enum MovementType type);
 
 };

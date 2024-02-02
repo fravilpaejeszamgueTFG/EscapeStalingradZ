@@ -67,6 +67,12 @@ public:
 		TSubclassOf<UWSelectCharacterTurn> turnWidgetClass;
 
 	UPROPERTY(VisibleAnywhere)
+		class UWDicesTurn* turnDicesWidget;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<UWDicesTurn> turnDicesWidgetClass;
+
+	UPROPERTY(VisibleAnywhere)
 		class AUserHUD* hud;
 
 	UFUNCTION(BlueprintCallable)
@@ -99,9 +105,15 @@ public:
 		void StartTurn();
 
 	UFUNCTION()
+		void ZombiesStartTurn();
+
+	UFUNCTION()
 		void Initiative();
 
 	UFUNCTION()
 		void EndTurn();
+
+	UFUNCTION()
+		void CreateOrSetTurnDicesWidget(int humanDie, int targetDie);
 
 };

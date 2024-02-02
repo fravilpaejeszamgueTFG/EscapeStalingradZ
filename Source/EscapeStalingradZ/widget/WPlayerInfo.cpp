@@ -10,6 +10,8 @@
 #include "WObjectives.h"
 #include "WOptions.h"
 #include "Styling/SlateTypes.h"
+#include "EscapeStalingradZ/grid/Grid.h"
+#include "EscapeStalingradZ/zombies/Zombie.h"
 
 UWPlayerInfo::UWPlayerInfo(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -166,4 +168,23 @@ void UWPlayerInfo::OnClickSecondaryWeapon()
 		character->useReadyWeapon = false;
 		SetUseSecondaryWeaponColor();
 	}
+}
+
+void UWPlayerInfo::HidePlayerInfoDuringCombat(AZombie* zombie)
+{
+	SetVisibility(ESlateVisibility::HitTestInvisible);
+	optionsWidget->SetVisibility(ESlateVisibility::Hidden);
+	actionWidget->SetVisibility(ESlateVisibility::Hidden);
+	actionWidget->HideWidgets();
+	TArray<FIntPoint> tiles = TArray<FIntPoint>();
+	tiles.Add(character->grid->GetTileIndexFromLocation(zombie->GetActorLocation()));
+	character->grid->DeleteStatesFromTilesButGiven(tiles);
+}
+
+void UWPlayerInfo::UnhidePlayerInfoDuringCombat()
+{
+	SetVisibility(ESlateVisibility::Visible);
+	optionsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	actionWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	character->grid->deleteStatesFromTilesButSelected();
 }

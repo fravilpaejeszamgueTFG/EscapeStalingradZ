@@ -521,6 +521,29 @@ void AGrid::deleteStatesFromTilesButSelected()
 	}
 }
 
+void AGrid::DeleteStatesFromTilesButGiven(TArray<FIntPoint> list)
+{
+	for (auto& index : gridTiles)
+	{
+		if (index.Value.states.Num() > 0) {
+			if (list.Contains(index.Key)) {
+				index.Value.states.Empty();
+				index.Value.states.Add(TileState::Hovered);
+			}
+			else {
+				if (!index.Value.states.Contains(TileState::Selected)) {
+					index.Value.states.Empty();
+				}
+				else {
+					index.Value.states.Empty();
+					index.Value.states.Add(TileState::Selected);
+				}
+			}
+			UpdateTileVisual(index.Key);
+		}
+	}
+}
+
 bool AGrid::CanShootDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, FIntPoint backward)
 {
 	int res = 0;
