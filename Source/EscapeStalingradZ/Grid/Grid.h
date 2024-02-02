@@ -167,4 +167,7 @@ public:
 		void deleteStatesFromTiles();
 	UFUNCTION()
 		void deleteStatesFromTilesButSelected();
+
+	UFUNCTION()
+		void DeleteStatesFromTilesButGiven(TArray<FIntPoint> list);
 };

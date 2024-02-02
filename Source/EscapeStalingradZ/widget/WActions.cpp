@@ -115,6 +115,19 @@ void UWActions::EndTurn()
 	hud->HidePlayerInfo();
 }
 
+void UWActions::HideWidgets()
+{
+	if (combatWidget != nullptr && combatWidget->Visibility != ESlateVisibility::Hidden) {
+		combatWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+	if (actionWidget != nullptr && actionWidget->Visibility != ESlateVisibility::Hidden) {
+		actionWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+	if (movementWidget != nullptr && movementWidget->Visibility != ESlateVisibility::Hidden) {
+		movementWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
 void UWActions::DisableButtonByMovementType(MovementType type)
 {
 	if (type == MovementType::Running) {

@@ -39,4 +39,6 @@ public:
 	UFUNCTION()
 		void HidePlayerInfo();
 
+	
+
 };

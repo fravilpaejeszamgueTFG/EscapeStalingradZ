@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/zombies/Zombie.h"
+#include "EscapeStalingradZ/widget/WDicesCombat.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -109,60 +110,18 @@ void APlayerCharacter::AttackZombieNormalFire(AZombie* zombie, FIntPoint tileZom
 		dices.Add(nextDie);
 	}
 	int finalHit = mod + GetPrimaryHitAndMultipleFire(tileZombie);
-	for (int num : dices) {
-		die = num;
-		//Comprobar ammo con cada dado
-		if (die == 1) {
-			ammo--;
-			UE_LOG(LogTemp, Warning, TEXT("Se me ha encasquillao"));
-			if (ammo <= 0) {
-				UE_LOG(LogTemp, Warning, TEXT("Sin balas. Perfecto"));
-				break;
-			}
-		}
-		else {
-			UE_LOG(LogTemp, Warning, TEXT("dado: %d, finalHit: %d, modificador: %d"), die, finalHit, mod);
-			if (die >= finalHit) {
-				if (die >= finalHit + 3) {
-					zombie->health--;
-					UE_LOG(LogTemp, Warning, TEXT("muerto"));
-					break;
-				}
-				else {
-					zombie->isStunned = true;
-					UE_LOG(LogTemp, Warning, TEXT("estuneado"));
-				}
-			}
-			if (die == 2) {
-				FriendlyFire(tileZombie);
-			}
-		}
-	}
-	attacked = true;
-	//TO-DO mejorar dados
+	CreateOrSetDicesCombatWidget(zombie, dices, finalHit, false);
 }
 
 void APlayerCharacter::AttackZombieHandToHand(AZombie* zombie, FIntPoint tileZombie)
 {
 	int mod = GetNumberOfHitModifiersAttack(zombie) + GetNumberOfHitModifiersLoF(tileZombie);
 	int die = FMath::RandRange(1, 12);
+	TArray<int> dice = TArray<int>();
+	dice.Add(die);
 	int finalHit = mod + GetPrimaryHitHandToHand();
 	UE_LOG(LogTemp, Warning, TEXT("dado: %d, finalHit: %d, modificador: %d"), die, finalHit, mod);
-	if (die >= finalHit) {
-		if (die >= finalHit + 3) {
-			zombie->health--;
-			UE_LOG(LogTemp, Warning, TEXT("muerto"));
-		}
-		else {
-			zombie->isStunned = true;
-			UE_LOG(LogTemp, Warning, TEXT("estuneado"));
-		}
-	}
-	if (die == 2) {
-		FriendlyFire(tileZombie);
-	}
-	attacked = true;
-	//TO-DO mejorar dados
+	CreateOrSetDicesCombatWidget(zombie, dice, finalHit, true);
 }
 
 int APlayerCharacter::GetDistanceAttackHandToHand()
@@ -332,4 +291,30 @@ int APlayerCharacter::GetNumberOfDices()
 	else {
 		return readySecondaryWeapon->rateOfFire;
 	}
+}
+
+void APlayerCharacter::CreateOrSetDicesCombatWidget(AZombie* zombie, TArray<int> dice, int targetDie, bool isHandToHand)
+{
+	if (DicesCombatWidgetClass) {
+		if (DicesCombatWidget != nullptr) {
+			DicesCombatWidget->character = this;
+			DicesCombatWidget->zombie = zombie;
+			DicesCombatWidget->SetVisibility(ESlateVisibility::Visible);
+			DicesCombatWidget->SetDices(dice,targetDie, isHandToHand);
+		}
+		else {
+			DicesCombatWidget = CreateWidget<UWDicesCombat>(GetWorld(), DicesCombatWidgetClass);
+			if (DicesCombatWidget != nullptr) {
+				DicesCombatWidget->character = this;
+				DicesCombatWidget->zombie = zombie;
+				DicesCombatWidget->AddToViewport();
+				DicesCombatWidget->SetDices(dice, targetDie, isHandToHand);
+			}
+		}
+	}
+}
+
+void APlayerCharacter::FriendlyFireGivenZombie(AZombie* zombie)
+{
+	FriendlyFire(grid->GetTileIndexFromLocation(zombie->GetActorLocation()));
 }

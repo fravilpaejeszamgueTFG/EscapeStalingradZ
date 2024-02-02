@@ -11,6 +11,7 @@
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "EscapeStalingradZ/widget/WSelectMovementType.h"
 #include "EscapeStalingradZ/widget/UserHUD.h"
+#include "EscapeStalingradZ/widget/WDicesTurn.h"
 #include "EscapeStalingradZ/zombies/Zombie.h"
 
 // Sets default values
@@ -228,6 +229,12 @@ void ATurn::StartTurn()
 	}
 }
 
+void ATurn::ZombiesStartTurn()
+{
+	zombiesToStartTurn = zombies;
+	SetNextZombie();
+}
+
 void ATurn::Initiative()
 {
 	charactersToStartTurn = characters;
@@ -244,18 +251,7 @@ void ATurn::Initiative()
 	UE_LOG(LogTemp, Warning, TEXT("Dado humano = %d"), humanDie);
 	UE_LOG(LogTemp, Warning, TEXT("Dado zombie = %d"), zombieDie);
 	UE_LOG(LogTemp, Warning, TEXT("Dado zombie final = %d"), finalZombieDie);
-	//TO-DO hacer esto en el dado
-	if (humanDie > finalZombieDie) {
-		//TO-DO Elegir jugador activo (otra interfaz...)
-		SetNextCharacter();
-	}
-	else if (humanDie == finalZombieDie) {
-		StartTurn();
-	}
-	else {
-		zombiesToStartTurn = zombies;
-		SetNextZombie();
-	}
+	CreateOrSetTurnDicesWidget(humanDie, finalZombieDie);
 }
 
 void ATurn::EndTurn()
@@ -264,5 +260,24 @@ void ATurn::EndTurn()
 	endTurnHuman = false;
 	roundNumber++;
 	StartTurn();
+}
+
+void ATurn::CreateOrSetTurnDicesWidget(int humanDie, int targetDie)
+{
+	if (turnDicesWidgetClass) {
+		if (turnDicesWidget != nullptr) {
+			turnDicesWidget->SetVisibility(ESlateVisibility::Visible);
+			turnDicesWidget->SetDices(humanDie, targetDie);
+			turnDicesWidget->turn = this;
+		}
+		else {
+			turnDicesWidget = CreateWidget<UWDicesTurn>(GetWorld(), turnDicesWidgetClass);
+			if (turnDicesWidget != nullptr) {
+				turnDicesWidget->AddToViewport();
+				turnDicesWidget->SetDices(humanDie, targetDie);
+				turnDicesWidget->turn = this;
+			}
+		}
+	}
 }
 
