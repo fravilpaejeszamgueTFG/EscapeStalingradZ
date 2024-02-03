@@ -112,11 +112,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = Movement) float currentMovementTime = 0.;
 
-	UPROPERTY(EditAnywhere, Category = Movement) int stepMovementPerSecond = 60;
+	UPROPERTY(VisibleAnywhere, Category = Movement) int stepMovementPerSecond = 60;
 
-	UPROPERTY(EditAnywhere, Category = Movement) int cont = 0;
+	UPROPERTY(VisibleAnywhere, Category = Movement) int cont = 0;
 
-	UPROPERTY(EditAnywhere, Category = Movement) float timeMovement = 2.f;
+	UPROPERTY(VisibleAnywhere, Category = Movement) float timeMovement = 2.f;
 	
 	//Funciones
 	void SetHealthAndMPPropertiesByZombie();

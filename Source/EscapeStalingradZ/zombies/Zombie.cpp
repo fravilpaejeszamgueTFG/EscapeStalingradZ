@@ -28,7 +28,7 @@ void AZombie::BeginPlay()
 {
 	Super::BeginPlay();
 	SetHealthAndMPPropertiesByZombie();
-	
+	timeMovement *= stepMovementPerSecond;
 }
 
 void AZombie::SetHealthAndMPPropertiesByZombie()
@@ -94,10 +94,10 @@ bool AZombie::MoveZombie(FIntPoint targetTile)
 
 void AZombie::MoveZombieLocation()
 {
-	SetActorLocation(FMath::Lerp(currentLocation, targetLocation, currentMovementTime));
 	cont++;
-	currentMovementTime = cont / (timeMovement * stepMovementPerSecond);
-	if (cont == timeMovement * stepMovementPerSecond) {
+	currentMovementTime = cont / timeMovement;
+	SetActorLocation(FMath::Lerp(currentLocation, targetLocation, currentMovementTime));
+	if (cont == timeMovement) {
 		GetWorldTimerManager().ClearTimer(movementTimer);
 		cont = 0;
 		currentMovementTime = 0;
