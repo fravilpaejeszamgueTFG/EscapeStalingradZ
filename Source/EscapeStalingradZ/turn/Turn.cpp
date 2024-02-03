@@ -150,9 +150,11 @@ void ATurn::SetNextZombie()
 {
 	if (zombiesToStartTurn.Num() > 0) {
 		selectedZombie = zombiesToStartTurn[0];
-		//TO-DO hacer acciones de zombies
-		UE_LOG(LogTemp, Warning, TEXT("Turno zombie empieza y acaba, pasa al siguiente"));
-		nextZombie();
+		UE_LOG(LogTemp, Warning, TEXT("Turno zombie empieza"));
+		selectedZombie->turn = this;
+		selectedZombie->characters = characters;
+		selectedZombie->ZombieActions();
+		// Hacer nextZombie(); cuando acabe de realizar las acciones el zombie
 	}
 	else {
 		endTurnZombie = true;
