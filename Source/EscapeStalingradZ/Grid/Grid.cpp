@@ -544,6 +544,30 @@ void AGrid::DeleteStatesFromTilesButGiven(TArray<FIntPoint> list)
 	}
 }
 
+int AGrid::GetCostToEnterNeighbor(FIntPoint index, FIntPoint neighbor)
+{
+	if (gridTiles[neighbor].types.Contains(TileType::Fire) || GetDoorIsClosed(index, neighbor)) {
+		return 0;
+	} 
+	if (gridTiles[neighbor].walls.Num() > 0) {
+		if (gridTiles[neighbor].walls.Contains(index)) {
+			return 0;
+		}
+	}
+	if (gridTiles[neighbor].types.Contains(TileType::Hinder)) {
+		return 500; 
+	}
+	else {
+		if (gridTiles[neighbor].actor != nullptr) {
+			AZombie* zombie = Cast<AZombie>(gridTiles[neighbor].actor);
+			if (zombie != nullptr) {
+				return 100;
+			}
+		}
+	}
+	return 1;
+}
+
 bool AGrid::CanShootDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, FIntPoint backward)
 {
 	int res = 0;

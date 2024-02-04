@@ -170,4 +170,7 @@ public:
 
 	UFUNCTION()
 		void DeleteStatesFromTilesButGiven(TArray<FIntPoint> list);
+
+	UFUNCTION()
+		int GetCostToEnterNeighbor(FIntPoint index, FIntPoint neighbor);
 };
