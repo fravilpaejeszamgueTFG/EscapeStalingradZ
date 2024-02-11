@@ -113,11 +113,20 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
 		class UWDicesCombat* DicesCombatWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+		TSubclassOf<class UWDiceSpreadCombat> DiceSpreadCombatWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
+		class UWDiceSpreadCombat* DiceSpreadCombatWidget;
+
 	//Funciones
 	UFUNCTION() void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
 	UFUNCTION() int getDistanceLoF(TArray<FIntPoint> tiles, FIntPoint index);
 	UFUNCTION() void AttackZombieNormalFire(class AZombie* zombie, FIntPoint tileZombie);
+	UFUNCTION() void AttackZombieSpreadFire(class AZombie* zombie, FIntPoint tileZombie);
+	UFUNCTION() void MoveToTileWithZombieDuringSpreadFire(class AZombie* zombie, FIntPoint tileZombie);
+	UFUNCTION() void MoveToTileWithoutZombieDuringSpreadFire(FIntPoint destinyTile);
 	UFUNCTION() void AttackZombieHandToHand(class AZombie* zombie, FIntPoint tileZombie);
 	UFUNCTION() int GetDistanceAttackHandToHand();
 	UFUNCTION() TArray<FIntPoint> GetIndexHandToHand2Range();
@@ -129,5 +138,6 @@ public:
 	UFUNCTION() void FriendlyFire(FIntPoint tileZombie);
 	UFUNCTION() int GetNumberOfDices();
 	UFUNCTION() void CreateOrSetDicesCombatWidget(class AZombie* zombie, TArray<int> dice, int targetDie, bool isHandToHand);
+	UFUNCTION() void CreateOrSetSpreadCombateWidget(class AZombie* zombie, TArray<int> dice, int targetDie);
 	UFUNCTION() void FriendlyFireGivenZombie(class AZombie* zombie);
 };

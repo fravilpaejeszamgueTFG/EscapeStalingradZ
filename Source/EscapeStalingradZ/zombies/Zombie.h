@@ -121,6 +121,8 @@ public:
 	//Funciones
 	void SetHealthAndMPPropertiesByZombie();
 
+	UFUNCTION() bool ZombieHit(int die, int stunNumber); //=true si muere el zombie, false si no muere
+
 	UFUNCTION() void ZombieActions();
 
 	UFUNCTION() void MovementZombie();

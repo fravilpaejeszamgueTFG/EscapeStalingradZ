@@ -8,6 +8,7 @@
 #include "EscapeStalingradZ/player/actions/Command.h"
 #include "EscapeStalingradZ/player/actions/ActionNormalFire.h"
 #include "EscapeStalingradZ/player/actions/ActionHandToHand.h"
+#include "EscapeStalingradZ/player/actions/ActionSpreadFire.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/player/PlayerActions.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
@@ -50,6 +51,10 @@ void UWCombat::OnClickNormalFire()
 
 void UWCombat::OnClickSpreadFire()
 {
+	command = NewObject<UActionSpreadFire>(this);
+	command->Execute(grid, character);
+	controller->actions->command = NewObject<UActionSpreadFire>(controller->actions);
+	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
 void UWCombat::OnClickHandToHand()

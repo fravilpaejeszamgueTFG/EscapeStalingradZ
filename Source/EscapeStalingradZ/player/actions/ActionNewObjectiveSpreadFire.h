@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Command.h"
-#include "ActionSpreadFire.generated.h"
+#include "ActionNewObjectiveSpreadFire.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ESCAPESTALINGRADZ_API UActionSpreadFire : public UCommand
+class ESCAPESTALINGRADZ_API UActionNewObjectiveSpreadFire : public UCommand
 {
 	GENERATED_BODY()
 
@@ -19,6 +19,7 @@ public:
 
 	virtual void Action(class AGrid* grid, FIntPoint tile, FIntPoint destinyTile) override;
 
-	virtual bool NeedLoF() override;
+	FIntPoint tileZombie = FIntPoint(-1,-1);
+	int NumberDiceLeft = 0;
 	
 };

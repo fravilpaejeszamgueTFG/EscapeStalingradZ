@@ -30,6 +30,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Tile) FIntPoint selectedTile = FIntPoint(-1,-1);
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Tile) FIntPoint actionTile = FIntPoint(-1, -1);
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Command) class UCommand* command;
+	UPROPERTY(VisibleAnywhere) bool deleteCommand = true;
 
 	UFUNCTION()
 		void LeftMouseClick();

@@ -176,9 +176,7 @@ void UWPlayerInfo::HidePlayerInfoDuringCombat(AZombie* zombie)
 	optionsWidget->SetVisibility(ESlateVisibility::Hidden);
 	actionWidget->SetVisibility(ESlateVisibility::Hidden);
 	actionWidget->HideWidgets();
-	TArray<FIntPoint> tiles = TArray<FIntPoint>();
-	tiles.Add(character->grid->GetTileIndexFromLocation(zombie->GetActorLocation()));
-	character->grid->DeleteStatesFromTilesButGiven(tiles);
+	SetZombieTileHovered(zombie);
 }
 
 void UWPlayerInfo::UnhidePlayerInfoDuringCombat()
@@ -187,4 +185,11 @@ void UWPlayerInfo::UnhidePlayerInfoDuringCombat()
 	optionsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	actionWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	character->grid->deleteStatesFromTilesButSelected();
+}
+
+void UWPlayerInfo::SetZombieTileHovered(AZombie* zombie)
+{
+	TArray<FIntPoint> tiles = TArray<FIntPoint>();
+	tiles.Add(character->grid->GetTileIndexFromLocation(zombie->GetActorLocation()));
+	character->grid->DeleteStatesFromTilesButGiven(tiles);
 }
