@@ -88,5 +88,6 @@ public:
 		void HidePlayerInfoDuringCombat(class AZombie* zombie);
 	UFUNCTION()
 		void UnhidePlayerInfoDuringCombat();
+	UFUNCTION() void SetZombieTileHovered(class AZombie* zombie);
 
 };

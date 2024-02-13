@@ -6,6 +6,7 @@
 #include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/zombies/Zombie.h"
 #include "EscapeStalingradZ/widget/WDicesCombat.h"
+#include "EscapeStalingradZ/widget/WDiceSpreadCombat.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -111,6 +112,40 @@ void APlayerCharacter::AttackZombieNormalFire(AZombie* zombie, FIntPoint tileZom
 	}
 	int finalHit = mod + GetPrimaryHitAndMultipleFire(tileZombie);
 	CreateOrSetDicesCombatWidget(zombie, dices, finalHit, false);
+}
+
+void APlayerCharacter::AttackZombieSpreadFire(AZombie* zombie, FIntPoint tileZombie)
+{
+	int mod = GetNumberOfHitModifiersAttack(zombie) + GetNumberOfHitModifiersLoF(tileZombie) + 1;
+	int numberOfDices = GetNumberOfDices();
+	TArray<int> dices = TArray<int>();
+	int die = 0;
+	for (int i = 1; i <= numberOfDices; i++) {
+		int nextDie = FMath::RandRange(1, 12);
+		dices.Add(nextDie);
+	}
+	int finalHit = mod + GetPrimaryHitAndMultipleFire(tileZombie);
+	CreateOrSetSpreadCombateWidget(zombie, dices, finalHit);
+}
+
+void APlayerCharacter::MoveToTileWithZombieDuringSpreadFire(AZombie* zombie, FIntPoint tileZombie)
+{
+	int finalHit = GetNumberOfHitModifiersAttack(zombie) + GetNumberOfHitModifiersLoF(tileZombie) 
+		+ GetPrimaryHitAndMultipleFire(tileZombie) + 1;
+	if (DiceSpreadCombatWidget != nullptr) {
+		DiceSpreadCombatWidget->character = this;
+		DiceSpreadCombatWidget->zombie = zombie;
+		DiceSpreadCombatWidget->SetVisibility(ESlateVisibility::Visible);
+		DiceSpreadCombatWidget->NextDie(finalHit);
+	}
+}
+
+void APlayerCharacter::MoveToTileWithoutZombieDuringSpreadFire(FIntPoint destinyTile)
+{
+	if (DiceSpreadCombatWidget != nullptr) {
+		DiceSpreadCombatWidget->tileZombie = destinyTile;
+		DiceSpreadCombatWidget->RemoveDie();
+	}
 }
 
 void APlayerCharacter::AttackZombieHandToHand(AZombie* zombie, FIntPoint tileZombie)
@@ -309,6 +344,27 @@ void APlayerCharacter::CreateOrSetDicesCombatWidget(AZombie* zombie, TArray<int>
 				DicesCombatWidget->zombie = zombie;
 				DicesCombatWidget->AddToViewport();
 				DicesCombatWidget->SetDices(dice, targetDie, isHandToHand);
+			}
+		}
+	}
+}
+
+void APlayerCharacter::CreateOrSetSpreadCombateWidget(AZombie* zombie, TArray<int> dice, int targetDie)
+{
+	if (DiceSpreadCombatWidgetClass) {
+		if (DiceSpreadCombatWidget != nullptr) {
+			DiceSpreadCombatWidget->character = this;
+			DiceSpreadCombatWidget->zombie = zombie;
+			DiceSpreadCombatWidget->SetVisibility(ESlateVisibility::Visible);
+			DiceSpreadCombatWidget->SetDices(dice, targetDie);
+		}
+		else {
+			DiceSpreadCombatWidget = CreateWidget<UWDiceSpreadCombat>(GetWorld(), DiceSpreadCombatWidgetClass);
+			if (DiceSpreadCombatWidget != nullptr) {
+				DiceSpreadCombatWidget->character = this;
+				DiceSpreadCombatWidget->zombie = zombie;
+				DiceSpreadCombatWidget->AddToViewport();
+				DiceSpreadCombatWidget->SetDices(dice, targetDie);
 			}
 		}
 	}

@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "WDicesCombat.generated.h"
+#include "WDiceSpreadCombat.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ESCAPESTALINGRADZ_API UWDicesCombat : public UUserWidget
+class ESCAPESTALINGRADZ_API UWDiceSpreadCombat : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
 
-	UWDicesCombat(const FObjectInitializer& ObjectInitializer);
+	UWDiceSpreadCombat(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeConstruct() override;
 
@@ -34,31 +34,34 @@ public:
 		class UTextBlock* NumberToKillText;
 	UPROPERTY(meta = (BindWidget))
 		class UTextBlock* NumberDiceLeftText;
-	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* ButtonConfirmText;
 
 	UPROPERTY(VisibleAnywhere) int currentNumber;
 	UPROPERTY(VisibleAnywhere) int numberToStun;
 	UPROPERTY(VisibleAnywhere) int numberToKill;
 	UPROPERTY(VisibleAnywhere) int numberDiceLeft;
-	UPROPERTY(EditAnywhere) FText confirmText;
-	UPROPERTY(EditAnywhere) FText rollAgainText;
 	UPROPERTY(VisibleAnywhere) TArray<int> humanDicesLeft;
-	UPROPERTY(VisibleAnywhere) bool isAttackHandToHand;
-	UPROPERTY(VisibleAnywhere) bool zombieStunned;
 
 	UPROPERTY(VisibleAnywhere) class AZombie* zombie;
+	UPROPERTY(VisibleAnywhere) FIntPoint tileZombie = FIntPoint(-1, -1);
 	UPROPERTY(VisibleAnywhere) class APlayerCharacter* character;
 
 	UPROPERTY(VisibleAnywhere)
 		class AUserHUD* hud;
 
+	UPROPERTY(EditDefaultsOnly, Category = "SpreadFire")
+		TSubclassOf<class UWSelectObjectiveSpreadFire> SelectObjectiveWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SpreadFire")
+		class UWSelectObjectiveSpreadFire* SelectObjectiveWidget;
+
 	FTimerHandle WaitTimer;
 
-	UFUNCTION() void SetDices(TArray<int> humanDices, int targetDie, bool isHandToHand);
-	UFUNCTION() void NextDie();
-	UFUNCTION() void AttackInHandToHand();
-	UFUNCTION() void AttackInFire();
+	UFUNCTION() void SetDices(TArray<int> humanDices, int targetDie);
+	UFUNCTION() void NextDie(int targetDie);
+	UFUNCTION() void AttackSpreadFire();
+	UFUNCTION() void SelectObjetiveSpreadFire();
+	UFUNCTION() void EndAttack();
+	UFUNCTION() void RemoveDie();
 
 	UFUNCTION(BlueprintImplementableEvent) void OnClickButtonRollAnimation();
 	UFUNCTION(BlueprintImplementableEvent) void SetHumanDieImage(int number);

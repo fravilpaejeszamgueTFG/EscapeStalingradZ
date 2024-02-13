@@ -47,7 +47,6 @@ void UActionNormalFire::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTil
 					if (zombie != nullptr) {
 						character->AttackZombieNormalFire(zombie, destinyTile);
 					}
-					//TO-DO
 				}
 			}
 			
@@ -56,7 +55,6 @@ void UActionNormalFire::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTil
 			}
 		}
 	}
-
 }
 
 bool UActionNormalFire::NeedLoF()

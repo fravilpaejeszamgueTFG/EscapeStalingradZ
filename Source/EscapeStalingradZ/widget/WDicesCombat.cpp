@@ -54,7 +54,7 @@ void UWDicesCombat::SetDices(TArray<int> humanDices, int targetDie, bool isHandT
 	}
 }
 
-void UWDicesCombat::NextDice()
+void UWDicesCombat::NextDie()
 {
 	DieNumber->SetVisibility(ESlateVisibility::Hidden);
 	ButtonRollAnimation->SetVisibility(ESlateVisibility::Visible);
@@ -89,22 +89,15 @@ void UWDicesCombat::NextDice()
 
 void UWDicesCombat::AttackInHandToHand()
 {
-	if (currentNumber >= numberToStun) {
-		if (currentNumber >= numberToKill) {
-			zombie->health--;
-			UE_LOG(LogTemp, Warning, TEXT("muerto"));
-			numberDiceLeft = 0;
-		}
-		else {
-			zombie->isStunned = true;
-			UE_LOG(LogTemp, Warning, TEXT("estuneado"));
-		}
-		if (currentNumber == 2) {
-			character->FriendlyFireGivenZombie(zombie);
-		}
+	bool zombieDied = zombie->ZombieHit(currentNumber, numberToStun);
+	if (currentNumber == 2) {
+		character->FriendlyFireGivenZombie(zombie);
+	}
+	if (zombieDied) {
+		numberDiceLeft = 0;
 	}
 	//aqui iria animación de ataque si hay, poner el temporizador el tiempo de la animación
-	GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDicesCombat::NextDice, 3, false);
+	GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDicesCombat::NextDie, 3, false);
 	UE_LOG(LogTemp, Warning, TEXT("aqui iria la animacion ataque cuerpo a cuerpo/normalFire"));
 }
 
@@ -117,7 +110,7 @@ void UWDicesCombat::AttackInFire()
 			UE_LOG(LogTemp, Warning, TEXT("Sin balas. Perfecto"));
 			numberDiceLeft = 0;
 		}
-		GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDicesCombat::NextDice, 3, false);
+		GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDicesCombat::NextDie, 3, false);
 		UE_LOG(LogTemp, Warning, TEXT("aqui iria la animacion fuego fallido"));
 	}
 	else {

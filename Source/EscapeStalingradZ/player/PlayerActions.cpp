@@ -36,7 +36,13 @@ void UPlayerActions::LeftMouseClick()
         UpdateHoveredTile();
         selectedTile = hoveredTile;
         command->Action(grid, actionTile, selectedTile);
-        command = nullptr;      
+        if (deleteCommand) {
+            command = nullptr;
+        }
+        else {
+            deleteCommand = true;
+        }
+            
     }
 }
 

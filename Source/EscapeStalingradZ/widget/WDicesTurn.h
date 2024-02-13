@@ -22,7 +22,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UImage* DieNumber;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 		class UImage* RollAnimation;
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 		class UButton* ButtonRollAnimation;

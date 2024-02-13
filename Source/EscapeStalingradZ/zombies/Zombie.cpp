@@ -43,6 +43,28 @@ void AZombie::SetHealthAndMPPropertiesByZombie()
 	}
 }
 
+bool AZombie::ZombieHit(int die, int stunNumber)
+{
+	if (die >= stunNumber) {
+		if (die >= stunNumber + 3) {
+			health--;
+			if (health <= 0) {
+				FIntPoint index = grid->GetTileIndexFromLocation(GetActorLocation());
+				turn->zombiesDied.Add(this);
+				turn->zombies.Remove(this);
+				SetActorLocation(FVector(-9999,-9999,-9999));
+				grid->gridTiles[index].actor = nullptr;
+				SetHealthAndMPPropertiesByZombie();
+				return true;
+			}
+		}
+		else {
+			isStunned = true;
+		}
+	}
+	return false;
+}
+
 void AZombie::ZombieActions()
 {
 	//TO-DO hacer acciones de zombies
