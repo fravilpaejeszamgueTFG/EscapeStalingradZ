@@ -121,6 +121,7 @@ void ATurn::ActivateCollision()
 	for (AActor* i : z) {
 		AZombie* zombie = Cast<AZombie>(i);
 		if (zombie != nullptr) {
+			zombie->turn = this;
 			zombie->SetActorEnableCollision(false);
 			zombiesToEnterGrid.Add(zombie);
 		}
@@ -151,7 +152,6 @@ void ATurn::SetNextZombie()
 	if (zombiesToStartTurn.Num() > 0) {
 		selectedZombie = zombiesToStartTurn[0];
 		UE_LOG(LogTemp, Warning, TEXT("Turno zombie empieza"));
-		selectedZombie->turn = this;
 		selectedZombie->characters = characters;
 		selectedZombie->ZombieActions();
 		// Hacer nextZombie(); cuando acabe de realizar las acciones el zombie
