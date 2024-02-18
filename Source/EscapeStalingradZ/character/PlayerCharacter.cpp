@@ -257,7 +257,7 @@ int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 	return res;
 }
 
-FIntPoint APlayerCharacter::GetFowardIndexInDiagonal(FIntPoint start, FIntPoint end)
+FIntPoint APlayerCharacter::GetForwardIndexInDiagonal(FIntPoint start, FIntPoint end)
 {
 	return FIntPoint(end.X, start.Y);
 }
