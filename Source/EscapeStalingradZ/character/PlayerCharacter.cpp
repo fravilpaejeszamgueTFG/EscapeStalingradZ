@@ -241,8 +241,8 @@ int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 					res += 2;
 				}
 				if (index.X != backward.X && index.Y != backward.Y) {
-					FIntPoint forward = GetFowardIndexInDiagonal(index, backward); 
-					FIntPoint right = GetFowardIndexInDiagonal(backward, index); 
+					FIntPoint forward = GetForwardIndexInDiagonal(index, backward); 
+					FIntPoint right = GetForwardIndexInDiagonal(backward, index); 
 					if (!grid->CanMoveDiagonal(index, forward, right, backward)) {
 						res += 2;
 					}
