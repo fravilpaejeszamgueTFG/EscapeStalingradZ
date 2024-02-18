@@ -65,7 +65,7 @@ void APlayerCharacter::getArcOfFire()
 		grid->RemoveTileState(i, TileState::isInAoF);
 	}
 	AoF = grid->GetTilesAoF(index, forwardVector, rightVector);
-	//grid->SetTilesForAttack(AoF); se quita por ahora el estado de aof de las casillas
+	grid->SetTilesForAttack(AoF);
 	TArray<FIntPoint> listZombies = grid->GetTilesWithZombies(AoF);
 	for (FIntPoint i : listZombies) {
 		TArray<FIntPoint> list = grid->GetTilesLoF(index,i);

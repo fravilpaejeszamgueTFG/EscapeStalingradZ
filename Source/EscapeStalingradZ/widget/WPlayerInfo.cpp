@@ -128,6 +128,12 @@ void UWPlayerInfo::UpdateImages()
 	SetCharacterImage();
 	SetReadyWImage();
 	SetSecondaryWImage();
+	if (character->useReadyWeapon) {
+		SetUseReadyWeaponColor();
+	}
+	else {
+		SetUseSecondaryWeaponColor();
+	}
 }
 
 void UWPlayerInfo::SetVisibleActionWidget()

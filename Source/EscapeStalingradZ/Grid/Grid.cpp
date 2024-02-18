@@ -161,15 +161,12 @@ void AGrid::RemoveTileState(FIntPoint index, TileState state)
 void AGrid::UpdateTileVisual(FIntPoint index)
 {
 	FLinearColor color = GetColorFromState(gridTiles[index].states);
-	int i = index.X * numberOfTiles.Y + index.Y;
-	instancedMesh->SetCustomDataValue(i,0,color.R, true);
-	instancedMesh->SetCustomDataValue(i,1,color.G, true);
-	instancedMesh->SetCustomDataValue(i,2,color.B, true);
-	if (color == tileAoFColor) {
-		instancedMesh->SetCustomDataValue(i,3,0.05,true);
-	}
-	else {
-		instancedMesh->SetCustomDataValue(i,3,0,true);
+	if (color != tileAoFColor) {
+		int i = index.X * numberOfTiles.Y + index.Y;
+		instancedMesh->SetCustomDataValue(i, 0, color.R, true);
+		instancedMesh->SetCustomDataValue(i, 1, color.G, true);
+		instancedMesh->SetCustomDataValue(i, 2, color.B, true);
+		instancedMesh->SetCustomDataValue(i, 3, 0, true);
 	}
 }
 
