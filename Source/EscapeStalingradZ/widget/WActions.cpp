@@ -5,6 +5,7 @@
 #include "WMovimiento.h"
 #include "WCombat.h"
 #include "WOtherActions.h"
+#include "WSelectCoveringAttackType.h"
 #include "buttons/Boton.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
@@ -23,7 +24,6 @@ void UWActions::NativeConstruct()
 {
 
 	Super::NativeConstruct();
-
 
 	buttonMovement->OnClicked.AddDynamic(this, &UWActions::OnClickMovement);
 	buttonCombat->OnClicked.AddDynamic(this, &UWActions::OnClickCombat);
@@ -108,11 +108,32 @@ void UWActions::EndTurn()
 {
 	if (turn != nullptr) {
 		grid->deleteStatesFromTiles();
-		turn->nextCharacter();
+		if (character->attacked) {
+			turn->nextCharacter();
+			hud->HidePlayerInfo();
+		}
+		else {
+			if (coveringWidgetClass) {
+				if (coveringWidget != nullptr) {
+					coveringWidget->character = character;
+					coveringWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+					coveringWidget->UpdateButtons();
+				}
+				else {
+					coveringWidget = CreateWidget<UWSelectCoveringAttackType>(GetWorld(), coveringWidgetClass);
+					if (coveringWidget != nullptr) {
+						coveringWidget->character = character;
+						coveringWidget->turn = turn;
+						coveringWidget->AddToViewport();
+						coveringWidget->UpdateButtons();
+					}
+				}
+			}
+		}
 		controller->actions->command = nullptr;
+		buttonCombat->SetIsEnabled(true);
+		SetVisibility(ESlateVisibility::Hidden);
 	}
-	SetVisibility(ESlateVisibility::Hidden);
-	hud->HidePlayerInfo();
 }
 
 void UWActions::HideWidgets()
@@ -138,5 +159,17 @@ void UWActions::DisableButtonByMovementType(MovementType type)
 	}
 	else {
 		buttonMovement->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UWActions::DisableAttack()
+{
+	buttonCombat->SetIsEnabled(false);
+}
+
+void UWActions::UpdateCoveringAttackWidget()
+{
+	if (coveringWidget != nullptr) {
+		coveringWidget->UpdateButtons();
 	}
 }

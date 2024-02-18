@@ -11,7 +11,9 @@
 #include "GameFramework/Actor.h"
 #include "EscapeStalingradZ/widget/UserHUD.h"
 #include "EscapeStalingradZ/widget/WPlayerInfo.h"
+#include "EscapeStalingradZ/widget/WActions.h"
 #include "TimerManager.h"
+#include "EscapeStalingradZ/turn/Turn.h"
 
 UWDicesCombat::UWDicesCombat(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -30,8 +32,16 @@ void UWDicesCombat::NativeConstruct()
 void UWDicesCombat::SetDices(TArray<int> humanDices, int targetDie, bool isHandToHand)
 {
 	if (humanDices.Num() > 0) {
-		if (hud !=nullptr && hud->PlayerInfoWidget!= nullptr) {
-			hud->PlayerInfoWidget->HidePlayerInfoDuringCombat(zombie);
+		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+			if (attackInCovering) {
+				hud->character = character;
+				hud->PlayerInfoWidget->character = character;
+				hud->PlayerInfoWidget->UpdateImages();
+				hud->PlayerInfoWidget->HidePlayerInfoDuringCombat(zombie, true);
+			}
+			else {
+				hud->PlayerInfoWidget->HidePlayerInfoDuringCombat(zombie, false);
+			}
 		}
 		zombieStunned = zombie->isStunned;
 		isAttackHandToHand = isHandToHand;
@@ -66,6 +76,7 @@ void UWDicesCombat::NextDie()
 			numberToKill -= 3;
 			NumberToKillText->SetText(FText::FromString(FString::FromInt(numberToKill)));
 			NumberToStunText->SetText(FText::FromString(FString::FromInt(numberToStun)));
+			zombieStunned = zombie->isStunned;
 		}
 		currentNumber = humanDicesLeft[0];
 		humanDicesLeft.RemoveSingle(currentNumber);
@@ -81,8 +92,29 @@ void UWDicesCombat::NextDie()
 		SetVisibility(ESlateVisibility::Visible);
 	}
 	else {
-		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
-			hud->PlayerInfoWidget->UnhidePlayerInfoDuringCombat();
+		character->attacked = true;
+		if (attackInCovering) {
+			if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+				hud->character = character;
+				hud->PlayerInfoWidget->character = character;
+				hud->PlayerInfoWidget->UnhidePlayerInfoDuringCombat(true);
+			}
+			attackInCovering = false;
+			character->typeOfCovering = CoveringType::NONE;
+			if (zombie->GetActorLocation().Z > -1000) {
+				zombie->charactersInCovering.Remove(character);
+				zombie->CoveringAttack();
+			}
+			else {
+				ATurn* turn = zombie->turn;
+				turn->nextZombie();
+			}
+		}
+		else {
+			if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+				hud->PlayerInfoWidget->UnhidePlayerInfoDuringCombat(false);
+				hud->PlayerInfoWidget->actionWidget->DisableAttack();
+			}
 		}
 	}
 }

@@ -69,6 +69,7 @@ void ATurn::SetNextCharacter()
 	else if (charactersToStartTurn.Num() == 1) {
 		selectedCharacter = charactersToStartTurn[0];
 		selectedCharacter->attacked = false;
+		selectedCharacter->typeOfCovering = CoveringType::NONE;
 		APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 		if (player != nullptr && player->actions != nullptr) {
 			FIntPoint tile = grid->GetTileIndexFromLocation(selectedCharacter->GetActorLocation());
@@ -142,6 +143,7 @@ void ATurn::ActivateCollision()
 void ATurn::nextZombie()
 {
 	if (selectedZombie != nullptr) {
+		selectedZombie->charactersInCovering.Empty();
 		zombiesToStartTurn.Remove(selectedZombie);
 		SetNextZombie();
 	}
@@ -250,9 +252,6 @@ void ATurn::Initiative()
 			break;
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Dado humano = %d"), humanDie);
-	UE_LOG(LogTemp, Warning, TEXT("Dado zombie = %d"), zombieDie);
-	UE_LOG(LogTemp, Warning, TEXT("Dado zombie final = %d"), finalZombieDie);
 	CreateOrSetTurnDicesWidget(humanDie, finalZombieDie);
 }
 

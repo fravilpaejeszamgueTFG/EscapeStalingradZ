@@ -85,9 +85,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent) void SetUseSecondaryWeaponColor();
 
 	UFUNCTION()
-		void HidePlayerInfoDuringCombat(class AZombie* zombie);
+		void HidePlayerInfoDuringCombat(class AZombie* zombie, bool inCovering);
 	UFUNCTION()
-		void UnhidePlayerInfoDuringCombat();
+		void UnhidePlayerInfoDuringCombat(bool inCovering);
 	UFUNCTION() void SetZombieTileHovered(class AZombie* zombie);
 
 };

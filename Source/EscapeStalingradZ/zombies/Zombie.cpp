@@ -68,6 +68,11 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 void AZombie::ZombieActions()
 {
 	//TO-DO hacer acciones de zombies
+	for (APlayerCharacter* chara : characters) {
+		if (chara->typeOfCovering != CoveringType::NONE) {
+			charactersInCovering.Add(chara);
+		}
+	}
 	MovementZombie();
 }
 
@@ -125,7 +130,7 @@ void AZombie::MoveZombieLocation()
 		currentMovementTime = 0;
 		currentIndexPath++;
 		mp--;
-		MoveZombieToNextLocation(currentIndexPath);
+		CoveringAttack();
 	}
 }
 
@@ -138,6 +143,60 @@ void AZombie::MoveZombieToNextLocation(int indexInPath)
 		mp = maxmp;
 		currentIndexPath = 0;
 		turn->nextZombie();
+	}
+}
+
+void AZombie::CoveringAttack()
+{
+	int nCharacterInCovering = charactersInCovering.Num();
+	if (charactersInCovering.Num() > 0) {
+		APlayerCharacter* chara = charactersInCovering[0];
+		FIntPoint start = grid->GetTileIndexFromLocation(GetActorLocation());
+		if (chara->typeOfCoveringAttack == CoveringAttackType::HandToHand) {
+			FIntPoint end = grid->GetTileIndexFromLocation(chara->GetActorLocation());
+			TArray<FIntPoint> indices;
+			if (chara->GetDistanceAttackHandToHand() == 1) {
+				indices = grid->GetTileNeighbors(end);
+			}
+			else {
+				indices = chara->GetIndexHandToHand2Range();
+			}
+			bool inRange = false;
+			for (FIntPoint index : indices) {
+				if (grid->gridTiles[index].actor == this) {
+					inRange = true;
+					break;
+				}
+			}
+			if(inRange) {
+				chara->CoveringAttackHandToHand(this, start);
+			}
+			else {
+				charactersInCovering.Remove(chara);
+			}
+		}
+		else {
+			chara->getArcOfFire();
+			if (chara->LoFs.Contains(grid->GetTileIndexFromLocation(GetActorLocation()))) {
+				if(chara->typeOfCoveringAttack == CoveringAttackType::NormalFire) {
+					chara->CoveringAttackNormalFire(this, start);
+				}
+				else {
+					chara->CoveringAttackSpreadFire(this, start);
+				}
+			}
+			else {
+				charactersInCovering.Remove(chara);
+			}
+		}
+	}
+	if (charactersInCovering.Num() <= 0) {
+		MoveZombieToNextLocation(currentIndexPath);
+	}
+	else {
+		if (nCharacterInCovering != charactersInCovering.Num()) { //el personaje no puede atacar en covering, pasa al siguiente
+			CoveringAttack();
+		}
 	}
 }
 

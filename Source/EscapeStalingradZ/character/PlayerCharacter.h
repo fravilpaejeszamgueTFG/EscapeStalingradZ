@@ -36,6 +36,15 @@ enum CoveringType
 
 };
 
+UENUM()
+enum CoveringAttackType
+{
+	HandToHand     UMETA(DisplayName = "HandToHand"),
+	NormalFire     UMETA(DisplayName = "NormalFire"),
+	SpreadFire   UMETA(DisplayName = "SpreadFire"),
+
+};
+
 USTRUCT(BlueprintType)
 struct FTilesLoF
 {
@@ -106,6 +115,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = variables) TMap<FIntPoint,FTilesLoF> LoFs;
 	UPROPERTY(VisibleAnywhere, Category = Movement) TEnumAsByte<MovementType> typeOfMovement;
 	UPROPERTY(VisibleAnywhere, Category = Covering) TEnumAsByte<CoveringType> typeOfCovering;
+	UPROPERTY(VisibleAnywhere, Category = Covering) TEnumAsByte<CoveringAttackType> typeOfCoveringAttack;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Widget")
 		TSubclassOf<class UWDicesCombat> DicesCombatWidgetClass;
@@ -123,11 +133,18 @@ public:
 	UFUNCTION() void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
 	UFUNCTION() int getDistanceLoF(TArray<FIntPoint> tiles, FIntPoint index);
+	//Ataque normal
 	UFUNCTION() void AttackZombieNormalFire(class AZombie* zombie, FIntPoint tileZombie);
 	UFUNCTION() void AttackZombieSpreadFire(class AZombie* zombie, FIntPoint tileZombie);
 	UFUNCTION() void MoveToTileWithZombieDuringSpreadFire(class AZombie* zombie, FIntPoint tileZombie);
 	UFUNCTION() void MoveToTileWithoutZombieDuringSpreadFire(FIntPoint destinyTile);
 	UFUNCTION() void AttackZombieHandToHand(class AZombie* zombie, FIntPoint tileZombie);
+	//coveringAttack
+	UFUNCTION() void CoveringAttackHandToHand(class AZombie* zombie, FIntPoint tileZombie);
+	UFUNCTION() void CoveringAttackNormalFire(class AZombie* zombie, FIntPoint tileZombie);
+	UFUNCTION() void CoveringAttackSpreadFire(class AZombie* zombie, FIntPoint tileZombie);
+	//auxiliares ataque
+	UFUNCTION() TArray<int> GetDice(int numberOfDice);
 	UFUNCTION() int GetDistanceAttackHandToHand();
 	UFUNCTION() TArray<FIntPoint> GetIndexHandToHand2Range();
 	UFUNCTION() int GetNumberOfHitModifiersLoF(FIntPoint tileZombie);
@@ -136,8 +153,9 @@ public:
 	UFUNCTION() int GetPrimaryHitHandToHand();
 	UFUNCTION() int GetPrimaryHitAndMultipleFire(FIntPoint tileZombie);
 	UFUNCTION() void FriendlyFire(FIntPoint tileZombie);
+	//dados ataques
 	UFUNCTION() int GetNumberOfDices();
-	UFUNCTION() void CreateOrSetDicesCombatWidget(class AZombie* zombie, TArray<int> dice, int targetDie, bool isHandToHand);
-	UFUNCTION() void CreateOrSetSpreadCombateWidget(class AZombie* zombie, TArray<int> dice, int targetDie);
+	UFUNCTION() void CreateOrSetDicesCombatWidget(class AZombie* zombie, TArray<int> dice, int targetDie, bool isHandToHand, bool inCovering);
+	UFUNCTION() void CreateOrSetSpreadCombateWidget(class AZombie* zombie, TArray<int> dice, int targetDie, bool inCovering);
 	UFUNCTION() void FriendlyFireGivenZombie(class AZombie* zombie);
 };

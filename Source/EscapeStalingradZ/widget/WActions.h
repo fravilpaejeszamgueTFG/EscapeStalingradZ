@@ -48,6 +48,12 @@ public:
 	TSubclassOf<UWOtherActions> actionWidgetClass;
 
 	UPROPERTY(VisibleAnywhere)
+	class UWSelectCoveringAttackType* coveringWidget;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UWSelectCoveringAttackType> coveringWidgetClass;
+
+	UPROPERTY(VisibleAnywhere)
 	class APlayerCharacter* character;
 
 	UPROPERTY(VisibleAnywhere)
@@ -68,5 +74,7 @@ public:
 	UFUNCTION() void EndTurn();
 	UFUNCTION() void HideWidgets();
 	UFUNCTION() void DisableButtonByMovementType(enum MovementType type);
+	UFUNCTION() void DisableAttack();
+	UFUNCTION() void UpdateCoveringAttackWidget();
 
 };

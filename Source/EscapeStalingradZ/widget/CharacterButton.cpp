@@ -41,6 +41,7 @@ void UCharacterButton::OnClick()
 			player->Movement->turn = turn;
 		}
 		character->attacked = false;
+		character->typeOfCovering = CoveringType::NONE;
 		selectCharacter->onClickButton();
 	}
 }
