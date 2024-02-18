@@ -128,6 +128,12 @@ void UWPlayerInfo::UpdateImages()
 	SetCharacterImage();
 	SetReadyWImage();
 	SetSecondaryWImage();
+	if (character->useReadyWeapon) {
+		SetUseReadyWeaponColor();
+	}
+	else {
+		SetUseSecondaryWeaponColor();
+	}
 }
 
 void UWPlayerInfo::SetVisibleActionWidget()
@@ -159,6 +165,9 @@ void UWPlayerInfo::OnClickReadyWeapon()
 	if (character != nullptr) {
 		character->useReadyWeapon = true;
 		SetUseReadyWeaponColor();
+		if (actionWidget != nullptr) {
+			actionWidget->UpdateCoveringAttackWidget();
+		}
 	}
 }
 
@@ -167,24 +176,37 @@ void UWPlayerInfo::OnClickSecondaryWeapon()
 	if (character != nullptr) {
 		character->useReadyWeapon = false;
 		SetUseSecondaryWeaponColor();
+		if (actionWidget != nullptr) {
+			actionWidget->UpdateCoveringAttackWidget();
+		}
 	}
 }
 
-void UWPlayerInfo::HidePlayerInfoDuringCombat(AZombie* zombie)
+void UWPlayerInfo::HidePlayerInfoDuringCombat(AZombie* zombie, bool inCovering)
 {
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 	optionsWidget->SetVisibility(ESlateVisibility::Hidden);
 	actionWidget->SetVisibility(ESlateVisibility::Hidden);
 	actionWidget->HideWidgets();
 	SetZombieTileHovered(zombie);
+	if (inCovering) {
+		AGrid* grid = character->grid;
+		grid->AddTileState(grid->GetTileIndexFromLocation(character->GetActorLocation()), TileState::Selected);
+	}
 }
 
-void UWPlayerInfo::UnhidePlayerInfoDuringCombat()
+void UWPlayerInfo::UnhidePlayerInfoDuringCombat(bool inCovering)
 {
-	SetVisibility(ESlateVisibility::Visible);
-	optionsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	actionWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	character->grid->deleteStatesFromTilesButSelected();
+	if (inCovering) {
+		SetVisibility(ESlateVisibility::Hidden);
+		character->grid->deleteStatesFromTiles();
+	}
+	else {
+		SetVisibility(ESlateVisibility::Visible);
+		character->grid->deleteStatesFromTilesButSelected();
+		optionsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		actionWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
 }
 
 void UWPlayerInfo::SetZombieTileHovered(AZombie* zombie)

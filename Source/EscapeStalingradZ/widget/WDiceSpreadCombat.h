@@ -40,8 +40,10 @@ public:
 	UPROPERTY(VisibleAnywhere) int numberToKill;
 	UPROPERTY(VisibleAnywhere) int numberDiceLeft;
 	UPROPERTY(VisibleAnywhere) TArray<int> humanDicesLeft;
+	UPROPERTY(VisibleAnywhere) bool attackInCovering = false;
 
 	UPROPERTY(VisibleAnywhere) class AZombie* zombie;
+	UPROPERTY(VisibleAnywhere) class AZombie* firstZombieIfCovering;
 	UPROPERTY(VisibleAnywhere) FIntPoint tileZombie = FIntPoint(-1, -1);
 	UPROPERTY(VisibleAnywhere) class APlayerCharacter* character;
 

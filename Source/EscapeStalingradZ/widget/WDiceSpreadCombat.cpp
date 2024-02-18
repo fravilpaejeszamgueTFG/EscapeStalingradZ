@@ -10,14 +10,16 @@
 #include "EscapeStalingradZ/grid/Grid.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
-#include "EscapeStalingradZ/widget/UserHUD.h"
-#include "EscapeStalingradZ/widget/WPlayerInfo.h"
+#include "UserHUD.h"
+#include "WPlayerInfo.h"
+#include "WActions.h"
 #include "TimerManager.h"
 #include "WSelectObjectiveSpreadFire.h"
 #include "EscapeStalingradZ/player/actions/Command.h"
 #include "EscapeStalingradZ/player/actions/ActionNewObjectiveSpreadFire.h"
 #include "EscapeStalingradZ/player/PlayerActions.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
+#include "EscapeStalingradZ/turn/Turn.h"
 
 UWDiceSpreadCombat::UWDiceSpreadCombat(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -37,7 +39,15 @@ void UWDiceSpreadCombat::SetDices(TArray<int> humanDices, int targetDie)
 {
 	if (humanDices.Num() > 0) {
 		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
-			hud->PlayerInfoWidget->HidePlayerInfoDuringCombat(zombie);
+			if (attackInCovering) {
+				hud->character = character;
+				hud->PlayerInfoWidget->character = character;
+				hud->PlayerInfoWidget->UpdateImages();
+				hud->PlayerInfoWidget->HidePlayerInfoDuringCombat(zombie, true);
+			}
+			else {
+				hud->PlayerInfoWidget->HidePlayerInfoDuringCombat(zombie, false);
+			}
 		}
 		tileZombie = character->grid->GetTileIndexFromLocation(zombie->GetActorLocation());
 		humanDicesLeft = humanDices;
@@ -58,8 +68,10 @@ void UWDiceSpreadCombat::NextDie(int targetDie)
 	if (SelectObjectiveWidget != nullptr) {
 		SelectObjectiveWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
-	if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
-		hud->PlayerInfoWidget->SetZombieTileHovered(zombie);
+	else {
+		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+			hud->PlayerInfoWidget->SetZombieTileHovered(zombie);
+		}
 	}
 	DieNumber->SetVisibility(ESlateVisibility::Hidden);
 	ButtonRollAnimation->SetVisibility(ESlateVisibility::Visible);
@@ -142,11 +154,32 @@ void UWDiceSpreadCombat::SelectObjetiveSpreadFire()
 
 void UWDiceSpreadCombat::EndAttack()
 {
+	character->attacked = true;
 	DieNumber->SetVisibility(ESlateVisibility::Hidden);
 	ButtonRollAnimation->SetVisibility(ESlateVisibility::Visible);
 	ButtonConfirm->SetVisibility(ESlateVisibility::Hidden);
-	if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
-		hud->PlayerInfoWidget->UnhidePlayerInfoDuringCombat();
+	if (attackInCovering) {
+		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+			hud->character = character;
+			hud->PlayerInfoWidget->character = character;
+			hud->PlayerInfoWidget->UnhidePlayerInfoDuringCombat(true);
+		}
+		attackInCovering = false;
+		character->typeOfCovering = CoveringType::NONE;
+		if (zombie->GetActorLocation().Z > -1000) {
+			firstZombieIfCovering->charactersInCovering.Remove(character);
+			firstZombieIfCovering->CoveringAttack();
+		}
+		else {
+			ATurn* turn = zombie->turn;
+			turn->nextZombie();
+		}
+	}
+	else {
+		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+			hud->PlayerInfoWidget->UnhidePlayerInfoDuringCombat(false);
+			hud->PlayerInfoWidget->actionWidget->DisableAttack();
+		}
 	}
 	if (SelectObjectiveWidget != nullptr) {
 		SelectObjectiveWidget->SetVisibility(ESlateVisibility::Hidden);

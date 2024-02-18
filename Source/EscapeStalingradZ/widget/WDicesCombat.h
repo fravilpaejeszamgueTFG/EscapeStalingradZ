@@ -46,6 +46,7 @@ public:
 	UPROPERTY(VisibleAnywhere) TArray<int> humanDicesLeft;
 	UPROPERTY(VisibleAnywhere) bool isAttackHandToHand;
 	UPROPERTY(VisibleAnywhere) bool zombieStunned;
+	UPROPERTY(VisibleAnywhere) bool attackInCovering = false;
 
 	UPROPERTY(VisibleAnywhere) class AZombie* zombie;
 	UPROPERTY(VisibleAnywhere) class APlayerCharacter* character;

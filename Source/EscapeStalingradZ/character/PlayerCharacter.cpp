@@ -103,29 +103,17 @@ int APlayerCharacter::getDistanceLoF(TArray<FIntPoint> tiles, FIntPoint index)
 void APlayerCharacter::AttackZombieNormalFire(AZombie* zombie, FIntPoint tileZombie)
 {
 	int mod = GetNumberOfHitModifiersAttack(zombie) + GetNumberOfHitModifiersLoF(tileZombie);
-	int numberOfDices = GetNumberOfDices();
-	TArray<int> dices = TArray<int>();
-	int die = 0;
-	for (int i = 1; i <= numberOfDices; i++) {
-		int nextDie = FMath::RandRange(1, 12);
-		dices.Add(nextDie);
-	}
+	TArray<int> dice = GetDice(GetNumberOfDices());
 	int finalHit = mod + GetPrimaryHitAndMultipleFire(tileZombie);
-	CreateOrSetDicesCombatWidget(zombie, dices, finalHit, false);
+	CreateOrSetDicesCombatWidget(zombie, dice, finalHit, false, false);
 }
 
 void APlayerCharacter::AttackZombieSpreadFire(AZombie* zombie, FIntPoint tileZombie)
 {
 	int mod = GetNumberOfHitModifiersAttack(zombie) + GetNumberOfHitModifiersLoF(tileZombie) + 1;
-	int numberOfDices = GetNumberOfDices();
-	TArray<int> dices = TArray<int>();
-	int die = 0;
-	for (int i = 1; i <= numberOfDices; i++) {
-		int nextDie = FMath::RandRange(1, 12);
-		dices.Add(nextDie);
-	}
+	TArray<int> dice = GetDice(GetNumberOfDices());
 	int finalHit = mod + GetPrimaryHitAndMultipleFire(tileZombie);
-	CreateOrSetSpreadCombateWidget(zombie, dices, finalHit);
+	CreateOrSetSpreadCombateWidget(zombie, dice, finalHit, false);
 }
 
 void APlayerCharacter::MoveToTileWithZombieDuringSpreadFire(AZombie* zombie, FIntPoint tileZombie)
@@ -151,12 +139,46 @@ void APlayerCharacter::MoveToTileWithoutZombieDuringSpreadFire(FIntPoint destiny
 void APlayerCharacter::AttackZombieHandToHand(AZombie* zombie, FIntPoint tileZombie)
 {
 	int mod = GetNumberOfHitModifiersAttack(zombie) + GetNumberOfHitModifiersLoF(tileZombie);
-	int die = FMath::RandRange(1, 12);
-	TArray<int> dice = TArray<int>();
-	dice.Add(die);
+	TArray<int> dice = GetDice(1);
 	int finalHit = mod + GetPrimaryHitHandToHand();
-	UE_LOG(LogTemp, Warning, TEXT("dado: %d, finalHit: %d, modificador: %d"), die, finalHit, mod);
-	CreateOrSetDicesCombatWidget(zombie, dice, finalHit, true);
+	CreateOrSetDicesCombatWidget(zombie, dice, finalHit, true, false);
+}
+
+void APlayerCharacter::CoveringAttackHandToHand(AZombie* zombie, FIntPoint tileZombie)
+{
+	int mod = GetNumberOfHitModifiersAttack(zombie) + GetNumberOfHitModifiersLoF(tileZombie);
+	TArray<int> dice = GetDice(1);
+	int finalHit = mod + GetPrimaryHitHandToHand();
+	CreateOrSetDicesCombatWidget(zombie, dice, finalHit, true, true);
+}
+
+void APlayerCharacter::CoveringAttackNormalFire(AZombie* zombie, FIntPoint tileZombie)
+{
+	int mod = GetNumberOfHitModifiersAttack(zombie) + GetNumberOfHitModifiersLoF(tileZombie);
+	TArray<int> dice = GetDice(GetNumberOfDices());
+	int finalHit = mod + GetPrimaryHitAndMultipleFire(tileZombie);
+	CreateOrSetDicesCombatWidget(zombie, dice, finalHit, false, true);
+}
+
+void APlayerCharacter::CoveringAttackSpreadFire(AZombie* zombie, FIntPoint tileZombie)
+{
+	int mod = GetNumberOfHitModifiersAttack(zombie) + GetNumberOfHitModifiersLoF(tileZombie) + 1;
+	TArray<int> dice = GetDice(GetNumberOfDices());
+	int finalHit = mod + GetPrimaryHitAndMultipleFire(tileZombie);
+	CreateOrSetSpreadCombateWidget(zombie, dice, finalHit, true);
+	if (DiceSpreadCombatWidget != nullptr) {
+		DiceSpreadCombatWidget->firstZombieIfCovering = zombie;
+	}
+}
+
+TArray<int> APlayerCharacter::GetDice(int numberOfDice)
+{
+	TArray<int> dice = TArray<int>();
+	for (int i = 1; i <= numberOfDice; i++) {
+		int nextDie = FMath::RandRange(1, 12);
+		dice.Add(nextDie);
+	}
+	return dice;
 }
 
 int APlayerCharacter::GetDistanceAttackHandToHand()
@@ -221,7 +243,6 @@ int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 				if (index.X != backward.X && index.Y != backward.Y) {
 					FIntPoint forward = GetForwardIndexInDiagonal(index, backward); 
 					FIntPoint right = GetForwardIndexInDiagonal(backward, index); 
-					UE_LOG(LogTemp, Warning, TEXT("es diagonal"));
 					if (!grid->CanMoveDiagonal(index, forward, right, backward)) {
 						res += 2;
 					}
@@ -247,7 +268,6 @@ int APlayerCharacter::GetNumberOfHitModifiersAttack(AZombie* zombie)
 	if (zombie->isStunned) {
 		res -= 3;
 	}
-	//TO-DO spread fire
 	if (typeOfCovering == CoveringType::Walked) {
 		res += 2;
 	}
@@ -328,13 +348,19 @@ int APlayerCharacter::GetNumberOfDices()
 	}
 }
 
-void APlayerCharacter::CreateOrSetDicesCombatWidget(AZombie* zombie, TArray<int> dice, int targetDie, bool isHandToHand)
+void APlayerCharacter::CreateOrSetDicesCombatWidget(AZombie* zombie, TArray<int> dice, int targetDie, bool isHandToHand, bool inCovering)
 {
 	if (DicesCombatWidgetClass) {
 		if (DicesCombatWidget != nullptr) {
 			DicesCombatWidget->character = this;
 			DicesCombatWidget->zombie = zombie;
 			DicesCombatWidget->SetVisibility(ESlateVisibility::Visible);
+			if (inCovering) {
+				DicesCombatWidget->attackInCovering = true;
+			}
+			else {
+				DicesCombatWidget->attackInCovering = false;
+			}
 			DicesCombatWidget->SetDices(dice,targetDie, isHandToHand);
 		}
 		else {
@@ -343,19 +369,31 @@ void APlayerCharacter::CreateOrSetDicesCombatWidget(AZombie* zombie, TArray<int>
 				DicesCombatWidget->character = this;
 				DicesCombatWidget->zombie = zombie;
 				DicesCombatWidget->AddToViewport();
+				if (inCovering) {
+					DicesCombatWidget->attackInCovering = true;
+				}
+				else {
+					DicesCombatWidget->attackInCovering = false;
+				}
 				DicesCombatWidget->SetDices(dice, targetDie, isHandToHand);
 			}
 		}
 	}
 }
 
-void APlayerCharacter::CreateOrSetSpreadCombateWidget(AZombie* zombie, TArray<int> dice, int targetDie)
+void APlayerCharacter::CreateOrSetSpreadCombateWidget(AZombie* zombie, TArray<int> dice, int targetDie, bool inCovering)
 {
 	if (DiceSpreadCombatWidgetClass) {
 		if (DiceSpreadCombatWidget != nullptr) {
 			DiceSpreadCombatWidget->character = this;
 			DiceSpreadCombatWidget->zombie = zombie;
 			DiceSpreadCombatWidget->SetVisibility(ESlateVisibility::Visible);
+			if (inCovering) {
+				DiceSpreadCombatWidget->attackInCovering = true;
+			}
+			else {
+				DiceSpreadCombatWidget->attackInCovering = false;
+			}
 			DiceSpreadCombatWidget->SetDices(dice, targetDie);
 		}
 		else {
@@ -364,6 +402,12 @@ void APlayerCharacter::CreateOrSetSpreadCombateWidget(AZombie* zombie, TArray<in
 				DiceSpreadCombatWidget->character = this;
 				DiceSpreadCombatWidget->zombie = zombie;
 				DiceSpreadCombatWidget->AddToViewport();
+				if (inCovering) {
+					DiceSpreadCombatWidget->attackInCovering = true;
+				}
+				else {
+					DiceSpreadCombatWidget->attackInCovering = false;
+				}
 				DiceSpreadCombatWidget->SetDices(dice, targetDie);
 			}
 		}

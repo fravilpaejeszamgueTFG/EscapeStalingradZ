@@ -84,6 +84,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = characters) TArray<class APlayerCharacter*> characters;
 
+	UPROPERTY(VisibleAnywhere, Category = characters) TArray<class APlayerCharacter*> charactersInCovering;
+
 	UPROPERTY(VisibleAnywhere, Category = PathFinding) TArray<FIntPoint> pathToCharacter;
 
 	UPROPERTY(VisibleAnywhere, Category = PathFinding) TArray<FIntPoint> discoveredTiles;
@@ -122,16 +124,12 @@ public:
 	void SetHealthAndMPPropertiesByZombie();
 
 	UFUNCTION() bool ZombieHit(int die, int stunNumber); //=true si muere el zombie, false si no muere
-
 	UFUNCTION() void ZombieActions();
-
 	UFUNCTION() void MovementZombie();
-
 	UFUNCTION() bool MoveZombie(FIntPoint targetTile);
-
 	UFUNCTION() void MoveZombieLocation();
-
 	UFUNCTION() void MoveZombieToNextLocation(int indexInPath);
+	UFUNCTION() void CoveringAttack();
 
 	//PathFinding
 	UFUNCTION() TArray<FIntPoint> FindPath(FIntPoint start, FIntPoint end);
