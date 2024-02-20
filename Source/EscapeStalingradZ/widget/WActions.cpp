@@ -33,7 +33,6 @@ void UWActions::NativeConstruct()
 	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	if (player != nullptr) {
 		controller = player;
-		character = player->playerchara;
 	}
 	hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 }
@@ -159,6 +158,13 @@ void UWActions::DisableButtonByMovementType(MovementType type)
 	}
 	else {
 		buttonMovement->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UWActions::DisableButtonIfCharacterIsInDirectContact()
+{
+	if (character != nullptr && character->inDirectContact) {
+		buttonMovement->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 

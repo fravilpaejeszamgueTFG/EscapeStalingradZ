@@ -59,7 +59,13 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 			}
 		}
 		else {
-			isStunned = true;
+			if (typeOfZombie == ZombieType::Armoured) {
+				isStunned = false;
+			}
+			else {
+				isStunned = true;
+			}
+			
 		}
 	}
 	return false;

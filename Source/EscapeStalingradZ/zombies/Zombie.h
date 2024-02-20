@@ -119,6 +119,8 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Movement) int cont = 0;
 
 	UPROPERTY(VisibleAnywhere, Category = Movement) float timeMovement = 2.f;
+
+	UPROPERTY(VisibleAnywhere, Category = DirectContact) class APlayerCharacter* characterInContact;
 	
 	//Funciones
 	void SetHealthAndMPPropertiesByZombie();

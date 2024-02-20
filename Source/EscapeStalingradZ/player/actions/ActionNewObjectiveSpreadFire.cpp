@@ -69,8 +69,8 @@ void UActionNewObjectiveSpreadFire::Action(AGrid* grid, FIntPoint tile, FIntPoin
 					else {
 						character->MoveToTileWithoutZombieDuringSpreadFire(destinyTile);
 					}
-					for (auto& tile : grid->gridTiles) {
-						grid->RemoveTileState(tile.Key, TileState::isReachable);
+					for (auto& t : grid->gridTiles) {
+						grid->RemoveTileState(t.Key, TileState::isReachable);
 					}
 				}
 				else {

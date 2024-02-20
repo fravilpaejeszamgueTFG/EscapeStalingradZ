@@ -74,6 +74,7 @@ public:
 	UFUNCTION() void EndTurn();
 	UFUNCTION() void HideWidgets();
 	UFUNCTION() void DisableButtonByMovementType(enum MovementType type);
+	UFUNCTION() void DisableButtonIfCharacterIsInDirectContact();
 	UFUNCTION() void DisableAttack();
 	UFUNCTION() void UpdateCoveringAttackWidget();
 

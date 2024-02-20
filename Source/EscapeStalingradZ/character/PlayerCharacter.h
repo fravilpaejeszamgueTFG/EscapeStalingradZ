@@ -116,6 +116,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Movement) TEnumAsByte<MovementType> typeOfMovement;
 	UPROPERTY(VisibleAnywhere, Category = Covering) TEnumAsByte<CoveringType> typeOfCovering;
 	UPROPERTY(VisibleAnywhere, Category = Covering) TEnumAsByte<CoveringAttackType> typeOfCoveringAttack;
+	UPROPERTY(VisibleAnywhere, Category = DirectContact) bool inDirectContact = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Widget")
 		TSubclassOf<class UWDicesCombat> DicesCombatWidgetClass;
