@@ -4,6 +4,8 @@
 #include "ActionMovementRotation.h"
 #include "EscapeStalingradZ/grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
+#include "EscapeStalingradZ/widget/UserHUD.h"
+#include "EscapeStalingradZ/widget/WPlayerInfo.h"
 
 void UActionMovementRotation::Execute(AGrid* grid, APlayerCharacter* character)
 {
@@ -40,6 +42,10 @@ void UActionMovementRotation::Action(AGrid* grid, FIntPoint tile, FIntPoint dest
 					FRotator rotation = GetRotationDirection(tile, destinyTile);
 					character->SetActorRotation(rotation);
 					CheckMP(character, forwardVector, character->GetActorForwardVector());
+					AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+					if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+						hud->PlayerInfoWidget->SetVisibleActionWidget();
+					}
 				}
 			}
 			for (FIntPoint i : indices) {

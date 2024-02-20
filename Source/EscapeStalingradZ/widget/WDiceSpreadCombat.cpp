@@ -110,6 +110,10 @@ void UWDiceSpreadCombat::AttackSpreadFire()
 	}
 	else {
 		bool zombieDied = zombie->ZombieHit(currentNumber, numberToStun);
+		if (zombie->isStunned == true || zombieDied) {
+			character->inDirectContact = false;
+			zombie->characterInContact = nullptr;
+		}
 		if (currentNumber == 2) {
 			character->FriendlyFireGivenZombie(zombie);
 		}

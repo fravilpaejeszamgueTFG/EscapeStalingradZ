@@ -4,6 +4,9 @@
 #include "ActionMovementLateral.h"
 #include "EscapeStalingradZ/grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
+#include "EscapeStalingradZ/zombies/Zombie.h"
+#include "EscapeStalingradZ/widget/UserHUD.h"
+#include "EscapeStalingradZ/widget/WPlayerInfo.h"
 
 void UActionMovementLateral::Execute(AGrid* grid, APlayerCharacter* character)
 {
@@ -14,6 +17,9 @@ void UActionMovementLateral::Execute(AGrid* grid, APlayerCharacter* character)
 		indices.Append(grid->GetTilesForwardMovement(indice, -(character->GetActorRightVector()), numCasillas, character->mp, 2));
 		for (FIntPoint l : indices) {
 			grid->AddTileState(l, TileState::isReachable);
+			if (grid->HasZombieInNeighbor(l)) {
+				break;
+			}
 		}
 	}
 }
@@ -59,6 +65,15 @@ void UActionMovementLateral::Action(AGrid* grid, FIntPoint tile, FIntPoint desti
 						}
 					}
 					character->mp -= cont;
+					AZombie* zombie = grid->ZombieInNeighbor(destinyTile);
+					if (zombie != nullptr) {
+						character->inDirectContact = true;
+						zombie->characterInContact = character;
+					}
+					AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+					if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+						hud->PlayerInfoWidget->SetVisibleActionWidget();
+					}
 				}
 			}
 			for (FIntPoint i : indicesright) {

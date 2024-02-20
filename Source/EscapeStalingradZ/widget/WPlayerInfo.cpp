@@ -138,9 +138,11 @@ void UWPlayerInfo::UpdateImages()
 
 void UWPlayerInfo::SetVisibleActionWidget()
 {
-	if (objectiveWidget != nullptr) {
+	if (actionWidget != nullptr) {
 		actionWidget->character = character;
 		actionWidget->DisableButtonByMovementType(character->typeOfMovement);
+		actionWidget->DisableButtonIfCharacterIsInDirectContact();
+		actionWidget->HideWidgets();
 		actionWidget->turn = turn;
 		actionWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
@@ -205,7 +207,7 @@ void UWPlayerInfo::UnhidePlayerInfoDuringCombat(bool inCovering)
 		SetVisibility(ESlateVisibility::Visible);
 		character->grid->deleteStatesFromTilesButSelected();
 		optionsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		actionWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		SetVisibleActionWidget();
 	}
 }
 

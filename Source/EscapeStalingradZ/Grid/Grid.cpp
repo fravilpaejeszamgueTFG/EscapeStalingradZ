@@ -565,6 +565,34 @@ int AGrid::GetCostToEnterNeighbor(FIntPoint index, FIntPoint neighbor)
 	return 1;
 }
 
+bool AGrid::HasZombieInNeighbor(FIntPoint index)
+{
+	TArray<FIntPoint> vecinos = GetTileNeighbors(index);
+	for (FIntPoint v : vecinos) {
+		if (gridTiles[v].actor != nullptr) {
+			AZombie* zombie = Cast<AZombie>(gridTiles[v].actor);
+			if (zombie != nullptr && !zombie->isStunned && zombie->characterInContact == nullptr) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+AZombie* AGrid::ZombieInNeighbor(FIntPoint index)
+{
+	TArray<FIntPoint> vecinos = GetTileNeighbors(index);
+	for (FIntPoint v : vecinos) {
+		if (gridTiles[v].actor != nullptr) {
+			AZombie* zombie = Cast<AZombie>(gridTiles[v].actor);
+			if (zombie != nullptr && !zombie->isStunned && zombie->characterInContact == nullptr) {
+				return zombie;
+			}
+		}
+	}
+	return nullptr;
+}
+
 bool AGrid::CanShootDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, FIntPoint backward)
 {
 	int res = 0;

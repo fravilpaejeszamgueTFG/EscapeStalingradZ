@@ -173,4 +173,10 @@ public:
 
 	UFUNCTION()
 		int GetCostToEnterNeighbor(FIntPoint index, FIntPoint neighbor);
+
+	UFUNCTION()
+		bool HasZombieInNeighbor(FIntPoint index);
+
+	UFUNCTION()
+		class AZombie* ZombieInNeighbor(FIntPoint index);
 };

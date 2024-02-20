@@ -4,6 +4,8 @@
 #include "ActionOpenCloseDoor.h"
 #include "EscapeStalingradZ/grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
+#include "EscapeStalingradZ/widget/UserHUD.h"
+#include "EscapeStalingradZ/widget/WPlayerInfo.h"
 
 void UActionOpenCloseDoor::Execute(AGrid* grid, APlayerCharacter* character)
 {
@@ -45,6 +47,10 @@ void UActionOpenCloseDoor::Action(AGrid* grid, FIntPoint tile, FIntPoint destiny
 					}
 					else {
 						character->mp--;
+					}
+					AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+					if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+						hud->PlayerInfoWidget->SetVisibleActionWidget();
 					}
 				}
 			}
