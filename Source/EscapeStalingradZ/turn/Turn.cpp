@@ -70,14 +70,21 @@ void ATurn::SetNextCharacter()
 		selectedCharacter = charactersToStartTurn[0];
 		selectedCharacter->attacked = false;
 		selectedCharacter->typeOfCovering = CoveringType::NONE;
-		APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-		if (player != nullptr && player->actions != nullptr) {
-			FIntPoint tile = grid->GetTileIndexFromLocation(selectedCharacter->GetActorLocation());
-			player->actions->actionTile = tile;
-			player->playerchara = selectedCharacter;
-			player->SetMovementWidget();
-			grid->AddTileState(tile, TileState::Selected);
-			player->Movement->turn = this;
+		if (selectedCharacter->isLocked) {
+			FTimerHandle prueba;
+			GetWorldTimerManager().SetTimer(prueba, this, &ATurn::nextCharacter, 1.f, false);
+			//Liberacion fijado
+		}
+		else {
+			APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+			if (player != nullptr && player->actions != nullptr) {
+				FIntPoint tile = grid->GetTileIndexFromLocation(selectedCharacter->GetActorLocation());
+				player->actions->actionTile = tile;
+				player->playerchara = selectedCharacter;
+				player->SetMovementWidget();
+				grid->AddTileState(tile, TileState::Selected);
+				player->Movement->turn = this;
+			}
 		}
 	}
 	else {
@@ -161,6 +168,7 @@ void ATurn::SetNextZombie()
 	else {
 		endTurnZombie = true;
 		selectedZombie = nullptr;
+		RemoveStunToZombies();
 		SpawnZombies();
 		if (endTurnHuman) {
 			EndTurn();
@@ -279,6 +287,13 @@ void ATurn::CreateOrSetTurnDicesWidget(int humanDie, int targetDie)
 				turnDicesWidget->turn = this;
 			}
 		}
+	}
+}
+
+void ATurn::RemoveStunToZombies()
+{
+	for (AZombie* z : zombies) {
+		z->isStunned = false;
 	}
 }
 

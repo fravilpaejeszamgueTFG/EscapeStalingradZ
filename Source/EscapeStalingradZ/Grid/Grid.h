@@ -179,4 +179,7 @@ public:
 
 	UFUNCTION()
 		class AZombie* ZombieInNeighbor(FIntPoint index);
+
+	UFUNCTION()
+		class APlayerCharacter* CharacterInNeighbor(FIntPoint index);
 };

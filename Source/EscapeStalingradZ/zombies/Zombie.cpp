@@ -41,6 +41,8 @@ void AZombie::SetHealthAndMPPropertiesByZombie()
 		health = 1;
 		mp = 1;
 	}
+	isStunned = false;
+	characterInContact = nullptr;
 }
 
 bool AZombie::ZombieHit(int die, int stunNumber)
@@ -62,10 +64,13 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 			if (typeOfZombie == ZombieType::Armoured) {
 				isStunned = false;
 			}
+			else if (typeOfZombie == ZombieType::Kugelfisch) {
+				//TO-DO hacer que explote
+			} 
 			else {
 				isStunned = true;
+				characterInContact = nullptr;
 			}
-			
 		}
 	}
 	return false;
@@ -74,12 +79,28 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 void AZombie::ZombieActions()
 {
 	//TO-DO hacer acciones de zombies
-	for (APlayerCharacter* chara : characters) {
-		if (chara->typeOfCovering != CoveringType::NONE) {
-			charactersInCovering.Add(chara);
+	if (isStunned) {
+		turn->nextZombie();
+	}
+	else {
+		if (characterInContact != nullptr) {
+			characterInContact->ZombieLock(this);
+			turn->nextZombie();
+		}
+		else {
+			if (!ZombieDirectContact()) {
+				for (APlayerCharacter* chara : characters) {
+					if (chara->typeOfCovering != CoveringType::NONE) {
+						charactersInCovering.Add(chara);
+					}
+				}
+				MovementZombie();
+			}
+			else {
+				turn->nextZombie();
+			}
 		}
 	}
-	MovementZombie();
 }
 
 void AZombie::MovementZombie()
@@ -142,8 +163,22 @@ void AZombie::MoveZombieLocation()
 
 void AZombie::MoveZombieToNextLocation(int indexInPath)
 {
-	if (mp > 0 && MoveZombie(pathToCharacter[indexInPath])) {
-		GetWorldTimerManager().SetTimer(movementTimer, this, &AZombie::MoveZombieLocation, 1. / stepMovementPerSecond, true);
+	if (GetActorLocation().Z > -1000 && !isStunned) {
+		if (ZombieDirectContact()) {
+			mp = maxmp;
+			currentIndexPath = 0;
+			turn->nextZombie();
+		}
+		else {
+			if (mp > 0 && MoveZombie(pathToCharacter[indexInPath])) {
+				GetWorldTimerManager().SetTimer(movementTimer, this, &AZombie::MoveZombieLocation, 1. / stepMovementPerSecond, true);
+			}
+			else {
+				mp = maxmp;
+				currentIndexPath = 0;
+				turn->nextZombie();
+			}
+		}
 	}
 	else {
 		mp = maxmp;
@@ -204,6 +239,17 @@ void AZombie::CoveringAttack()
 			CoveringAttack();
 		}
 	}
+}
+
+bool AZombie::ZombieDirectContact()
+{
+	FIntPoint tile = grid->GetTileIndexFromLocation(GetActorLocation());
+	characterInContact = grid->CharacterInNeighbor(tile);
+	if (characterInContact != nullptr) {
+		characterInContact->ZombieLock(this);
+		return true;
+	}
+	return false;
 }
 
 TArray<FIntPoint> AZombie::FindPath(FIntPoint start, FIntPoint end)
