@@ -55,6 +55,7 @@ void ATurn::SetCharacters(TArray<FIntPoint> charactersList)
 
 void ATurn::nextCharacter()
 {
+	grid->deleteStatesFromTiles();
 	if (selectedCharacter != nullptr) {
 		charactersToStartTurn.Remove(selectedCharacter);
 		SetNextCharacter();
@@ -70,22 +71,7 @@ void ATurn::SetNextCharacter()
 		selectedCharacter = charactersToStartTurn[0];
 		selectedCharacter->attacked = false;
 		selectedCharacter->typeOfCovering = CoveringType::NONE;
-		if (selectedCharacter->isLocked) {
-			FTimerHandle prueba;
-			GetWorldTimerManager().SetTimer(prueba, this, &ATurn::nextCharacter, 1.f, false);
-			//Liberacion fijado
-		}
-		else {
-			APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-			if (player != nullptr && player->actions != nullptr) {
-				FIntPoint tile = grid->GetTileIndexFromLocation(selectedCharacter->GetActorLocation());
-				player->actions->actionTile = tile;
-				player->playerchara = selectedCharacter;
-				player->SetMovementWidget();
-				grid->AddTileState(tile, TileState::Selected);
-				player->Movement->turn = this;
-			}
-		}
+		PrepareCharacterForTurn();
 	}
 	else {
 		hud->HidePlayerInfo();
@@ -149,6 +135,7 @@ void ATurn::ActivateCollision()
 
 void ATurn::nextZombie()
 {
+	grid->deleteStatesFromTiles();
 	if (selectedZombie != nullptr) {
 		selectedZombie->charactersInCovering.Empty();
 		zombiesToStartTurn.Remove(selectedZombie);
@@ -163,7 +150,6 @@ void ATurn::SetNextZombie()
 		UE_LOG(LogTemp, Warning, TEXT("Turno zombie empieza"));
 		selectedZombie->characters = characters;
 		selectedZombie->ZombieActions();
-		// Hacer nextZombie(); cuando acabe de realizar las acciones el zombie
 	}
 	else {
 		endTurnZombie = true;
@@ -294,6 +280,19 @@ void ATurn::RemoveStunToZombies()
 {
 	for (AZombie* z : zombies) {
 		z->isStunned = false;
+	}
+}
+
+void ATurn::PrepareCharacterForTurn()
+{
+	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (player != nullptr && player->actions != nullptr) {
+		FIntPoint tile = grid->GetTileIndexFromLocation(selectedCharacter->GetActorLocation());
+		player->actions->actionTile = tile;
+		player->playerchara = selectedCharacter;
+		player->SetMovementWidget();
+		grid->AddTileState(tile, TileState::Selected);
+		player->Movement->turn = this;
 	}
 }
 

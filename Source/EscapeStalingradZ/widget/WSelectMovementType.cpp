@@ -29,7 +29,8 @@ void UWSelectMovementType::OnClickRunning()
 	character->mp = 8;
 	character->typeOfMovement = MovementType::Running;
 	SetVisibility(ESlateVisibility::Hidden);
-	hud->CreateOrSetPlayerInfo();
+	hud->character = character;
+	hud->StartCharacterTurn();
 }
 
 void UWSelectMovementType::OnClickWalking()
@@ -37,7 +38,8 @@ void UWSelectMovementType::OnClickWalking()
 	character->mp = 4;
 	character->typeOfMovement = MovementType::Walking;
 	SetVisibility(ESlateVisibility::Hidden);
-	hud->CreateOrSetPlayerInfo();
+	hud->character = character;
+	hud->StartCharacterTurn();
 }
 
 void UWSelectMovementType::OnClickStatic()
@@ -45,5 +47,6 @@ void UWSelectMovementType::OnClickStatic()
 	character->mp = 4;
 	character->typeOfMovement = MovementType::Stationary;
 	SetVisibility(ESlateVisibility::Hidden);
-	hud->CreateOrSetPlayerInfo();
+	hud->character = character;
+	hud->StartCharacterTurn();
 }

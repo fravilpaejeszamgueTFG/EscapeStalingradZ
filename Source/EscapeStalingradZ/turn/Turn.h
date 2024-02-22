@@ -117,5 +117,6 @@ public:
 		void CreateOrSetTurnDicesWidget(int humanDie, int targetDie);
 
 	UFUNCTION() void RemoveStunToZombies();
+	UFUNCTION() void PrepareCharacterForTurn();
 
 };

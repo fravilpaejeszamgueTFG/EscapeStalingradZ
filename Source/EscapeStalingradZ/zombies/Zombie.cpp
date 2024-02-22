@@ -86,6 +86,7 @@ void AZombie::ZombieActions()
 		if (characterInContact != nullptr) {
 			characterInContact->ZombieLock(this);
 			turn->nextZombie();
+			//TO-DO covering atttack
 		}
 		else {
 			if (!ZombieDirectContact()) {
@@ -97,7 +98,9 @@ void AZombie::ZombieActions()
 				MovementZombie();
 			}
 			else {
+				characterInContact->ZombieLock(this);
 				turn->nextZombie();
+				//TO-DO covering atttack
 			}
 		}
 	}
@@ -246,10 +249,21 @@ bool AZombie::ZombieDirectContact()
 	FIntPoint tile = grid->GetTileIndexFromLocation(GetActorLocation());
 	characterInContact = grid->CharacterInNeighbor(tile);
 	if (characterInContact != nullptr) {
-		characterInContact->ZombieLock(this);
 		return true;
 	}
 	return false;
+}
+
+void AZombie::CoveringAttackBeforeLock()
+{
+	if (characterInContact->attacked) {
+		characterInContact->ZombieLock(this);
+		turn->nextZombie();
+	}
+	else {
+
+	}
+	//TO-DO
 }
 
 TArray<FIntPoint> AZombie::FindPath(FIntPoint start, FIntPoint end)
