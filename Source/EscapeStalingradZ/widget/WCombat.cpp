@@ -29,10 +29,8 @@ void UWCombat::NativeConstruct()
 
 	buttonNormalFire->VisibilityDelegate.BindDynamic(this, &UWCombat::CanFireWeapon);
 	buttonNormalFire->SynchronizeProperties();
-	buttonSpreadFire->VisibilityDelegate.BindDynamic(this, &UWCombat::CanFireWeapon);
+	buttonSpreadFire->VisibilityDelegate.BindDynamic(this, &UWCombat::CanFireWeaponInSpread);
 	buttonSpreadFire->SynchronizeProperties();
-
-
 
 	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	if (player != nullptr) {
@@ -80,6 +78,19 @@ ESlateVisibility UWCombat::CanFireWeapon()
 			return ESlateVisibility::Visible;
 		}
 		if (!character->useReadyWeapon && character->readySecondaryWeapon->multipleRange > 0) {
+			return ESlateVisibility::Visible;
+		}
+	}
+	return ESlateVisibility::Hidden;
+}
+
+ESlateVisibility UWCombat::CanFireWeaponInSpread()
+{
+	if (character != nullptr && character->ammo > 0) {
+		if (character->useReadyWeapon && character->readyWeapon->multipleRange > 0 && character->readyWeapon->rateOfFire > 1) {
+			return ESlateVisibility::Visible;
+		}
+		if (!character->useReadyWeapon && character->readySecondaryWeapon->multipleRange > 0 && character->readySecondaryWeapon->rateOfFire > 1) {
 			return ESlateVisibility::Visible;
 		}
 	}

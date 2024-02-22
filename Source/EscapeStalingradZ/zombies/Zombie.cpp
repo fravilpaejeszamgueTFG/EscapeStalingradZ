@@ -56,7 +56,10 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 				turn->zombies.Remove(this);
 				SetActorLocation(FVector(-9999,-9999,-9999));
 				grid->gridTiles[index].actor = nullptr;
+				characterInContact->isLocked = false;
+				characterInContact->inDirectContact = false;
 				SetHealthAndMPPropertiesByZombie();
+				//TO-DO si hay zombies esperando para entrar en esta casilla que entre uno (turno), tambien asignar en contacto directo si hay un personaje en una adyacente
 				return true;
 			}
 		}
@@ -69,6 +72,8 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 			} 
 			else {
 				isStunned = true;
+				characterInContact->isLocked = false;
+				characterInContact->inDirectContact = false;
 				characterInContact = nullptr;
 			}
 		}
@@ -84,9 +89,7 @@ void AZombie::ZombieActions()
 	}
 	else {
 		if (characterInContact != nullptr) {
-			characterInContact->ZombieLock(this);
-			turn->nextZombie();
-			//TO-DO covering atttack
+			CoveringAttackBeforeLock();
 		}
 		else {
 			if (!ZombieDirectContact()) {
@@ -98,9 +101,7 @@ void AZombie::ZombieActions()
 				MovementZombie();
 			}
 			else {
-				characterInContact->ZombieLock(this);
-				turn->nextZombie();
-				//TO-DO covering atttack
+				CoveringAttackBeforeLock();
 			}
 		}
 	}
@@ -170,6 +171,7 @@ void AZombie::MoveZombieToNextLocation(int indexInPath)
 		if (ZombieDirectContact()) {
 			mp = maxmp;
 			currentIndexPath = 0;
+			characterInContact->ZombieLock(this);
 			turn->nextZombie();
 		}
 		else {
@@ -256,14 +258,31 @@ bool AZombie::ZombieDirectContact()
 
 void AZombie::CoveringAttackBeforeLock()
 {
-	if (characterInContact->attacked) {
+	if (characterInContact->isLocked || characterInContact->attacked) {
 		characterInContact->ZombieLock(this);
 		turn->nextZombie();
 	}
 	else {
-
+		FIntPoint tile = grid->GetTileIndexFromLocation(GetActorLocation());
+		if (characterInContact->typeOfCoveringAttack == CoveringAttackType::HandToHand) {
+			characterInContact->CoveringAttackHandToHand(this, tile);
+		}
+		else {
+			characterInContact->getArcOfFire();
+			if (characterInContact->LoFs.Contains(grid->GetTileIndexFromLocation(GetActorLocation()))) {
+				if (characterInContact->typeOfCoveringAttack == CoveringAttackType::NormalFire) {
+					characterInContact->CoveringAttackNormalFire(this, tile);
+				}
+				else {
+					characterInContact->CoveringAttackSpreadFire(this, tile);
+				}
+			}
+			else {
+				characterInContact->ZombieLock(this);
+				turn->nextZombie();
+			}
+		}
 	}
-	//TO-DO
 }
 
 TArray<FIntPoint> AZombie::FindPath(FIntPoint start, FIntPoint end)
