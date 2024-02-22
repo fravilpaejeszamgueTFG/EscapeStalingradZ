@@ -132,6 +132,7 @@ public:
 	UFUNCTION() void MoveZombieLocation();
 	UFUNCTION() void MoveZombieToNextLocation(int indexInPath);
 	UFUNCTION() void CoveringAttack();
+	UFUNCTION() bool ZombieDirectContact(); //=true si hay un personaje en una casilla adyacente
 
 	//PathFinding
 	UFUNCTION() TArray<FIntPoint> FindPath(FIntPoint start, FIntPoint end);

@@ -117,6 +117,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Covering) TEnumAsByte<CoveringType> typeOfCovering;
 	UPROPERTY(VisibleAnywhere, Category = Covering) TEnumAsByte<CoveringAttackType> typeOfCoveringAttack;
 	UPROPERTY(VisibleAnywhere, Category = DirectContact) bool inDirectContact = false;
+	UPROPERTY(VisibleAnywhere, Category = DirectContact) bool isLocked = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Widget")
 		TSubclassOf<class UWDicesCombat> DicesCombatWidgetClass;
@@ -159,4 +160,7 @@ public:
 	UFUNCTION() void CreateOrSetDicesCombatWidget(class AZombie* zombie, TArray<int> dice, int targetDie, bool isHandToHand, bool inCovering);
 	UFUNCTION() void CreateOrSetSpreadCombateWidget(class AZombie* zombie, TArray<int> dice, int targetDie, bool inCovering);
 	UFUNCTION() void FriendlyFireGivenZombie(class AZombie* zombie);
+	//fijado zombie
+	UFUNCTION() void ZombieLock(class AZombie* zombie);
+	UFUNCTION() FRotator GetRotationDirectionToZombie(class AZombie* zombie);
 };

@@ -418,3 +418,33 @@ void APlayerCharacter::FriendlyFireGivenZombie(AZombie* zombie)
 {
 	FriendlyFire(grid->GetTileIndexFromLocation(zombie->GetActorLocation()));
 }
+
+FRotator APlayerCharacter::GetRotationDirectionToZombie(AZombie* zombie)
+{
+	FIntPoint index = grid->GetTileIndexFromLocation(GetActorLocation());
+	FIntPoint zombieIndex = grid->GetTileIndexFromLocation(zombie->GetActorLocation());
+	if (zombieIndex.X > index.X) {
+		return FRotator(0, 0, 0);
+	}
+	else if (zombieIndex.X < index.X) {
+		return FRotator(0, 180, 0);
+	}
+	else if (zombieIndex.Y > index.Y) {
+		return FRotator(0, 90, 0);
+	}
+	else {
+		return FRotator(0, 270, 0);
+	}
+}
+
+void APlayerCharacter::ZombieLock(AZombie* zombie)
+{
+	inDirectContact = true;
+	isLocked = true;
+	if (zombie->mp > 0) {
+		health--;
+	}
+	zombie->characterInContact = this;
+	FRotator rotacion = GetRotationDirectionToZombie(zombie);
+	SetActorRotation(rotacion);
+}

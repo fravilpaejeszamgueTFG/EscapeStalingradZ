@@ -11,6 +11,9 @@
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "WSelectCharacterTurn.h"
 #include "WSelectMovementType.h"
+#include "TimerManager.h"
+#include "GameFramework/Actor.h"
+#include "Kismet/GameplayStatics.h"
 
 UCharacterButton::UCharacterButton(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -31,25 +34,34 @@ void UCharacterButton::OnClick()
 {
 	if (grid != nullptr && tile != FIntPoint(-1, -1)) {
 		grid->RemoveTileState(tile, TileState::Hovered);
-		grid->AddTileState(tile, TileState::Selected);
-		APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-		if (player != nullptr && player->actions!=nullptr) {
-			player->actions->actionTile = tile;
-			player->playerchara = character;
-			turn->selectedCharacter = character;
-			player->SetMovementWidget();
-			player->Movement->turn = turn;
-		}
 		character->attacked = false;
 		character->typeOfCovering = CoveringType::NONE;
 		selectCharacter->onClickButton();
+		turn->selectedCharacter = character;
+		if (character->isLocked) {
+			FTimerHandle prueba;
+			GetWorld()->GetTimerManager().SetTimer(prueba, turn, &ATurn::nextCharacter, 1.f, false);
+			//Liberacion fijado
+		}
+		else {
+			grid->AddTileState(tile, TileState::Selected);
+			APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+			if (player != nullptr && player->actions != nullptr) {
+				player->actions->actionTile = tile;
+				player->playerchara = character;
+				player->SetMovementWidget();
+				player->Movement->turn = turn;
+			}
+		}
 	}
 }
 
 void UCharacterButton::OnHover()
 {
 	if (character != nullptr) {
-		grid = character->grid;
+		if (grid == nullptr) {
+			grid = character->grid;
+		}
 		if (grid != nullptr) {
 			tile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 			grid->AddTileState(tile, TileState::Hovered);

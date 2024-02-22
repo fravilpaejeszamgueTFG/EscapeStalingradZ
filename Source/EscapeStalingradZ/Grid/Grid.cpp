@@ -593,6 +593,20 @@ AZombie* AGrid::ZombieInNeighbor(FIntPoint index)
 	return nullptr;
 }
 
+APlayerCharacter* AGrid::CharacterInNeighbor(FIntPoint index)
+{
+	TArray<FIntPoint> vecinos = GetTileNeighbors(index);
+	for (FIntPoint v : vecinos) {
+		if (gridTiles[v].actor != nullptr) {
+			APlayerCharacter* chara = Cast<APlayerCharacter>(gridTiles[v].actor);
+			if (chara != nullptr && !chara->inDirectContact) {
+				return chara;
+			}
+		}
+	}
+	return nullptr;
+}
+
 bool AGrid::CanShootDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, FIntPoint backward)
 {
 	int res = 0;
