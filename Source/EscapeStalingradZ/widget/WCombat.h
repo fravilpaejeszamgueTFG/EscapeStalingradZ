@@ -43,5 +43,6 @@ public:
 	UFUNCTION() void GoBack();
 
 	UFUNCTION() ESlateVisibility CanFireWeapon();
+	UFUNCTION() ESlateVisibility CanFireWeaponInSpread();
 
 };
