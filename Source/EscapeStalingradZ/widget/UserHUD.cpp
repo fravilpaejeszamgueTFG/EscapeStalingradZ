@@ -3,7 +3,7 @@
 
 #include "UserHUD.h"
 #include "WPlayerInfo.h"
-#include "EscapeStalingradZ/player/PlayerC.h"
+#include "WReleaseLock.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -20,19 +20,25 @@ void AUserHUD::DrawHUD()
 void AUserHUD::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
-	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	if (player != nullptr) {
-		controller = player;
+void AUserHUD::StartCharacterTurn()
+{
+	if (character != nullptr) {
+		if (character->isLocked) {
+			CreateOrSetReleaseLock();
+		}
+		else {
+			CreateOrSetPlayerInfo();
+		}
 	}
 }
 
 void AUserHUD::CreateOrSetPlayerInfo()
 {
 	if (PlayerInfoWidgetClass) {
-		character = controller->playerchara;
 		if (PlayerInfoWidget != nullptr) {
-			PlayerInfoWidget->character = controller->playerchara;
+			PlayerInfoWidget->character = character;
 			PlayerInfoWidget->turn = turn;
 			PlayerInfoWidget->UpdateImages();
 			PlayerInfoWidget->SetVisibility(ESlateVisibility::Visible);
@@ -41,11 +47,32 @@ void AUserHUD::CreateOrSetPlayerInfo()
 		else {
 			PlayerInfoWidget = CreateWidget<UWPlayerInfo>(GetWorld(), PlayerInfoWidgetClass);
 			if (PlayerInfoWidget != nullptr) {
-				PlayerInfoWidget->character = controller->playerchara;
+				PlayerInfoWidget->character = character;
 				PlayerInfoWidget->turn = turn;
 				PlayerInfoWidget->UpdateImages();
 				PlayerInfoWidget->AddToViewport();
 				PlayerInfoWidget->SetVisibleActionWidget();
+			}
+		}
+	}
+}
+
+void AUserHUD::CreateOrSetReleaseLock()
+{
+	if (ReleaseLockWidgetClass) {
+		if (ReleaseLockWidget != nullptr) {
+			ReleaseLockWidget->turn = turn;
+			ReleaseLockWidget->character = character;
+			ReleaseLockWidget->SetDicesNumbers();
+			ReleaseLockWidget->SetVisibility(ESlateVisibility::Visible);
+		}
+		else {
+			ReleaseLockWidget = CreateWidget<UWReleaseLock>(GetWorld(), ReleaseLockWidgetClass);
+			if (ReleaseLockWidget != nullptr) {
+				ReleaseLockWidget->turn = turn;
+				ReleaseLockWidget->character = character;
+				ReleaseLockWidget->SetDicesNumbers();
+				ReleaseLockWidget->AddToViewport();
 			}
 		}
 	}

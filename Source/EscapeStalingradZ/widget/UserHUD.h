@@ -28,17 +28,23 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UWPlayerInfo* PlayerInfoWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "ReleaseLock")
+		TSubclassOf<class UWReleaseLock> ReleaseLockWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UWReleaseLock* ReleaseLockWidget;
+
 	UPROPERTY(VisibleAnywhere)
 		class ATurn* turn;
 
 	UPROPERTY(VisibleAnywhere, Category = Character) class APlayerCharacter* character;
-	UPROPERTY(VisibleAnywhere, Category = Character) class APlayerC* controller;
 
+	UFUNCTION()
+		void StartCharacterTurn();
 	UFUNCTION()
 		void CreateOrSetPlayerInfo();
 	UFUNCTION()
+		void CreateOrSetReleaseLock();
+	UFUNCTION()
 		void HidePlayerInfo();
-
-	
-
 };
