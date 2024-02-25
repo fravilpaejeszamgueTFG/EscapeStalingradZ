@@ -56,8 +56,10 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 				turn->zombies.Remove(this);
 				SetActorLocation(FVector(-9999,-9999,-9999));
 				grid->gridTiles[index].actor = nullptr;
-				characterInContact->isLocked = false;
-				characterInContact->inDirectContact = false;
+				if (characterInContact != nullptr) {
+					characterInContact->isLocked = false;
+					characterInContact->inDirectContact = false;
+				}
 				SetHealthAndMPPropertiesByZombie();
 				//TO-DO si hay zombies esperando para entrar en esta casilla que entre uno (turno), tambien asignar en contacto directo si hay un personaje en una adyacente
 				return true;
@@ -72,9 +74,11 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 			} 
 			else {
 				isStunned = true;
-				characterInContact->isLocked = false;
-				characterInContact->inDirectContact = false;
-				characterInContact = nullptr;
+				if (characterInContact != nullptr) {
+					characterInContact->isLocked = false;
+					characterInContact->inDirectContact = false;
+					characterInContact = nullptr;
+				}
 			}
 		}
 	}
@@ -114,7 +118,7 @@ void AZombie::MovementZombie()
 		int min = 100;
 		int indice = 0;
 		int cost = 100;
-		for (int i = 0; i < characters.Num() - 1; i++) {
+		for (int i = 0; i < characters.Num(); i++) {
 			cost = GetMinimunCostBetweenTwoTiles(tile,
 				grid->GetTileIndexFromLocation(characters[i]->GetActorLocation()));
 			if (cost < min) {
@@ -161,6 +165,8 @@ void AZombie::MoveZombieLocation()
 		currentMovementTime = 0;
 		currentIndexPath++;
 		mp--;
+		FIntPoint previousIndex = grid->GetTileIndexFromLocation(currentLocation);
+		turn->SpawnWaitingZombies(previousIndex);
 		CoveringAttack();
 	}
 }

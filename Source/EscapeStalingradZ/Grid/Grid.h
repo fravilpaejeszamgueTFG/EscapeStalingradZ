@@ -164,6 +164,8 @@ public:
 	UFUNCTION()
 		bool CanShootDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, FIntPoint backward);
 	UFUNCTION()
+		bool DoorOrWallBetweenTiles(FIntPoint tile1, FIntPoint tile2);
+	UFUNCTION()
 		void deleteStatesFromTiles();
 	UFUNCTION()
 		void deleteStatesFromTilesButSelected();
@@ -182,4 +184,7 @@ public:
 
 	UFUNCTION()
 		class APlayerCharacter* CharacterInNeighbor(FIntPoint index);
+
+	UFUNCTION()
+		TArray<FIntPoint> GetTileNeighborsThatCanMoveInto(FIntPoint index);
 };
