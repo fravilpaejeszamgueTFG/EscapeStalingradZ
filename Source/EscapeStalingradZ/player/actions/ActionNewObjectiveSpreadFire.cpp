@@ -54,6 +54,7 @@ void UActionNewObjectiveSpreadFire::Execute(AGrid* grid, APlayerCharacter* chara
 		}
 	}
 }
+
 void UActionNewObjectiveSpreadFire::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTile)
 {
 	if (grid != nullptr && tile != FIntPoint(-1, -1)) {

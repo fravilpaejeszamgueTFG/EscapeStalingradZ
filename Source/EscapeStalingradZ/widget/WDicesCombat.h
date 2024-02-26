@@ -47,6 +47,7 @@ public:
 	UPROPERTY(VisibleAnywhere) bool isAttackHandToHand;
 	UPROPERTY(VisibleAnywhere) bool zombieStunned;
 	UPROPERTY(VisibleAnywhere) bool attackInCovering = false;
+	UPROPERTY(VisibleAnywhere) FIntPoint tileZombie = FIntPoint(-1, -1);
 
 	UPROPERTY(VisibleAnywhere) class AZombie* zombie;
 	UPROPERTY(VisibleAnywhere) class APlayerCharacter* character;

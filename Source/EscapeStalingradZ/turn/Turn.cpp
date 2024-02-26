@@ -13,6 +13,7 @@
 #include "EscapeStalingradZ/widget/UserHUD.h"
 #include "EscapeStalingradZ/widget/WDicesTurn.h"
 #include "EscapeStalingradZ/zombies/Zombie.h"
+#include "EscapeStalingradZ/player/actions/ActionSelectTileToMove.h"
 
 // Sets default values
 ATurn::ATurn()
@@ -156,14 +157,6 @@ void ATurn::SetNextZombie()
 		selectedZombie = nullptr;
 		RemoveStunToZombies();
 		SpawnZombies();
-		if (endTurnHuman) {
-			EndTurn();
-		}
-		else {
-			charactersToStartTurn = characters;
-			SetNextCharacter();
-			UE_LOG(LogTemp, Warning, TEXT("Empieza turno humano"));
-		}
 	}
 }
 
@@ -179,6 +172,8 @@ void ATurn::SpawnZombies()
 			if (grid->gridTiles[tile].actor == nullptr) {
 				grid->SetZombieStartLocation(newZombie);
 				zombies.Add(newZombie);
+				DirectContactInSpawnZombie(tile);
+				EndZombieTurn();
 			}
 			else {
 				AZombie* zombieInTile = Cast<AZombie>(grid->gridTiles[tile].actor);
@@ -191,15 +186,54 @@ void ATurn::SpawnZombies()
 						z.Add(newZombie);
 						zombiesWaitingToEnterGrid.Add(tile, FZombiesWaiting(z));
 					}
+					EndZombieTurn();
 				}
 				else {
 					APlayerCharacter* characterInTile = Cast<APlayerCharacter>(grid->gridTiles[tile].actor);
 					if (characterInTile != nullptr) {
-						//TO-DO quitar vida personaje y que el jugador elija a que casilla lo empuja.
+						characterInTile->health--; //pasar a una funcion en character que compruebe si muere
+						if (characterInTile->inDirectContact) {
+							FIntPoint t = grid->GetTileIndexFromLocation(characterInTile->GetActorLocation());
+							TArray<FIntPoint> neighbors = grid->GetTileNeighbors(t);
+							for (FIntPoint index : neighbors) {
+								if (grid->gridTiles[index].actor != nullptr) {
+									AZombie* zombie = Cast<AZombie>(grid->gridTiles[index].actor);
+									if (zombie != nullptr && zombie->characterInContact == characterInTile) {
+										zombie->characterInContact = nullptr;
+									}
+								}
+							}
+							characterInTile->isLocked = false;
+						}
+						characterInTile->inDirectContact = true;
+						newZombie->characterInContact = characterInTile;
+						UActionSelectTileToMove* command = NewObject<UActionSelectTileToMove>(this);
+						command->Execute(grid, characterInTile);
+						APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+						UActionSelectTileToMove* commandActions = NewObject<UActionSelectTileToMove>(player->actions);
+						commandActions->turn = this;
+						commandActions->zombie = newZombie;
+						player->actions->command = commandActions;
+						player->actions->actionTile = tile;
 					}
 				}
 			}
 		}
+		else {
+			EndZombieTurn();
+		}
+	}
+}
+
+void ATurn::EndZombieTurn()
+{
+	if (endTurnHuman) {
+		EndTurn();
+	}
+	else {
+		charactersToStartTurn = characters;
+		SetNextCharacter();
+		UE_LOG(LogTemp, Warning, TEXT("Empieza turno humano"));
 	}
 }
 
@@ -294,5 +328,45 @@ void ATurn::PrepareCharacterForTurn()
 		grid->AddTileState(tile, TileState::Selected);
 		player->Movement->turn = this;
 	}
+}
+
+void ATurn::DirectContactInSpawnZombie(FIntPoint tile)
+{
+	TArray<FIntPoint> neighbors = grid->GetTileNeighbors(tile);
+	for (FIntPoint index : neighbors) {
+		if (grid->gridTiles[index].actor != nullptr) {
+			APlayerCharacter* chara = Cast<APlayerCharacter>(grid->gridTiles[index].actor);
+			if (chara != nullptr && !chara->inDirectContact) {
+				chara->inDirectContact = true;
+				break;
+			}
+		}
+	}
+}
+
+void ATurn::SpawnWaitingZombies(FIntPoint tile)
+{
+	if (zombiesWaitingToEnterGrid.Contains(tile) && zombiesWaitingToEnterGrid[tile].zombies.Num() > 0) {
+		AZombie* z = zombiesWaitingToEnterGrid[tile].zombies[0];
+		zombiesWaitingToEnterGrid[tile].zombies.Remove(z);
+		zombies.Add(z);
+		grid->gridTiles[tile].actor = z;
+		FVector loc = grid->GetLocationByIndex(tile);
+		z->SetActorLocation(loc);
+		APlayerCharacter* chara = grid->CharacterInNeighbor(tile);
+		if (chara != nullptr) {
+			chara->inDirectContact = true;
+			z->characterInContact = chara;
+		}
+	}
+}
+
+void ATurn::SpawnZombieAfterMoveCharacter(AZombie* zombie)
+{
+	int numRound = roundNumber % spawnZombiesTiles.Num();
+	FIntPoint tile = spawnZombiesTiles[numRound];
+	grid->SetZombieStartLocation(zombie);
+	zombies.Add(zombie);
+	EndZombieTurn();
 }
 

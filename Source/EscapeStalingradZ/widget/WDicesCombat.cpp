@@ -14,6 +14,7 @@
 #include "EscapeStalingradZ/widget/WActions.h"
 #include "TimerManager.h"
 #include "EscapeStalingradZ/turn/Turn.h"
+#include "EscapeStalingradZ/grid/Grid.h"
 
 UWDicesCombat::UWDicesCombat(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -43,6 +44,7 @@ void UWDicesCombat::SetDices(TArray<int> humanDices, int targetDie, bool isHandT
 				hud->PlayerInfoWidget->HidePlayerInfoDuringCombat(zombie, false);
 			}
 		}
+		tileZombie = character->grid->GetTileIndexFromLocation(zombie->GetActorLocation());
 		zombieStunned = zombie->isStunned;
 		isAttackHandToHand = isHandToHand;
 		humanDicesLeft = humanDices;
@@ -69,6 +71,9 @@ void UWDicesCombat::NextDie()
 	DieNumber->SetVisibility(ESlateVisibility::Hidden);
 	ButtonRollAnimation->SetVisibility(ESlateVisibility::Visible);
 	ButtonConfirm->SetVisibility(ESlateVisibility::Hidden);
+	if (zombie->GetActorLocation().Z < -1000) {
+		zombie->turn->SpawnWaitingZombies(tileZombie);
+	}
 	if (numberDiceLeft > 0) {
 		//Tira el siguiente dado
 		if (zombieStunned != zombie->isStunned) {

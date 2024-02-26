@@ -102,6 +102,9 @@ public:
 		void SpawnZombies();
 
 	UFUNCTION()
+		void EndZombieTurn();
+
+	UFUNCTION()
 		void StartTurn();
 
 	UFUNCTION()
@@ -118,5 +121,8 @@ public:
 
 	UFUNCTION() void RemoveStunToZombies();
 	UFUNCTION() void PrepareCharacterForTurn();
+	UFUNCTION() void DirectContactInSpawnZombie(FIntPoint tile);
+	UFUNCTION() void SpawnWaitingZombies(FIntPoint tile);
+	UFUNCTION() void SpawnZombieAfterMoveCharacter(class AZombie* zombie);
 
 };

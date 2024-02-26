@@ -150,6 +150,9 @@ void UWDiceSpreadCombat::SelectObjetiveSpreadFire()
 			player->actions->command = commandActions;
 			player->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 		}
+		if (zombie->GetActorLocation().Z < -1000) {
+			zombie->turn->SpawnWaitingZombies(tileZombie);
+		}
 	}
 	else {
 		EndAttack();
@@ -158,6 +161,9 @@ void UWDiceSpreadCombat::SelectObjetiveSpreadFire()
 
 void UWDiceSpreadCombat::EndAttack()
 {
+	if (zombie->GetActorLocation().Z < -1000) {
+		zombie->turn->SpawnWaitingZombies(tileZombie);
+	}
 	character->attacked = true;
 	DieNumber->SetVisibility(ESlateVisibility::Hidden);
 	ButtonRollAnimation->SetVisibility(ESlateVisibility::Visible);

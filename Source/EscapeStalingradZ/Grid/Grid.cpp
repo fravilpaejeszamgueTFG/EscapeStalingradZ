@@ -82,16 +82,28 @@ TArray<FIntPoint> AGrid::GetTileNeighbors(FIntPoint index)
 {
 	TArray<FIntPoint> list = TArray<FIntPoint>();
 	if (index.X > 0) {
-		list.Add(index - FIntPoint(1, 0));
+		FIntPoint left = index - FIntPoint(1, 0);
+		if (!DoorOrWallBetweenTiles(left, index)) {
+			list.Add(left);
+		}
 	}
 	if (index.Y > 0) {
-		list.Add(index - FIntPoint(0, 1));
+		FIntPoint back = index - FIntPoint(0, 1);
+		if (!DoorOrWallBetweenTiles(back, index)) {
+			list.Add(back);
+		}
 	}
 	if (index.X < numberOfTiles.X - 1) {
-		list.Add(index + FIntPoint(1, 0));
+		FIntPoint right = index + FIntPoint(1, 0);
+		if (!DoorOrWallBetweenTiles(right, index)) {
+			list.Add(right);
+		}
 	}
 	if (index.Y < numberOfTiles.Y - 1) {
-		list.Add(index + FIntPoint(0, 1));
+		FIntPoint forward = index + FIntPoint(0, 1);
+		if (!DoorOrWallBetweenTiles(forward, index)) {
+			list.Add(forward);
+		}
 	}
 	return list;
 }
@@ -599,7 +611,7 @@ APlayerCharacter* AGrid::CharacterInNeighbor(FIntPoint index)
 	for (FIntPoint v : vecinos) {
 		if (gridTiles[v].actor != nullptr) {
 			APlayerCharacter* chara = Cast<APlayerCharacter>(gridTiles[v].actor);
-			if (chara != nullptr && !chara->inDirectContact) {
+			if (chara != nullptr && !chara->isLocked) {
 				return chara;
 			}
 		}
@@ -610,52 +622,41 @@ APlayerCharacter* AGrid::CharacterInNeighbor(FIntPoint index)
 bool AGrid::CanShootDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, FIntPoint backward)
 {
 	int res = 0;
-	bool f = false;
-	bool r = false;
 	//comprobar que hay pared/puerta en las casillas adyacentes, pero no con la misma
-	if (gridTiles[forward].walls.Num() > 0) {
-		if (gridTiles[forward].walls.Contains(backward)) {
-			f = true;
-		}
-	}
-	if (GetDoorIsClosed(forward, backward)) {
-		f = true;
-	}
-	//forward-backward
-	if (gridTiles[right].walls.Num() > 0) {
-		if (gridTiles[right].walls.Contains(tile)) {
-			r = true;
-		}
-	}
-	if (GetDoorIsClosed(right, tile)) {
-		r = true;
-	}
-	//right-tile
+	bool f = DoorOrWallBetweenTiles(forward, backward);
+	bool r = DoorOrWallBetweenTiles(right, tile);
 	if (f && r) {
 		return false;
 	}
-	f = false;
-	r = false;
-	if (gridTiles[forward].walls.Num() > 0) {
-		if (gridTiles[forward].walls.Contains(tile)) {
-			f = true;
-		}
-	}
-	if (GetDoorIsClosed(forward, tile)) {
-		f = true;
-	}
-	//forward-tile
-	if (gridTiles[right].walls.Num() > 0) {
-		if (gridTiles[right].walls.Contains(backward)) {
-			r = true;
-		}
-	}
-	if (GetDoorIsClosed(right, backward)) {
-		r = true;
-	}
-	//right-backward
+	f = DoorOrWallBetweenTiles(forward, tile); 
+	r = DoorOrWallBetweenTiles(right, backward); 
 	if (f && r) {
 		return false;
 	}
 	return true;
+}
+
+bool AGrid::DoorOrWallBetweenTiles(FIntPoint tile1, FIntPoint tile2)
+{
+	if (gridTiles[tile1].walls.Num() > 0) {
+		if (gridTiles[tile1].walls.Contains(tile2)) {
+			return true;
+		}
+	}
+	if (GetDoorIsClosed(tile1, tile2)) {
+		return true;
+	}
+	return false;
+}
+
+TArray<FIntPoint> AGrid::GetTileNeighborsThatCanMoveInto(FIntPoint index)
+{
+	TArray<FIntPoint> vecinos = GetTileNeighbors(index);
+	TArray<FIntPoint> res = TArray<FIntPoint>();
+	for (FIntPoint tile : vecinos) {
+		if (gridTiles[tile].actor == nullptr && !gridTiles[tile].types.Contains(TileType::Fire)) {
+			res.Add(tile);
+		}
+	}
+	return res;
 }

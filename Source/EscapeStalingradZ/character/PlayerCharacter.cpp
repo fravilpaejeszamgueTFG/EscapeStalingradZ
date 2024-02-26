@@ -444,6 +444,7 @@ void APlayerCharacter::ZombieLock(AZombie* zombie)
 	if (zombie->mp > 0) {
 		health--;
 	}
+	typeOfCovering = CoveringType::NONE;
 	zombie->characterInContact = this;
 	FRotator rotacion = GetRotationDirectionToZombie(zombie);
 	SetActorRotation(rotacion);
