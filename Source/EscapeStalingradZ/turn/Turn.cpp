@@ -131,7 +131,7 @@ void ATurn::ActivateCollision()
 		}
 	}
 	SetActorEnableCollision(false);
-	StartTurn();
+	SpawnZombieBeforeStartGame();
 }
 
 void ATurn::nextZombie()
@@ -156,6 +156,7 @@ void ATurn::SetNextZombie()
 		endTurnZombie = true;
 		selectedZombie = nullptr;
 		RemoveStunToZombies();
+		ResetZombiesWhenAllAreDead();
 		SpawnZombies();
 	}
 }
@@ -368,5 +369,29 @@ void ATurn::SpawnZombieAfterMoveCharacter(AZombie* zombie)
 	grid->SetZombieStartLocation(zombie);
 	zombies.Add(zombie);
 	EndZombieTurn();
+}
+
+void ATurn::SpawnZombieBeforeStartGame()
+{
+	for (FIntPoint tile : initialSpawnZombiesTiles) {
+		if (zombiesToEnterGrid.Num() > 0) {
+			AZombie* newZombie = zombiesToEnterGrid[0];
+			zombiesToEnterGrid.Remove(newZombie);
+			newZombie->startIndex = tile;
+			if (grid->gridTiles[tile].actor == nullptr) {
+				grid->SetZombieStartLocation(newZombie);
+				zombies.Add(newZombie);
+			}
+		}
+	}
+	StartTurn();
+}
+
+void ATurn::ResetZombiesWhenAllAreDead()
+{
+	if (zombiesToEnterGrid.Num() == 0 && zombies.Num() == 0 && zombiesDied.Num() > 0) {
+		zombiesToEnterGrid = zombiesDied;
+		zombiesDied.Empty();
+	}
 }
 

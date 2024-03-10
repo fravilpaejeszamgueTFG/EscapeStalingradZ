@@ -59,6 +59,8 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Map) bool isFubar = true;
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category = turn)
 		TArray<FIntPoint> spawnZombiesTiles; //indica donde poner un zombie en la ronda del indice del array. Si FIntPoint = -1,-1 -> no spawnea.
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category = turn)
+		TArray<FIntPoint> initialSpawnZombiesTiles; //casillas donde deben spawnear zombies al empezar el tablero.
 
 	UPROPERTY(VisibleAnywhere)
 		class UWSelectCharacterTurn* turnWidget;
@@ -124,5 +126,7 @@ public:
 	UFUNCTION() void DirectContactInSpawnZombie(FIntPoint tile);
 	UFUNCTION() void SpawnWaitingZombies(FIntPoint tile);
 	UFUNCTION() void SpawnZombieAfterMoveCharacter(class AZombie* zombie);
+	UFUNCTION() void SpawnZombieBeforeStartGame();
+	UFUNCTION() void ResetZombiesWhenAllAreDead();
 
 };

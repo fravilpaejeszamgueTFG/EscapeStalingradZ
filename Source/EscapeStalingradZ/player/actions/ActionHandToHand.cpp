@@ -48,10 +48,7 @@ void UActionHandToHand::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTil
 				indices = character->GetIndexHandToHand2Range();
 			}
 			for (FIntPoint i : indices) {
-				AZombie* zombie = Cast<AZombie>(grid->gridTiles[i].actor);
-				if (zombie != nullptr) {
-					grid->RemoveTileState(i, TileState::isReachable);
-				}
+				grid->RemoveTileState(i, TileState::isReachable);
 			}
 		}
 	}
