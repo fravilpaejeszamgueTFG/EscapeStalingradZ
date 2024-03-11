@@ -131,6 +131,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
 		class UWDiceSpreadCombat* DiceSpreadCombatWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+		TSubclassOf<class UWSearchDie> SearchDieWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
+		class UWSearchDie* SearchDieWidget;
+
 	//Funciones
 	UFUNCTION() void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
@@ -163,4 +169,7 @@ public:
 	//fijado zombie
 	UFUNCTION() void ZombieLock(class AZombie* zombie);
 	UFUNCTION() FRotator GetRotationDirectionToZombie(class AZombie* zombie);
+	//busqueda
+	UFUNCTION() void SearchAction();
+	UFUNCTION() void CreateOrSetDieSearchWidget(int numberOfDie);
 };

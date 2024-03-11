@@ -25,6 +25,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UBoton* buttonOpenCloseDoor;
 	UPROPERTY(meta = (BindWidget))
+	class UBoton* buttonSearch;
+	UPROPERTY(meta = (BindWidget))
 	class UBoton* goBack;
 
 	UPROPERTY(VisibleAnywhere) class ATurn* turn;
@@ -37,5 +39,8 @@ public:
 
 	UFUNCTION() void OnClickRotation();
 	UFUNCTION() void OnClickOpenCloseDoor();
+	UFUNCTION() void OnClickSearch();
 	UFUNCTION() void GoBack();
+	UFUNCTION() void SetButtonSearchEnabledOrDisabled();
+	UFUNCTION() bool SearchTileInNeighbor(FIntPoint tile);
 };

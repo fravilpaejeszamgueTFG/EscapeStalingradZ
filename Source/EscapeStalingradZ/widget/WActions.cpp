@@ -87,6 +87,7 @@ void UWActions::OnClickActions()
 	if (actionWidgetClass) {
 		if (actionWidget != nullptr) {
 			actionWidget->character = character;
+			actionWidget->SetButtonSearchEnabledOrDisabled();
 			actionWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 		else {
@@ -96,6 +97,7 @@ void UWActions::OnClickActions()
 				actionWidget->turn = turn;
 				actionWidget->grid = grid;
 				actionWidget->actions = this;
+				actionWidget->SetButtonSearchEnabledOrDisabled();
 				actionWidget->AddToViewport();
 			}
 		}
@@ -131,6 +133,8 @@ void UWActions::EndTurn()
 		}
 		controller->actions->command = nullptr;
 		buttonCombat->SetIsEnabled(true);
+		buttonActions->SetIsEnabled(true);
+		buttonMovement->SetIsEnabled(true);
 		SetVisibility(ESlateVisibility::Hidden);
 	}
 }
@@ -177,5 +181,14 @@ void UWActions::UpdateCoveringAttackWidget()
 {
 	if (coveringWidget != nullptr) {
 		coveringWidget->UpdateButtons();
+	}
+}
+
+void UWActions::DisableActions()
+{
+	buttonActions->SetIsEnabled(false);
+	buttonMovement->SetIsEnabled(false);
+	if (character->attacked) {
+		buttonCombat->SetIsEnabled(false);
 	}
 }

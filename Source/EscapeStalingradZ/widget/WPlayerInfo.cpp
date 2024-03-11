@@ -145,6 +145,9 @@ void UWPlayerInfo::SetVisibleActionWidget()
 		actionWidget->HideWidgets();
 		actionWidget->turn = turn;
 		actionWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		if (character->mp == 0) {
+			actionWidget->DisableActions();
+		}
 	}
 }
 
@@ -216,4 +219,21 @@ void UWPlayerInfo::SetZombieTileHovered(AZombie* zombie)
 	TArray<FIntPoint> tiles = TArray<FIntPoint>();
 	tiles.Add(character->grid->GetTileIndexFromLocation(zombie->GetActorLocation()));
 	character->grid->DeleteStatesFromTilesButGiven(tiles);
+}
+
+void UWPlayerInfo::HidePlayerInfoDuringSearch()
+{
+	SetVisibility(ESlateVisibility::HitTestInvisible);
+	optionsWidget->SetVisibility(ESlateVisibility::Hidden);
+	actionWidget->SetVisibility(ESlateVisibility::Hidden);
+	actionWidget->HideWidgets();
+}
+
+void UWPlayerInfo::UnhidePlayerInfoDuringSearch()
+{
+	SetVisibility(ESlateVisibility::Visible);
+	character->grid->deleteStatesFromTilesButSelected();
+	optionsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	SetVisibleActionWidget();
+	actionWidget->DisableActions();
 }
