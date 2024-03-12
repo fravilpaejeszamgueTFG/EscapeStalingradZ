@@ -17,6 +17,9 @@ void UActionSearch::Execute(AGrid* grid, APlayerCharacter* character)
 				grid->AddTileState(index, TileState::isReachable);
 			}
 		}
+		if (grid->gridTiles[indice].types.Contains(TileType::Search)) {
+			grid->AddTileState(indice, TileState::isReachable);
+		}
 	}
 }
 
@@ -39,6 +42,7 @@ void UActionSearch::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTile)
 					grid->gridTiles[destinyTile].types.Remove(TileType::Search);
 				}
 			}
+			grid->RemoveTileState(tile, TileState::isReachable);
 			for (FIntPoint i : neighbors) {
 				grid->RemoveTileState(i, TileState::isReachable);
 			}

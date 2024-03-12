@@ -98,6 +98,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int medkit = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int mp = 4;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Attack) bool attacked = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Player) bool isPrimaryPlayer = true;
 
 	UPROPERTY(EditAnywhere) FIntPoint startIndex = FIntPoint(7, 6);
 

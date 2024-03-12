@@ -6,6 +6,15 @@
 #include "GameFramework/Actor.h"
 #include "Grid.generated.h"
 
+UENUM()
+enum ScenarioName
+{
+	FUBAR     UMETA(DisplayName = "FUBAR"),
+	AFRIEND     UMETA(DisplayName = "AFRIEND"),
+	WAKEUP	   UMETA(DisplayName = "WAKEUP"),
+	STASH	   UMETA(DisplayName = "STASH"),
+	MOVEALONG	   UMETA(DisplayName = "MOVEALONG"),
+};
 
 UENUM()
 enum TileType
@@ -95,6 +104,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileNeighborColor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileReachableColor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileAoFColor;
+
+	//nombre del mapa
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category = scenario) TEnumAsByte<ScenarioName> name;
 
 	//actores
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = characters) TArray<FIntPoint> charactersIndex;
