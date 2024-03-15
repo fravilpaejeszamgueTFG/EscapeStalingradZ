@@ -98,11 +98,13 @@ void UWOtherActions::SetButtonSearchEnabledOrDisabled()
 
 bool UWOtherActions::SearchTileInNeighbor(FIntPoint tile)
 {
-	TArray<FIntPoint> neighbors = grid->GetTileNeighbors(tile);
 	if (grid->gridTiles[tile].types.Contains(TileType::Search)) {
 		return true;
 	}
-	for (FIntPoint index : neighbors) {
+	FVector fv = character->GetActorForwardVector();
+	FVector rv = character->GetActorRightVector();
+	TArray<FIntPoint> indices = grid->GetFrontTiles(tile, fv, rv);
+	for (FIntPoint index : indices) {
 		if (grid->gridTiles[index].types.Contains(TileType::Search)) {
 			return true;
 		}

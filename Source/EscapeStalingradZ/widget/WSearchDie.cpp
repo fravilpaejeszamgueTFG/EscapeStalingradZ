@@ -30,6 +30,7 @@ void UWSearchDie::SetDie(int numberOfDie)
     if (character != nullptr && character->grid != nullptr) {
         gridName = character->grid->name;
         SetSearchingObjects();
+        SetActiveSearchObjectsWidget(GetNumberOfWidgetFromScenarioName());
     }
 }
 
@@ -172,6 +173,32 @@ void UWSearchDie::SetObjectWonToCharacter(ObjectName name, int number)
         else {
             character->weapon1 = character->PreferredWeapon;
         }
+    }
+}
+
+int UWSearchDie::GetNumberOfWidgetFromScenarioName()
+{
+    if (gridName == ScenarioName::FUBAR) {
+        return 0;
+    }
+    else if (gridName == ScenarioName::AFRIEND) {
+        return 1;
+    }
+    else if (gridName == ScenarioName::WAKEUP) {
+        if (character != nullptr && character->grid != nullptr) {
+            AGrid* grid = character->grid;
+            FIntPoint tile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+            if (tile.X <= 1) {
+                return 3;
+            }
+        }
+        return 2;
+    }
+    else if (gridName == ScenarioName::STASH) {
+        return 0; //TO-DO
+    }
+    else {
+        return 4;
     }
 }
 

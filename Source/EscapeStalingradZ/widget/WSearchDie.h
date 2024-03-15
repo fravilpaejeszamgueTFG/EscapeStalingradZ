@@ -67,6 +67,9 @@ public:
 	UFUNCTION() void SetSearchingObjectsMoveAlong();
 	UFUNCTION() void SetObjectWonToCharacter(ObjectName name, int number);
 	UFUNCTION() void SetWeaponInFreeSlot(enum EWeapon weaponName);
+	UFUNCTION() int GetNumberOfWidgetFromScenarioName();
+	UFUNCTION(BlueprintImplementableEvent) void SetActiveSearchObjectsWidget(int number);
+
 
 	
 };
