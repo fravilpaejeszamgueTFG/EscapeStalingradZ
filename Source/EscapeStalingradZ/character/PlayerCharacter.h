@@ -98,6 +98,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int medkit = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int mp = 4;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Attack) bool attacked = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Player) bool isPrimaryPlayer = true;
 
 	UPROPERTY(EditAnywhere) FIntPoint startIndex = FIntPoint(7, 6);
 
@@ -131,6 +132,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
 		class UWDiceSpreadCombat* DiceSpreadCombatWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+		TSubclassOf<class UWSearchDie> SearchDieWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
+		class UWSearchDie* SearchDieWidget;
+
 	//Funciones
 	UFUNCTION() void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
@@ -163,4 +170,7 @@ public:
 	//fijado zombie
 	UFUNCTION() void ZombieLock(class AZombie* zombie);
 	UFUNCTION() FRotator GetRotationDirectionToZombie(class AZombie* zombie);
+	//busqueda
+	UFUNCTION() void SearchAction();
+	UFUNCTION() void CreateOrSetDieSearchWidget(int numberOfDie);
 };

@@ -185,14 +185,14 @@ void AGrid::UpdateTileVisual(FIntPoint index)
 FLinearColor AGrid::GetColorFromState(TArray<TEnumAsByte<TileState>> states)
 {
 	if (states.Num() > 0) {
-		if (states.Contains(TileState::Selected)) {
-			return tileSelectedColor;
-		}
 		if (states.Contains(TileState::Hovered)) {
 			return tileHoveredColor;
 		}
 		if (states.Contains(TileState::isReachable)) {
 			return tileReachableColor;
+		}
+		if (states.Contains(TileState::Selected)) {
+			return tileSelectedColor;
 		}
 		if (states.Contains(TileState::isInAoF)) {
 			return tileAoFColor;

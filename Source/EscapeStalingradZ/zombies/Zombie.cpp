@@ -129,8 +129,10 @@ void AZombie::MovementZombie()
 			grid->GetTileIndexFromLocation(characters[indice]->GetActorLocation()));
 	}
 	else {
-		pathToCharacter = FindPath(tile,
-			grid->GetTileIndexFromLocation(characters[0]->GetActorLocation()));
+		if (characters.Num() > 0) {
+			pathToCharacter = FindPath(tile,
+				grid->GetTileIndexFromLocation(characters[0]->GetActorLocation()));
+		}
 	}
 	if (pathToCharacter.Num() > 0) {
 		MoveZombieToNextLocation(0);

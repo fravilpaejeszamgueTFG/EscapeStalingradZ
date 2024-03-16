@@ -7,6 +7,7 @@
 #include "EscapeStalingradZ/zombies/Zombie.h"
 #include "EscapeStalingradZ/widget/WDicesCombat.h"
 #include "EscapeStalingradZ/widget/WDiceSpreadCombat.h"
+#include "EscapeStalingradZ/widget/WSearchDie.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -448,4 +449,29 @@ void APlayerCharacter::ZombieLock(AZombie* zombie)
 	zombie->characterInContact = this;
 	FRotator rotacion = GetRotationDirectionToZombie(zombie);
 	SetActorRotation(rotacion);
+}
+
+void APlayerCharacter::SearchAction()
+{
+	int die = FMath::RandRange(1, 12);
+	CreateOrSetDieSearchWidget(die);
+}
+
+void APlayerCharacter::CreateOrSetDieSearchWidget(int numberOfDie)
+{
+	if (SearchDieWidgetClass) {
+		if (SearchDieWidget != nullptr) {
+			SearchDieWidget->character = this;
+			SearchDieWidget->SetVisibility(ESlateVisibility::Visible);
+			SearchDieWidget->SetDie(numberOfDie);
+		}
+		else {
+			SearchDieWidget = CreateWidget<UWSearchDie>(GetWorld(), SearchDieWidgetClass);
+			if (SearchDieWidget != nullptr) {
+				SearchDieWidget->character = this;
+				SearchDieWidget->AddToViewport();
+				SearchDieWidget->SetDie(numberOfDie);
+			}
+		}
+	}
 }

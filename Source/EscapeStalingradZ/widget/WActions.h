@@ -77,5 +77,6 @@ public:
 	UFUNCTION() void DisableButtonIfCharacterIsInDirectContact();
 	UFUNCTION() void DisableAttack();
 	UFUNCTION() void UpdateCoveringAttackWidget();
+	UFUNCTION() void DisableActions();
 
 };
