@@ -27,5 +27,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		class AUserHUD* hud;
+
+
+	UFUNCTION() void OnClickInventory();
 	
 };

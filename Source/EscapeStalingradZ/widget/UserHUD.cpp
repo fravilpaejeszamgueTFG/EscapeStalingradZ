@@ -4,6 +4,7 @@
 #include "UserHUD.h"
 #include "WPlayerInfo.h"
 #include "WReleaseLock.h"
+#include "WInventory.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -73,6 +74,28 @@ void AUserHUD::CreateOrSetReleaseLock()
 				ReleaseLockWidget->character = character;
 				ReleaseLockWidget->SetDicesNumbers();
 				ReleaseLockWidget->AddToViewport();
+			}
+		}
+	}
+}
+
+void AUserHUD::CreateOrSetInventory()
+{
+	if (InventoryWidgetClass) {
+		if (InventoryWidget != nullptr) {
+			InventoryWidget->character = character;
+			InventoryWidget->SetTextNumbers();
+			InventoryWidget->SetImages();
+			InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+		}
+		else {
+			InventoryWidget = CreateWidget<UWInventory>(GetWorld(), InventoryWidgetClass);
+			if (InventoryWidget != nullptr) {
+				InventoryWidget->character = character;
+				InventoryWidget->hud = this;
+				InventoryWidget->SetTextNumbers();
+				InventoryWidget->SetImages();
+				InventoryWidget->AddToViewport();
 			}
 		}
 	}
