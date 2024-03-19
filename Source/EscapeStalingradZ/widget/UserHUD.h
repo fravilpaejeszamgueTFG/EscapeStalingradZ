@@ -34,6 +34,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UWReleaseLock* ReleaseLockWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
+		TSubclassOf<class UWInventory> InventoryWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UWInventory* InventoryWidget;
+
 	UPROPERTY(VisibleAnywhere)
 		class ATurn* turn;
 
@@ -45,6 +51,8 @@ public:
 		void CreateOrSetPlayerInfo();
 	UFUNCTION()
 		void CreateOrSetReleaseLock();
+	UFUNCTION()
+		void CreateOrSetInventory();
 	UFUNCTION()
 		void HidePlayerInfo();
 };
