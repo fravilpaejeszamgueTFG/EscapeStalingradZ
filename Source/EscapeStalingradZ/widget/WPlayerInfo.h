@@ -89,5 +89,6 @@ public:
 	UFUNCTION() void SetZombieTileHovered(class AZombie* zombie);
 	UFUNCTION() void HidePlayerInfoDuringSearch();
 	UFUNCTION() void UnhidePlayerInfoDuringSearch();
+	UFUNCTION() void HideOptionsDuringActions();
 
 };

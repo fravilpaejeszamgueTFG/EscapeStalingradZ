@@ -122,3 +122,11 @@ void UWeapon::SetPropiertiesByName(EWeapon weapon)
 	}
 }
 
+bool UWeapon::GetIfWeaponIsTwoHandByName(EWeapon weapon)
+{
+	if (weapon == EWeapon::None || weapon == EWeapon::Knife || weapon == EWeapon::Luger) {
+		return true;
+	}
+	return false;
+}
+

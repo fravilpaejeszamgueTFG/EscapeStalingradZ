@@ -148,6 +148,7 @@ void UWPlayerInfo::SetVisibleActionWidget()
 		if (character->mp == 0) {
 			actionWidget->DisableActions();
 		}
+		SetVisibleOptionsWidget();
 	}
 }
 
@@ -236,4 +237,11 @@ void UWPlayerInfo::UnhidePlayerInfoDuringSearch()
 	optionsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	SetVisibleActionWidget();
 	actionWidget->DisableActions();
+}
+
+void UWPlayerInfo::HideOptionsDuringActions()
+{
+	if (optionsWidget != nullptr) {
+		optionsWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
 }

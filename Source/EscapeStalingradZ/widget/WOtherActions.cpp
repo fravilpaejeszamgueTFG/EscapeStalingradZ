@@ -66,7 +66,7 @@ void UWOtherActions::GoBack()
 	grid->deleteStatesFromTilesButSelected();
 	controller->actions->command = nullptr;
 	SetVisibility(ESlateVisibility::Hidden);
-	actions->SetVisibility(ESlateVisibility::Visible);
+	actions->SetVisibleActionsAndOptions();
 }
 
 void UWOtherActions::SetButtonSearchEnabledOrDisabled()

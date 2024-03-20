@@ -68,7 +68,7 @@ void UWCombat::GoBack()
 	grid->deleteStatesFromTilesButSelected();
 	controller->actions->command = nullptr;
 	SetVisibility(ESlateVisibility::Hidden);
-	actions->SetVisibility(ESlateVisibility::Visible);
+	actions->SetVisibleActionsAndOptions();
 }
 
 ESlateVisibility UWCombat::CanFireWeapon()
