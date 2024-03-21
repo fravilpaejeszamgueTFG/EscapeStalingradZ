@@ -8,6 +8,7 @@
 #include "EscapeStalingradZ/widget/WDicesCombat.h"
 #include "EscapeStalingradZ/widget/WDiceSpreadCombat.h"
 #include "EscapeStalingradZ/widget/WSearchDie.h"
+#include "EscapeStalingradZ/widget/UserHUD.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -30,7 +31,11 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	SetPreferredWeaponByCharacter();
-	
+
+	if (isPrimaryPlayer && GetWorld()->GetName() == "InitialMap") { //InitialMap cambiarlo a fubar cuando se le cambie el nombre
+		AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		hud->CreateSelectCharacterWidget(this);
+	}
 }
 
 // Called every frame
