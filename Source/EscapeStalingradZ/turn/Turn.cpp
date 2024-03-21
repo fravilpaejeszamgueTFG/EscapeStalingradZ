@@ -384,7 +384,6 @@ void ATurn::SpawnZombieBeforeStartGame()
 			}
 		}
 	}
-	StartTurn();
 }
 
 void ATurn::ResetZombiesWhenAllAreDead()

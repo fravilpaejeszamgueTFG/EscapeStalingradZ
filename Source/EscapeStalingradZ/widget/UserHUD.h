@@ -40,6 +40,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UWInventory* InventoryWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerInfo")
+		TSubclassOf<class UWSelectCharacter> SelectCharacterWidgetClass;
+
 	UPROPERTY(VisibleAnywhere)
 		class ATurn* turn;
 
@@ -55,4 +58,8 @@ public:
 		void CreateOrSetInventory();
 	UFUNCTION()
 		void HidePlayerInfo();
+	UFUNCTION()
+		void StartGameAfterSelectCharacter();
+	UFUNCTION()
+		void CreateSelectCharacterWidget(class APlayerCharacter* chara);
 };

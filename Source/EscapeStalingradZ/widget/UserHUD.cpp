@@ -5,7 +5,9 @@
 #include "WPlayerInfo.h"
 #include "WReleaseLock.h"
 #include "WInventory.h"
+#include "WSelectCharacter.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
+#include "EscapeStalingradZ/turn/Turn.h"
 #include "Kismet/GameplayStatics.h"
 
 AUserHUD::AUserHUD() 
@@ -109,5 +111,24 @@ void AUserHUD::HidePlayerInfo()
 {
 	if (PlayerInfoWidget != nullptr) {
 		PlayerInfoWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void AUserHUD::StartGameAfterSelectCharacter()
+{
+	if (turn != nullptr) {
+		turn->StartTurn();
+	}
+}
+
+void AUserHUD::CreateSelectCharacterWidget(APlayerCharacter* chara)
+{
+	if (SelectCharacterWidgetClass) {
+		UWSelectCharacter* selectCharacter = CreateWidget<UWSelectCharacter>(GetWorld(), SelectCharacterWidgetClass);
+		if (selectCharacter != nullptr) {
+			selectCharacter->character = chara;
+			selectCharacter->hud = this;
+			selectCharacter->AddToViewport();
+		}
 	}
 }
