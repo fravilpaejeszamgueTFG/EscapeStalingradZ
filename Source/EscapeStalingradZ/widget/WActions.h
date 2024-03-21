@@ -78,5 +78,6 @@ public:
 	UFUNCTION() void DisableAttack();
 	UFUNCTION() void UpdateCoveringAttackWidget();
 	UFUNCTION() void DisableActions();
+	UFUNCTION() void SetVisibleActionsAndOptions();
 
 };

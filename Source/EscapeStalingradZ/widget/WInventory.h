@@ -50,12 +50,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character) class APlayerCharacter* character;
 
 	UFUNCTION(BlueprintImplementableEvent) void SetImages();
-	UFUNCTION(BlueprintImplementableEvent) void SetWeaponSlot1ImageByGivenWeapon(enum EWeapon weaponName);
-	UFUNCTION(BlueprintImplementableEvent) void SetWeaponSlot2ImageByGivenWeapon(enum EWeapon weaponName);
-	UFUNCTION(BlueprintImplementableEvent) void SetWeaponSlot3ImageByGivenWeapon(enum EWeapon weaponName);
-	UFUNCTION(BlueprintImplementableEvent) void SetWeaponSlot4ImageByGivenWeapon(enum EWeapon weaponName);
 	UFUNCTION(BlueprintImplementableEvent) void SetWeaponSlotReadyImageByGivenWeapon(enum EWeapon weaponName);
 	UFUNCTION(BlueprintImplementableEvent) void SetWeaponSlotSecondaryImageByGivenWeapon(enum EWeapon weaponName);
+	UFUNCTION(BlueprintImplementableEvent) void ResetSlotsColors();
+	UFUNCTION(BlueprintImplementableEvent) void SetSlotSelected(class UButton* SlotNumber);
 	UFUNCTION() void OnClickSlot1();
 	UFUNCTION() void OnClickSlot2();
 	UFUNCTION() void OnClickSlot3();
@@ -64,5 +62,10 @@ public:
 	UFUNCTION() void OnClickSlotSecondaryWeapon();
 	UFUNCTION() void OnClickGoBack();
 	UFUNCTION() void SetTextNumbers();
+	UFUNCTION() void ResetSelectedWeapon();
+	UFUNCTION() void SetSelectedWeaponGivenSlotAndWeapon(class UButton* SlotNumber, enum EWeapon weaponName);
+	UFUNCTION() void DisableButtons();
+	UFUNCTION() void DisableReadyAndSecondaryButtons();
+	UFUNCTION() void ActivateReadyAndSecondaryIfProceed(enum EWeapon weaponName);
 	
 };

@@ -2,6 +2,7 @@
 
 
 #include "WActions.h"
+#include "WPlayerInfo.h"
 #include "WMovimiento.h"
 #include "WCombat.h"
 #include "WOtherActions.h"
@@ -57,6 +58,9 @@ void UWActions::OnClickMovement()
 			}
 		}
 		SetVisibility(ESlateVisibility::Hidden);
+		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+			hud->PlayerInfoWidget->HideOptionsDuringActions();
+		}
 	}
 }
 
@@ -79,6 +83,9 @@ void UWActions::OnClickCombat()
 		}
 		character->getArcOfFire();
 		SetVisibility(ESlateVisibility::Hidden);
+		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+			hud->PlayerInfoWidget->HideOptionsDuringActions();
+		}
 	}
 }
 
@@ -102,6 +109,9 @@ void UWActions::OnClickActions()
 			}
 		}
 		SetVisibility(ESlateVisibility::Hidden);
+		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+			hud->PlayerInfoWidget->HideOptionsDuringActions();
+		}
 	}
 }
 
@@ -190,5 +200,13 @@ void UWActions::DisableActions()
 	buttonMovement->SetIsEnabled(false);
 	if (character->attacked) {
 		buttonCombat->SetIsEnabled(false);
+	}
+}
+
+void UWActions::SetVisibleActionsAndOptions()
+{
+	SetVisibility(ESlateVisibility::Visible);
+	if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+		hud->PlayerInfoWidget->SetVisibleOptionsWidget();
 	}
 }

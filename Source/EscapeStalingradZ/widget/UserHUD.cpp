@@ -86,6 +86,8 @@ void AUserHUD::CreateOrSetInventory()
 			InventoryWidget->character = character;
 			InventoryWidget->SetTextNumbers();
 			InventoryWidget->SetImages();
+			InventoryWidget->ResetSelectedWeapon();
+			InventoryWidget->DisableButtons();
 			InventoryWidget->SetVisibility(ESlateVisibility::Visible);
 		}
 		else {
@@ -95,6 +97,8 @@ void AUserHUD::CreateOrSetInventory()
 				InventoryWidget->hud = this;
 				InventoryWidget->SetTextNumbers();
 				InventoryWidget->SetImages();
+				InventoryWidget->ResetSelectedWeapon();
+				InventoryWidget->DisableButtons();
 				InventoryWidget->AddToViewport();
 			}
 		}

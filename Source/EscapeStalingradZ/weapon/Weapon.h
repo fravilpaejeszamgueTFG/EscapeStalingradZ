@@ -53,4 +53,5 @@ public:
 	//funciones
 	UFUNCTION(BlueprintCallable)
 		void SetPropiertiesByName(EWeapon weapon);
+	UFUNCTION() bool GetIfWeaponIsTwoHandByName(EWeapon weapon);
 };
