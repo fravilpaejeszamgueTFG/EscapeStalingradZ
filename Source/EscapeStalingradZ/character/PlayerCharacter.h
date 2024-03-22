@@ -5,45 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "EscapeStalingradZ/weapon/Weapon.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "PlayerCharacter.generated.h"
-
-UENUM()
-enum AvailableCharacter
-{
-	Becker     UMETA(DisplayName = "Becker"),
-	Dasha     UMETA(DisplayName = "Dasha"),
-	Katyusha   UMETA(DisplayName = "Katyusha"),
-	Til     UMETA(DisplayName = "Til"),
-
-};
-
-UENUM()
-enum MovementType
-{
-	Stationary     UMETA(DisplayName = "Stationary"),
-	Walking     UMETA(DisplayName = "Walking"),
-	Running   UMETA(DisplayName = "Running"),
-
-};
-
-UENUM()
-enum CoveringType
-{
-	NONE     UMETA(DisplayName = "NONE"),
-	CStationary     UMETA(DisplayName = "CStationary"),
-	Walked   UMETA(DisplayName = "Walked"),
-	Ran     UMETA(DisplayName = "Ran"),
-
-};
-
-UENUM()
-enum CoveringAttackType
-{
-	HandToHand     UMETA(DisplayName = "HandToHand"),
-	NormalFire     UMETA(DisplayName = "NormalFire"),
-	SpreadFire   UMETA(DisplayName = "SpreadFire"),
-
-};
 
 USTRUCT(BlueprintType)
 struct FTilesLoF

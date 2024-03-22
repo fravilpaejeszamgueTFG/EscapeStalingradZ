@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "EscapeStalingradZ/character/PlayerCharacter.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "CharacterButton.generated.h"
 
 /**
@@ -33,7 +33,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) FIntPoint tile = FIntPoint(-1,-1);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void SetButtonStyle(enum AvailableCharacter characterChosen);
+		void SetButtonStyle(AvailableCharacter characterChosen);
 
 	UFUNCTION() void OnClick();
 	UFUNCTION() void OnHover();

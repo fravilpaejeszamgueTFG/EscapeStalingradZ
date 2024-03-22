@@ -2,6 +2,7 @@
 
 #include "WPlayerInfo.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
+#include "EscapeStalingradZ/grid/Grid.h"
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Components/Overlay.h"
@@ -169,6 +170,7 @@ void UWPlayerInfo::SetVisibleObjectivesWidget()
 void UWPlayerInfo::OnClickReadyWeapon()
 {
 	if (character != nullptr) {
+		character->grid->deleteStatesFromTilesButSelected();
 		character->useReadyWeapon = true;
 		SetUseReadyWeaponColor();
 		if (actionWidget != nullptr) {
@@ -180,6 +182,7 @@ void UWPlayerInfo::OnClickReadyWeapon()
 void UWPlayerInfo::OnClickSecondaryWeapon()
 {
 	if (character != nullptr) {
+		character->grid->deleteStatesFromTilesButSelected();
 		character->useReadyWeapon = false;
 		SetUseSecondaryWeaponColor();
 		if (actionWidget != nullptr) {

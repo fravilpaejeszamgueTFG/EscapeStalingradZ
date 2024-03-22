@@ -177,9 +177,9 @@ void AZombie::MoveZombieToNextLocation(int indexInPath)
 {
 	if (GetActorLocation().Z > -1000 && !isStunned) {
 		if (ZombieDirectContact()) {
-			mp = maxmp;
 			currentIndexPath = 0;
 			characterInContact->ZombieLock(this);
+			mp = maxmp;
 			turn->nextZombie();
 		}
 		else {

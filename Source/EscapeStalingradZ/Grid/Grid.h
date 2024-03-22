@@ -4,38 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "Grid.generated.h"
-
-UENUM()
-enum ScenarioName
-{
-	FUBAR     UMETA(DisplayName = "FUBAR"),
-	AFRIEND     UMETA(DisplayName = "AFRIEND"),
-	WAKEUP	   UMETA(DisplayName = "WAKEUP"),
-	STASH	   UMETA(DisplayName = "STASH"),
-	MOVEALONG	   UMETA(DisplayName = "MOVEALONG"),
-};
-
-UENUM()
-enum TileType
-{
-	Normal     UMETA(DisplayName = "Normal"),
-	Hinder     UMETA(DisplayName = "Hinder"),
-	Fire	   UMETA(DisplayName = "Fire"),
-	Search	   UMETA(DisplayName = "Search"),
-	Spawn	   UMETA(DisplayName = "Spawn"),
-	Exit	   UMETA(DisplayName = "Exit")
-};
-
-UENUM()
-enum TileState
-{
-	Hovered     UMETA(DisplayName = "Hovered"),
-	Selected	   UMETA(DisplayName = "Selected"),
-	isNeighbor		UMETA(DisplayName = "isNeighbor"),
-	isReachable		UMETA(DisplayName = "isReachable"),
-	isInAoF			UMETA(DisplayName = "isInAoF"),
-};
 
 USTRUCT(BlueprintType)
 struct FTileData
