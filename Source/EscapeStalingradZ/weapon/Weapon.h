@@ -4,20 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "Weapon.generated.h"
-
-UENUM()
-enum EWeapon
-{
-	None     UMETA(DisplayName = "None"),
-	MP40     UMETA(DisplayName = "MP-40"),
-	Nagant   UMETA(DisplayName = "Nagant"),
-	MG34     UMETA(DisplayName = "MG34"),
-	Axe      UMETA(DisplayName = "Axe"),
-	Knife    UMETA(DisplayName = "Knife"),
-	Luger     UMETA(DisplayName = "Luger"),
-
-};
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class ESCAPESTALINGRADZ_API UWeapon : public UActorComponent

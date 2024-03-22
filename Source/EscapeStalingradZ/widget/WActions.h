@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "WActions.generated.h"
 
 /**
@@ -73,7 +74,7 @@ public:
 	UFUNCTION() void OnClickActions();
 	UFUNCTION() void EndTurn();
 	UFUNCTION() void HideWidgets();
-	UFUNCTION() void DisableButtonByMovementType(enum MovementType type);
+	UFUNCTION() void DisableButtonByMovementType(MovementType type);
 	UFUNCTION() void DisableButtonIfCharacterIsInDirectContact();
 	UFUNCTION() void DisableAttack();
 	UFUNCTION() void UpdateCoveringAttackWidget();

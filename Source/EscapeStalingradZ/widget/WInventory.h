@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "WInventory.generated.h"
 
 /**
@@ -44,14 +45,14 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class AUserHUD* hud;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TEnumAsByte<enum EWeapon> selectedWeapon;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TEnumAsByte<EWeapon> selectedWeapon;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) bool hasSelectedWeapon = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character) class APlayerCharacter* character;
 
 	UFUNCTION(BlueprintImplementableEvent) void SetImages();
-	UFUNCTION(BlueprintImplementableEvent) void SetWeaponSlotReadyImageByGivenWeapon(enum EWeapon weaponName);
-	UFUNCTION(BlueprintImplementableEvent) void SetWeaponSlotSecondaryImageByGivenWeapon(enum EWeapon weaponName);
+	UFUNCTION(BlueprintImplementableEvent) void SetWeaponSlotReadyImageByGivenWeapon(EWeapon weaponName);
+	UFUNCTION(BlueprintImplementableEvent) void SetWeaponSlotSecondaryImageByGivenWeapon(EWeapon weaponName);
 	UFUNCTION(BlueprintImplementableEvent) void ResetSlotsColors();
 	UFUNCTION(BlueprintImplementableEvent) void SetSlotSelected(class UButton* SlotNumber);
 	UFUNCTION() void OnClickSlot1();
@@ -63,9 +64,9 @@ public:
 	UFUNCTION() void OnClickGoBack();
 	UFUNCTION() void SetTextNumbers();
 	UFUNCTION() void ResetSelectedWeapon();
-	UFUNCTION() void SetSelectedWeaponGivenSlotAndWeapon(class UButton* SlotNumber, enum EWeapon weaponName);
+	UFUNCTION() void SetSelectedWeaponGivenSlotAndWeapon(class UButton* SlotNumber, EWeapon weaponName);
 	UFUNCTION() void DisableButtons();
 	UFUNCTION() void DisableReadyAndSecondaryButtons();
-	UFUNCTION() void ActivateReadyAndSecondaryIfProceed(enum EWeapon weaponName);
+	UFUNCTION() void ActivateReadyAndSecondaryIfProceed(EWeapon weaponName);
 	
 };

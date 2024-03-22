@@ -14,5 +14,11 @@
 				"CoreUObject"
 			]
 		}
+	],
+	"Plugins": [
+		{
+			"Name": "AndroidCamera",
+			"Enabled": true
+		}
 	]
 }

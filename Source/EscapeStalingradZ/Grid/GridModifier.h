@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "GridModifier.generated.h"
 
 UCLASS()
@@ -21,7 +22,7 @@ protected:
 
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = TileData)
-		TEnumAsByte<enum TileType>  type;
+		TEnumAsByte<TileType>  type;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = colors) FLinearColor modifierColor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) USceneComponent* DefaultSceneRoot;

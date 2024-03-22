@@ -41,6 +41,7 @@ void UWCombat::NativeConstruct()
 
 void UWCombat::OnClickNormalFire()
 {
+	grid->deleteStatesFromTilesButSelected();
 	command = NewObject<UActionNormalFire>(this);
 	command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionNormalFire>(controller->actions);
@@ -49,6 +50,7 @@ void UWCombat::OnClickNormalFire()
 
 void UWCombat::OnClickSpreadFire()
 {
+	grid->deleteStatesFromTilesButSelected();
 	command = NewObject<UActionSpreadFire>(this);
 	command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionSpreadFire>(controller->actions);
@@ -57,6 +59,7 @@ void UWCombat::OnClickSpreadFire()
 
 void UWCombat::OnClickHandToHand()
 {
+	grid->deleteStatesFromTilesButSelected();
 	command = NewObject<UActionHandToHand>(this);
 	command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionHandToHand>(controller->actions);

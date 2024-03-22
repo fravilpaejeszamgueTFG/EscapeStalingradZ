@@ -4,17 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "Zombie.generated.h"
-
-UENUM()
-enum ZombieType
-{
-	Beta     UMETA(DisplayName = "Beta"),
-	Armoured     UMETA(DisplayName = "Armoured"),
-	Kugelfisch   UMETA(DisplayName = "Kugelfisch"),
-	Alpha     UMETA(DisplayName = "Alpha"),
-
-};
 
 USTRUCT(BlueprintType)
 struct FPathFinding

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "WMovimiento.generated.h"
 
 /**
@@ -44,6 +45,6 @@ public:
 	UFUNCTION() void OnClickBackward();
 	UFUNCTION() void OnClickDiagonal();
 	UFUNCTION() void GoBack();
-	UFUNCTION() void DisableButtonByMovementType(enum MovementType type);
+	UFUNCTION() void DisableButtonByMovementType(MovementType type);
 	
 };
