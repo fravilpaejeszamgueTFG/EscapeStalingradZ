@@ -4,20 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "WSearchDie.generated.h"
-
-
-UENUM()
-enum ObjectName
-{
-	Ammo     UMETA(DisplayName = "Ammo"),
-	Food     UMETA(DisplayName = "Food"),
-	MedKit	   UMETA(DisplayName = "MedKit"),
-	WKnife     UMETA(DisplayName = "WKnife"),
-	WLuger	   UMETA(DisplayName = "WLuger"),
-	SecondFavWeapon	   UMETA(DisplayName = "SecondFavWeapon"),
-	FavWeapon	   UMETA(DisplayName = "FavWeapon"),
-};
 
 /**
  * 
@@ -50,7 +38,7 @@ public:
 	UPROPERTY(VisibleAnywhere) int currentNumber;
 
 	//nombre del mapa
-	UPROPERTY(BlueprintReadOnly, Category = gridName) TEnumAsByte<enum ScenarioName> gridName;
+	UPROPERTY(BlueprintReadOnly, Category = gridName) TEnumAsByte<ScenarioName> gridName;
 	//nombre del mapa
 	UPROPERTY(BlueprintReadOnly, Category = gridName) TMap<TEnumAsByte<ObjectName>, int> objectsWon; //nombre objeto + cantidad
 
@@ -66,7 +54,7 @@ public:
 	UFUNCTION() void SetSearchingObjectsStash();
 	UFUNCTION() void SetSearchingObjectsMoveAlong();
 	UFUNCTION() void SetObjectWonToCharacter(ObjectName name, int number);
-	UFUNCTION() void SetWeaponInFreeSlot(enum EWeapon weaponName);
+	UFUNCTION() void SetWeaponInFreeSlot(EWeapon weaponName);
 	UFUNCTION() int GetNumberOfWidgetFromScenarioName();
 	UFUNCTION(BlueprintImplementableEvent) void SetActiveSearchObjectsWidget(int number);
 

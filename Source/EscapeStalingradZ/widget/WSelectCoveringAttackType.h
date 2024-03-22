@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "WSelectCoveringAttackType.generated.h"
 
 /**
@@ -36,7 +37,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class AUserHUD* hud;
 
-	UPROPERTY(VisibleAnywhere, Category = Covering) TEnumAsByte<enum CoveringAttackType> typeOfAttack;
+	UPROPERTY(VisibleAnywhere, Category = Covering) TEnumAsByte<CoveringAttackType> typeOfAttack;
 
 	UFUNCTION() void OnClickHandToHand();
 	UFUNCTION() void OnClickNormalFire();
