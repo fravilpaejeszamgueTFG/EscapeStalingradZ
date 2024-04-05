@@ -75,18 +75,24 @@ void ATurn::SetNextCharacter()
 		PrepareCharacterForTurn();
 	}
 	else {
-		hud->HidePlayerInfo();
-		charactersToStartTurn = characters;
-		endTurnHuman = true;
-		UE_LOG(LogTemp, Warning, TEXT("Turno humano terminado"));
-		if (endTurnZombie) {
-			EndTurn();
+		if (isFubar && roundNumber >= 6) {
+			UE_LOG(LogTemp, Warning, TEXT("Fin de partida"));
 		}
 		else {
-			UE_LOG(LogTemp, Warning, TEXT("Empieza turno zombie"));
-			zombiesToStartTurn = zombies;
-			SetNextZombie();
+			hud->HidePlayerInfo();
+			charactersToStartTurn = characters;
+			endTurnHuman = true;
+			UE_LOG(LogTemp, Warning, TEXT("Turno humano terminado"));
+			if (endTurnZombie) {
+				EndTurn();
+			}
+			else {
+				UE_LOG(LogTemp, Warning, TEXT("Empieza turno zombie"));
+				zombiesToStartTurn = zombies;
+				SetNextZombie();
+			}
 		}
+		
 	}
 }
 
@@ -241,19 +247,24 @@ void ATurn::EndZombieTurn()
 void ATurn::StartTurn()
 {
 	if (isFubar) {
-		if (roundNumber == 0) {
-			//TO-DO Hacer tutorial primera ronda (movimientos basicos)
+		if (false) { //TO-DO si activa tutorial
+			if (roundNumber == 0) {
+				//TO-DO Hacer tutorial primera ronda (movimientos basicos)
+			}
+			else if (roundNumber == 1) {
+				//TO-DO Hacer tutorial segunda ronda (buscar objeto)
+			}
+			else if (roundNumber == 2) {
+				//TO-DO Hacer tutorial tercera ronda (acciones (rotar,abrir/cerrar puerta))
+			}
+			else if (roundNumber == 3) {
+				//TO-DO Hacer tutorial en cuarta ronda (iniciativa y combate)
+			}
+			else if (roundNumber > 3) {
+				Initiative();
+			}
 		}
-		else if (roundNumber == 1) {
-			//TO-DO Hacer tutorial segunda ronda (buscar objeto)
-		}
-		else if (roundNumber == 2) {
-			//TO-DO Hacer tutorial tercera ronda (acciones (rotar,abrir/cerrar puerta))
-		}
-		else if (roundNumber == 3) {
-			//TO-DO Hacer tutorial en cuarta ronda (iniciativa y combate)
-		}
-		else if (roundNumber > 3) {
+		else {
 			Initiative();
 		}
 	}
