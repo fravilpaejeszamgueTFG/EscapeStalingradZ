@@ -32,9 +32,15 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	SetPreferredWeaponByCharacter();
 
-	if (isPrimaryPlayer && GetWorld()->GetName() == "InitialMap") { //InitialMap cambiarlo a fubar cuando se le cambie el nombre
-		AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-		hud->CreateSelectCharacterWidget(this);
+	if (isPrimaryPlayer) {
+		if (GetWorld()->GetName() == "InitialMap") { //InitialMap cambiarlo a fubar cuando se le cambie el nombre
+			AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			hud->CreateSelectCharacterWidget(this);
+		} else {
+			//TO-DO cambiar a iniciar turno
+			AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			hud->CreateSelectCharacterWidget(this);
+		}
 	}
 }
 

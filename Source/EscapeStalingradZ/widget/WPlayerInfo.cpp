@@ -31,12 +31,19 @@ void UWPlayerInfo::NativeConstruct()
 	health->SynchronizeProperties();
 	MP->TextDelegate.BindDynamic(this, &UWPlayerInfo::SetMPText);
 	MP->SynchronizeProperties();
+	KillNumber->TextDelegate.BindDynamic(this, &UWPlayerInfo::SetKillNumberText);
+	KillNumber->SynchronizeProperties();
+	AmmoNumber->TextDelegate.BindDynamic(this, &UWPlayerInfo::SetAmmoNumberText);
+	AmmoNumber->SynchronizeProperties();
+	FoodNumber->TextDelegate.BindDynamic(this, &UWPlayerInfo::SetFoodNumberText);
+	FoodNumber->SynchronizeProperties();
+	MedKitNumber->TextDelegate.BindDynamic(this, &UWPlayerInfo::SetMedKitNumberText);
+	MedKitNumber->SynchronizeProperties();
 	SecondaryWeapon_Overlay->VisibilityDelegate.BindDynamic(this, &UWPlayerInfo::SetVisibilitySecondaryWeapon);
 	SecondaryWeapon_Overlay->SynchronizeProperties();
 
 	ButtonReadyWeapon->OnClicked.AddDynamic(this, &UWPlayerInfo::OnClickReadyWeapon);
 	ButtonSecondaryWeapon->OnClicked.AddDynamic(this, &UWPlayerInfo::OnClickSecondaryWeapon);
-	//TO-DO setear los demas textos y cambiar seteo de vida y overlay para que no ocurra siempre
 	
 }
 
