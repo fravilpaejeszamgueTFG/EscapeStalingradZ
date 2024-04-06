@@ -178,7 +178,12 @@ void AGrid::UpdateTileVisual(FIntPoint index)
 		instancedMesh->SetCustomDataValue(i, 0, color.R, true);
 		instancedMesh->SetCustomDataValue(i, 1, color.G, true);
 		instancedMesh->SetCustomDataValue(i, 2, color.B, true);
-		instancedMesh->SetCustomDataValue(i, 3, 0, true);
+		if (color != tileNoneColor) {
+			instancedMesh->SetCustomDataValue(i, 3, 0.25, true);
+		}
+		else {
+			instancedMesh->SetCustomDataValue(i, 3, 0, true);
+		}
 	}
 }
 

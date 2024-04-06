@@ -53,7 +53,7 @@ public:
 		class UWActions* actionWidget;
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-		class UWObjectives* objectiveWidget;
+		class UUserWidget* objectiveWidget;
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 		class UWOptions* optionsWidget;

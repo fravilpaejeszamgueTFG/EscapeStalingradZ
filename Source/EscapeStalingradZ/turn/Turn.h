@@ -80,6 +80,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetCharacters(TArray<FIntPoint>  charactersList);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		class UWObjectives* CurrentObjective;
+
 	UFUNCTION()
 		void nextCharacter();
 

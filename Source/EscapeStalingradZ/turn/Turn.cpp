@@ -14,6 +14,7 @@
 #include "EscapeStalingradZ/widget/WDicesTurn.h"
 #include "EscapeStalingradZ/zombies/Zombie.h"
 #include "EscapeStalingradZ/player/actions/ActionSelectTileToMove.h"
+#include "EscapeStalingradZ/widget/WObjectives.h"
 
 // Sets default values
 ATurn::ATurn()
@@ -78,21 +79,17 @@ void ATurn::SetNextCharacter()
 		if (isFubar && roundNumber >= 6) {
 			UE_LOG(LogTemp, Warning, TEXT("Fin de partida"));
 		}
-		else {
-			hud->HidePlayerInfo();
-			charactersToStartTurn = characters;
-			endTurnHuman = true;
-			UE_LOG(LogTemp, Warning, TEXT("Turno humano terminado"));
-			if (endTurnZombie) {
-				EndTurn();
-			}
-			else {
-				UE_LOG(LogTemp, Warning, TEXT("Empieza turno zombie"));
-				zombiesToStartTurn = zombies;
-				SetNextZombie();
-			}
+		//Aquí iria un else cuando se haga el fin de la partida
+		hud->HidePlayerInfo();
+		charactersToStartTurn = characters;
+		endTurnHuman = true;
+		if (endTurnZombie) {
+			EndTurn();
 		}
-		
+		else {
+			zombiesToStartTurn = zombies;
+			SetNextZombie();
+		}	
 	}
 }
 
@@ -300,6 +297,9 @@ void ATurn::EndTurn()
 	endTurnZombie = false;
 	endTurnHuman = false;
 	roundNumber++;
+	if (CurrentObjective != nullptr) {
+		CurrentObjective->SetNumberRoundInImage(roundNumber);
+	}
 	StartTurn();
 }
 

@@ -27,6 +27,12 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<UWSelectMovementType> MovementClass;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool hasPrimaryObjective = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool hasSecondaryObjective = false;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = actions) class UPlayerActions* actions;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerCharacter* playerchara;
