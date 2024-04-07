@@ -138,4 +138,7 @@ public:
 	UFUNCTION() void CreateOrSetDieSearchWidget(int numberOfDie);
 	//setear imagen
 	UFUNCTION(BlueprintImplementableEvent) void SetImage();
+	//inicio turno al cambiar de nivel
+	FTimerHandle initialTimer;
+	UFUNCTION() void SetInitialTurn();
 };

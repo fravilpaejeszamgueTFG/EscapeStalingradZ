@@ -30,16 +30,15 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	SetPreferredWeaponByCharacter();
 
 	if (isPrimaryPlayer) {
-		if (GetWorld()->GetName() == "InitialMap") { //InitialMap cambiarlo a fubar cuando se le cambie el nombre
+		if (GetWorld()->GetName() == "FUBAR") {
 			AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 			hud->CreateSelectCharacterWidget(this);
 		} else {
-			//TO-DO cambiar a iniciar turno
-			AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			hud->CreateSelectCharacterWidget(this);
+			GetWorldTimerManager().SetTimer(initialTimer, this, &APlayerCharacter::SetInitialTurn, 0.5, false);
 		}
 	}
 }
@@ -259,7 +258,11 @@ int APlayerCharacter::GetNumberOfHitModifiersLoF(FIntPoint tileZombie)
 						res += 2;
 					}
 				}
+				if (grid->gridTiles[index].wallsHinder.Contains(backward)) {
+					res += 2;
+				}
 			}
+			
 			if (res >= 4) {
 				return 4;
 			}
@@ -343,7 +346,6 @@ void APlayerCharacter::FriendlyFire(FIntPoint tileZombie)
 			APlayerCharacter* chara = Cast<APlayerCharacter>(grid->gridTiles[index].actor);
 			if (chara != nullptr) {
 				chara->health--;
-				UE_LOG(LogTemp, Warning, TEXT("fuego amigo"));
 				break;
 			}
 		}
@@ -485,4 +487,10 @@ void APlayerCharacter::CreateOrSetDieSearchWidget(int numberOfDie)
 			}
 		}
 	}
+}
+
+void APlayerCharacter::SetInitialTurn()
+{
+	AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	hud->StartGameAfterSelectCharacter();
 }

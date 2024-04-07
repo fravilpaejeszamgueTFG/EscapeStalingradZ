@@ -51,16 +51,16 @@ void UWSearchDie::OnClickButtonConfirm()
         if (character != nullptr && character->grid != nullptr) {
             AGrid* grid = character->grid;
             FIntPoint tile = grid->GetTileIndexFromLocation(character->GetActorLocation());
-            if (tile.X > 1) { // tile.X <= 1 -> o, > 1 -> o2
-                player->hasSecondaryObjective = true;
-            }
-            else {
+            if (tile.X > 1) { // tile.X > 1 -> o, <= 1 -> o2
                 player->hasPrimaryObjective = true;
                 player->canExitTheRoom = true;
-                for (AExitModifier* mod : player->exits){
+                for (AExitModifier* mod : player->exits) {
                     mod->SetActorEnableCollision(true);
                 }
                 player->exits.Empty();
+            }
+            else {
+                player->hasSecondaryObjective = true;
             }
         }
     }

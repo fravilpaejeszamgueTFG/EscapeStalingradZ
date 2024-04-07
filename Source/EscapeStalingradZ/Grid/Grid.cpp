@@ -279,13 +279,17 @@ TArray<FIntPoint> AGrid::GetTilesForwardMovement(FIntPoint index, FVector forwar
 			if (gridTiles[forward].actor != nullptr || gridTiles[forward].types.Contains(TileType::Fire)) {
 				break;
 			}
+			FIntPoint backward = index + FIntPoint(round(forwardVector.X) * (i - 1), round(forwardVector.Y) * (i - 1));
 			if (gridTiles[forward].walls.Num() > 0) {
-				FIntPoint backward = index + FIntPoint(round(forwardVector.X) * (i - 1), round(forwardVector.Y) * (i - 1));
 				if (gridTiles[forward].walls.Contains(backward)) {
 					break;
 				}
 			}
-			FIntPoint backward = index + FIntPoint(round(forwardVector.X) * (i - 1), round(forwardVector.Y) * (i - 1));
+			if (gridTiles[forward].wallsHinder.Num() > 0) {
+				if (gridTiles[forward].wallsHinder.Contains(backward)) {
+					break;
+				}
+			}
 			if (GetDoorIsClosed(forward, backward)) {
 				break;
 			}
@@ -507,6 +511,16 @@ bool AGrid::CanMoveDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right, 
 			return false;
 		}
 	}
+	if (gridTiles[forward].wallsHinder.Num() > 0) {
+		if (gridTiles[forward].wallsHinder.Contains(backward) || gridTiles[forward].wallsHinder.Contains(tile)) {
+			return false;
+		}
+	}
+	if (gridTiles[right].wallsHinder.Num() > 0) {
+		if (gridTiles[right].wallsHinder.Contains(backward) || gridTiles[right].wallsHinder.Contains(tile)) {
+			return false;
+		}
+	}
 	if (GetDoorIsClosed(forward, backward) || GetDoorIsClosed(forward, tile)
 		|| GetDoorIsClosed(right, backward) || GetDoorIsClosed(right, tile)) {
 		return false;
@@ -571,6 +585,11 @@ int AGrid::GetCostToEnterNeighbor(FIntPoint index, FIntPoint neighbor)
 	} 
 	if (gridTiles[neighbor].walls.Num() > 0) {
 		if (gridTiles[neighbor].walls.Contains(index)) {
+			return 0;
+		}
+	}
+	if (gridTiles[neighbor].wallsHinder.Num() > 0) {
+		if (gridTiles[neighbor].wallsHinder.Contains(index)) {
 			return 0;
 		}
 	}
@@ -656,6 +675,11 @@ bool AGrid::DoorOrWallBetweenTiles(FIntPoint tile1, FIntPoint tile2)
 	}
 	if (GetDoorIsClosed(tile1, tile2)) {
 		return true;
+	}
+	if (gridTiles[tile1].wallsHinder.Num() > 0) {
+		if (gridTiles[tile1].wallsHinder.Contains(tile2)) {
+			return true;
+		}
 	}
 	return false;
 }
