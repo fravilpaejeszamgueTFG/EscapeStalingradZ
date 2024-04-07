@@ -74,6 +74,7 @@ void UActionMovementLateral::Action(AGrid* grid, FIntPoint tile, FIntPoint desti
 					if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
 						hud->PlayerInfoWidget->SetVisibleActionWidget();
 					}
+					grid->EndIfTileIsExit(destinyTile);
 				}
 			}
 			for (FIntPoint i : indicesright) {

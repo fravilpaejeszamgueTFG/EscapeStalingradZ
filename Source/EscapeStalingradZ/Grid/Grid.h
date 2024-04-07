@@ -169,4 +169,7 @@ public:
 
 	UFUNCTION()
 		TArray<FIntPoint> GetTileNeighborsThatCanMoveInto(FIntPoint index);
+
+	UFUNCTION()
+		void EndIfTileIsExit(FIntPoint index);
 };

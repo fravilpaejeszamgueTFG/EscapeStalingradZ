@@ -24,6 +24,10 @@ void APlayerC::BeginPlay()
 	EnableInput(this);
 
 	InputComponent->BindAction("LeftMouseButton", IE_Pressed, this, &APlayerC::LeftMouseClick);
+
+	if (GetWorld()->GetName() == "AFriendWillBleed" || GetWorld()->GetName() == "WakeUp") {
+		canExitTheRoom = false;
+	}
 }
 
 void APlayerC::LeftMouseClick()

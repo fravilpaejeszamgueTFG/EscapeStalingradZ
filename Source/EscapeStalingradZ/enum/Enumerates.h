@@ -23,7 +23,8 @@ enum TileType
 	Fire	   UMETA(DisplayName = "Fire"),
 	Search	   UMETA(DisplayName = "Search"),
 	Spawn	   UMETA(DisplayName = "Spawn"),
-	Exit	   UMETA(DisplayName = "Exit")
+	S1		UMETA(DisplayName = "S1"),
+	S2		UMETA(DisplayName = "S2"),
 };
 
 UENUM()

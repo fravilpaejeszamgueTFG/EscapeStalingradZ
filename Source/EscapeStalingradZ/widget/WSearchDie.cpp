@@ -10,6 +10,7 @@
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "UserHUD.h"
 #include "WPlayerInfo.h"
+#include "EscapeStalingradZ/grid/ExitModifier.h"
 
 UWSearchDie::UWSearchDie(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -37,6 +38,9 @@ void UWSearchDie::SetDie(int numberOfDie)
 
 void UWSearchDie::OnClickButtonConfirm()
 {
+    DieNumber->SetVisibility(ESlateVisibility::Hidden);
+    ButtonRollAnimation->SetVisibility(ESlateVisibility::Visible);
+    ButtonConfirm->SetVisibility(ESlateVisibility::Hidden);
     APlayerC* player = Cast<APlayerC>(GetWorld()->GetFirstPlayerController());
     if (gridName == ScenarioName::STASH) {
         if (currentNumber > 10) {
@@ -52,7 +56,11 @@ void UWSearchDie::OnClickButtonConfirm()
             }
             else {
                 player->hasPrimaryObjective = true;
-                //TO-DO, aqui habrá que desbloquear la casilla salida
+                player->canExitTheRoom = true;
+                for (AExitModifier* mod : player->exits){
+                    mod->SetActorEnableCollision(true);
+                }
+                player->exits.Empty();
             }
         }
     }
