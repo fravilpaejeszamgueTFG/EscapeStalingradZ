@@ -7,6 +7,7 @@
 #include "Components/Image.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
+#include "EscapeStalingradZ/player/PlayerC.h"
 #include "UserHUD.h"
 #include "WPlayerInfo.h"
 
@@ -36,7 +37,28 @@ void UWSearchDie::SetDie(int numberOfDie)
 
 void UWSearchDie::OnClickButtonConfirm()
 {
-    //TO-DO implementar objetivos en cada nivel
+    APlayerC* player = Cast<APlayerC>(GetWorld()->GetFirstPlayerController());
+    if (gridName == ScenarioName::STASH) {
+        if (currentNumber > 10) {
+            player->hasSecondaryObjective = true;
+        }
+    }
+    else if (gridName == ScenarioName::WAKEUP) {
+        if (character != nullptr && character->grid != nullptr) {
+            AGrid* grid = character->grid;
+            FIntPoint tile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+            if (tile.X > 1) { // tile.X <= 1 -> o, > 1 -> o2
+                player->hasSecondaryObjective = true;
+            }
+            else {
+                player->hasPrimaryObjective = true;
+                //TO-DO, aqui habrá que desbloquear la casilla salida
+            }
+        }
+    }
+    else {
+        player->hasSecondaryObjective = true;
+    }
     for (const auto& item : objectsWon) {
         SetObjectWonToCharacter(item.Key, item.Value);
     }

@@ -236,6 +236,7 @@ void UWPlayerInfo::HidePlayerInfoDuringSearch()
 {
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 	optionsWidget->SetVisibility(ESlateVisibility::Hidden);
+	objectiveWidget->SetVisibility(ESlateVisibility::Hidden);
 	actionWidget->SetVisibility(ESlateVisibility::Hidden);
 	actionWidget->HideWidgets();
 }
@@ -247,6 +248,7 @@ void UWPlayerInfo::UnhidePlayerInfoDuringSearch()
 	optionsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	SetVisibleActionWidget();
 	actionWidget->DisableActions();
+	objectiveWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
 void UWPlayerInfo::HideOptionsDuringActions()
