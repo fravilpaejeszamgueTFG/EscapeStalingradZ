@@ -33,9 +33,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool hasSecondaryObjective = false;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool canExitTheRoom = true;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = actions) class UPlayerActions* actions;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerCharacter* playerchara;
+
+	UPROPERTY(VisibleAnywhere, Category = Exits) TArray<class AExitModifier*> exits;
 
 	UFUNCTION() void LeftMouseClick();
 

@@ -129,7 +129,13 @@ TArray<FIntPoint> AGrid::GetFrontTiles(FIntPoint index, FVector forwardVector, F
 FIntPoint AGrid::GetTileIndexFromLocation(FVector location)
 {
 	FVector v = UtilitiesESZ::SnapVectorToVector(location - gridBottomLeftCornerLocation, tileScale)/tileScale;
-	return FIntPoint(v.X, v.Y);
+	if (v.X >= 0 && v.X < numberOfTiles.X && v.Y >= 0 && v.Y < numberOfTiles.Y) {
+		return FIntPoint(v.X, v.Y);
+	}
+	else {
+		return FIntPoint(-1,-1);
+	}
+	
 }
 
 void AGrid::UpdateTileNeighbors(FIntPoint index, bool isadding)
@@ -664,4 +670,15 @@ TArray<FIntPoint> AGrid::GetTileNeighborsThatCanMoveInto(FIntPoint index)
 		}
 	}
 	return res;
+}
+
+void AGrid::EndIfTileIsExit(FIntPoint index)
+{
+	if (gridTiles[index].types.Contains(TileType::S1) || gridTiles[index].types.Contains(TileType::S2)) {
+		APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		if (player != nullptr) {
+			player->hasPrimaryObjective = true;
+		}
+		//TO-DO cambiar de nivel 
+	}
 }

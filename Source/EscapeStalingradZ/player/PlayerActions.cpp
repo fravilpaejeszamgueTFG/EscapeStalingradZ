@@ -56,9 +56,6 @@ void UPlayerActions::RightMouseClick()
 void UPlayerActions::UpdateHoveredTile()
 {
     FIntPoint index = grid->GetTileIndexUnderCursor();
-    if (index.X < 0 || index.Y < 0) {
-        index = FIntPoint(-1, -1);
-    }
     if (index != hoveredTile) {
         if (grid->particleLoF->IsVisible()) {
             grid->DeActivateParticleLoF();

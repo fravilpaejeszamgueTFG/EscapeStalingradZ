@@ -78,6 +78,7 @@ void UActionDiagonalMovement::Action(AGrid* grid, FIntPoint tile, FIntPoint dest
 					if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
 						hud->PlayerInfoWidget->SetVisibleActionWidget();
 					}
+					grid->EndIfTileIsExit(destinyTile);
 				}
 			}
 			for (FIntPoint i : indicesright) {
