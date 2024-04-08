@@ -26,6 +26,8 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = TileData)
 		TArray<FIntPoint> walls;
 	UPROPERTY(VisibleAnywhere, Category = TileData)
+		TArray<FIntPoint> wallsHinder;
+	UPROPERTY(VisibleAnywhere, Category = TileData)
 		TMap<FIntPoint, bool> doors; //si bool = true -> puerta cerrada, si bool = false -> puerta abierta
 
 	FTileData() { 
