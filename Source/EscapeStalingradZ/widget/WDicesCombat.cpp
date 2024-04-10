@@ -15,6 +15,7 @@
 #include "TimerManager.h"
 #include "EscapeStalingradZ/turn/Turn.h"
 #include "EscapeStalingradZ/grid/Grid.h"
+#include "EscapeStalingradZ/misc/AnimatedTextAttack.h"
 
 UWDicesCombat::UWDicesCombat(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -138,7 +139,7 @@ void UWDicesCombat::AttackInHandToHand()
 		numberDiceLeft = 0;
 	}
 	//aqui iria animación de ataque si hay, poner el temporizador el tiempo de la animación
-	GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDicesCombat::NextDie, 3, false);
+	GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDicesCombat::NextDie, 2, false);
 	UE_LOG(LogTemp, Warning, TEXT("aqui iria la animacion ataque cuerpo a cuerpo/normalFire"));
 }
 
@@ -146,12 +147,15 @@ void UWDicesCombat::AttackInFire()
 {
 	if (currentNumber == 1) {
 		character->ammo--;
-		UE_LOG(LogTemp, Warning, TEXT("Se me ha encasquillao"));
+		FVector pos = zombie->GetActorLocation();
+		AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, pos, FRotator(0, 0, 0));
+		if (text != nullptr) {
+			text->SetAnimationText(FText::FromString("Fail"));
+		}
 		if (character->ammo <= 0) {
-			UE_LOG(LogTemp, Warning, TEXT("Sin balas. Perfecto"));
 			numberDiceLeft = 0;
 		}
-		GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDicesCombat::NextDie, 3, false);
+		GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDicesCombat::NextDie, 2, false);
 		UE_LOG(LogTemp, Warning, TEXT("aqui iria la animacion fuego fallido"));
 	}
 	else {

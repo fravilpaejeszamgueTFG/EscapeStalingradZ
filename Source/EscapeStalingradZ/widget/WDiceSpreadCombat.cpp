@@ -20,6 +20,7 @@
 #include "EscapeStalingradZ/player/PlayerActions.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "EscapeStalingradZ/turn/Turn.h"
+#include "EscapeStalingradZ/misc/AnimatedTextAttack.h"
 
 UWDiceSpreadCombat::UWDiceSpreadCombat(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -93,19 +94,20 @@ void UWDiceSpreadCombat::AttackSpreadFire()
 {
 	if (currentNumber == 1) {
 		character->ammo--;
-		UE_LOG(LogTemp, Warning, TEXT("Se me ha encasquillao"));
+		FVector pos = zombie->GetActorLocation();
+		AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, pos, FRotator(0, 0, 0));
+		if (text != nullptr) {
+			text->SetAnimationText(FText::FromString("Fail"));
+		}
 		bool withoutAmmo = false;
 		if (character->ammo <= 0) {
-			UE_LOG(LogTemp, Warning, TEXT("Sin balas. Perfecto"));
 			withoutAmmo = true;
 		}
 		if (withoutAmmo) {
-			GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDiceSpreadCombat::EndAttack, 3, false);
-			UE_LOG(LogTemp, Warning, TEXT("aqui iria la animacion fuego fallido + fin ataque"));
+			GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDiceSpreadCombat::EndAttack, 2, false);
 		}
 		else {
-			GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDiceSpreadCombat::SelectObjetiveSpreadFire, 3, false);
-			UE_LOG(LogTemp, Warning, TEXT("aqui iria la animacion fuego fallido"));
+			GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDiceSpreadCombat::SelectObjetiveSpreadFire, 2, false);
 		}
 	}
 	else {
@@ -118,7 +120,7 @@ void UWDiceSpreadCombat::AttackSpreadFire()
 			character->FriendlyFireGivenZombie(zombie);
 		}
 		//aqui iria animación de ataque si hay, poner el temporizador el tiempo de la animación
-		GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDiceSpreadCombat::SelectObjetiveSpreadFire, 3, false);
+		GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDiceSpreadCombat::SelectObjetiveSpreadFire, 2, false);
 		UE_LOG(LogTemp, Warning, TEXT("aqui iria la animacion ataque cuerpo a cuerpo/normalFire"));
 	}
 }

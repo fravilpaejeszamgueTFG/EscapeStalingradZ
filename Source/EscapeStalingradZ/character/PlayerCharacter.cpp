@@ -9,6 +9,8 @@
 #include "EscapeStalingradZ/widget/WDiceSpreadCombat.h"
 #include "EscapeStalingradZ/widget/WSearchDie.h"
 #include "EscapeStalingradZ/widget/UserHUD.h"
+#include "Components/WidgetComponent.h"
+#include "EscapeStalingradZ/misc/StunIcon.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -460,6 +462,11 @@ void APlayerCharacter::ZombieLock(AZombie* zombie)
 	}
 	typeOfCovering = CoveringType::NONE;
 	zombie->characterInContact = this;
+	if (stunIcon == nullptr) {
+		FVector pos = (zombie->GetActorLocation() + GetActorLocation()) / 2;
+		stunIcon = GetWorld()->SpawnActor<AStunIcon>(stunClass, pos, FRotator(0, 0, 0));
+	}
+	
 	FRotator rotacion = GetRotationDirectionToZombie(zombie);
 	SetActorRotation(rotacion);
 }

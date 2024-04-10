@@ -56,6 +56,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SpreadFire")
 		class UWSelectObjectiveSpreadFire* SelectObjectiveWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Parameters")
+		TSubclassOf<class AAnimatedTextAttack> textClass;
+
 	FTimerHandle WaitTimer;
 
 	UFUNCTION() void SetDices(TArray<int> humanDices, int targetDie);

@@ -58,6 +58,7 @@ protected:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) USceneComponent* DefaultSceneRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) class UStaticMeshComponent* mesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) class UWidgetComponent* zombieInfo;
 
 	//Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ZombieType) TEnumAsByte<ZombieType> typeOfZombie;
@@ -112,6 +113,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Movement) float timeMovement = 2.f;
 
 	UPROPERTY(VisibleAnywhere, Category = DirectContact) class APlayerCharacter* characterInContact;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Parameters")
+		TSubclassOf<class AAnimatedTextAttack> textClass;
 	
 	//Funciones
 	void SetHealthAndMPPropertiesByZombie();
