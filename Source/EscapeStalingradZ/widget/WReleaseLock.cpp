@@ -51,9 +51,7 @@ void UWReleaseLock::OnClickButtonConfirm()
 	SetVisibility(ESlateVisibility::Hidden);
 	if (currentNumber >= targetNumber) {
 		character->isLocked = false;
-		AStunIcon* icon = character->stunIcon;
-		character->stunIcon = nullptr;
-		icon->Destroy();
+		character->stunIcon->SetActorHiddenInGame(true);
 		AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 		if (hud != nullptr) {
 			hud->CreateOrSetPlayerInfo();

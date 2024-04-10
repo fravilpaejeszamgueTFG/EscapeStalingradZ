@@ -466,7 +466,11 @@ void APlayerCharacter::ZombieLock(AZombie* zombie)
 		FVector pos = (zombie->GetActorLocation() + GetActorLocation()) / 2;
 		stunIcon = GetWorld()->SpawnActor<AStunIcon>(stunClass, pos, FRotator(0, 0, 0));
 	}
-	
+	else if (stunIcon->IsHidden()) {
+		FVector pos = (zombie->GetActorLocation() + GetActorLocation()) / 2;
+		stunIcon = GetWorld()->SpawnActor<AStunIcon>(stunClass, pos, FRotator(0, 0, 0));
+		stunIcon->SetActorHiddenInGame(false);
+	}
 	FRotator rotacion = GetRotationDirectionToZombie(zombie);
 	SetActorRotation(rotacion);
 }
