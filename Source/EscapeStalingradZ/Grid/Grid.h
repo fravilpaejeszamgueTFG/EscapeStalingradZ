@@ -82,6 +82,7 @@ public:
 
 	//actores
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = characters) TArray<FIntPoint> charactersIndex;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = doors) TArray<class ADoorIcon*> doorsIcon;
 
 	//functions
 	UFUNCTION(BlueprintCallable) 

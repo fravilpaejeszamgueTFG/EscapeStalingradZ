@@ -3,9 +3,12 @@
 
 #include "Zombie.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/WidgetComponent.h"
 #include "EscapeStalingradZ/grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/turn/Turn.h"
+#include "EscapeStalingradZ/widget/WZombieInfo.h"
+#include "EscapeStalingradZ/misc/AnimatedTextAttack.h"
 
 // Sets default values
 AZombie::AZombie()
@@ -19,6 +22,9 @@ AZombie::AZombie()
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>("InstancedMesh");
 	mesh->SetupAttachment(DefaultSceneRoot);
 
+	zombieInfo = CreateDefaultSubobject<UWidgetComponent>("ZombieInfo");
+	zombieInfo->SetupAttachment(DefaultSceneRoot);
+
 	SetActorEnableCollision(true);
 
 }
@@ -29,6 +35,11 @@ void AZombie::BeginPlay()
 	Super::BeginPlay();
 	SetHealthAndMPPropertiesByZombie();
 	timeMovement *= stepMovementPerSecond;
+
+	UWZombieInfo* zombieWidget = Cast<UWZombieInfo>(zombieInfo->GetWidget());
+	if (zombieWidget != nullptr) {
+		zombieWidget->zombie = this;
+	}
 }
 
 void AZombie::SetHealthAndMPPropertiesByZombie()
@@ -36,10 +47,12 @@ void AZombie::SetHealthAndMPPropertiesByZombie()
 	if (typeOfZombie == ZombieType::Alpha) {
 		health = 2;
 		mp = 2;
+		maxmp = 2;
 	}
 	else {
 		health = 1;
 		mp = 1;
+		maxmp = 1;
 	}
 	isStunned = false;
 	characterInContact = nullptr;
@@ -47,8 +60,13 @@ void AZombie::SetHealthAndMPPropertiesByZombie()
 
 bool AZombie::ZombieHit(int die, int stunNumber)
 {
+	FVector pos = GetActorLocation();
+	AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, pos, FRotator(0, 0, 0));
 	if (die >= stunNumber) {
 		if (die >= stunNumber + 3) {
+			if (text != nullptr) {
+				text->SetAnimationText(FText::FromString("Hit"));
+			}
 			health--;
 			if (health <= 0) {
 				FIntPoint index = grid->GetTileIndexFromLocation(GetActorLocation());
@@ -56,30 +74,34 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 				turn->zombies.Remove(this);
 				SetActorLocation(FVector(-9999,-9999,-9999));
 				grid->gridTiles[index].actor = nullptr;
-				if (characterInContact != nullptr) {
-					characterInContact->isLocked = false;
-					characterInContact->inDirectContact = false;
-				}
 				SetHealthAndMPPropertiesByZombie();
-				//TO-DO si hay zombies esperando para entrar en esta casilla que entre uno (turno), tambien asignar en contacto directo si hay un personaje en una adyacente
 				return true;
 			}
 		}
 		else {
 			if (typeOfZombie == ZombieType::Armoured) {
 				isStunned = false;
+				if (text != nullptr) {
+					text->SetAnimationText(FText::FromString("Miss"));
+				}
 			}
 			else if (typeOfZombie == ZombieType::Kugelfisch) {
 				//TO-DO hacer que explote
+				if (text != nullptr) {
+					text->SetAnimationText(FText::FromString("Boom")); //cambiar
+				}
 			} 
 			else {
-				isStunned = true;
-				if (characterInContact != nullptr) {
-					characterInContact->isLocked = false;
-					characterInContact->inDirectContact = false;
-					characterInContact = nullptr;
+				if (text != nullptr) {
+					text->SetAnimationText(FText::FromString("Stun"));
 				}
+				isStunned = true;
 			}
+		}
+	}
+	else {
+		if (text != nullptr) {
+			text->SetAnimationText(FText::FromString("Miss"));
 		}
 	}
 	return false;
@@ -87,7 +109,6 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 
 void AZombie::ZombieActions()
 {
-	//TO-DO hacer acciones de zombies
 	if (isStunned) {
 		turn->nextZombie();
 	}
@@ -290,6 +311,23 @@ void AZombie::CoveringAttackBeforeLock()
 				turn->nextZombie();
 			}
 		}
+	}
+}
+
+void AZombie::FreeCharacterWhenStunOrKillZombie(APlayerCharacter* chara)
+{
+	if (grid != nullptr) {
+		chara->isLocked = false;
+		chara->inDirectContact = false;
+		TArray<FIntPoint> neighbors = grid->GetTileNeighbors(grid->GetTileIndexFromLocation(chara->GetActorLocation()));
+		for (FIntPoint n : neighbors) {
+			AZombie* z = Cast<AZombie>(grid->gridTiles[n].actor);
+			if (z != nullptr && !z->isStunned) {
+				chara->inDirectContact = true;
+				break;
+			}
+		}
+		characterInContact = nullptr;
 	}
 }
 

@@ -4,6 +4,7 @@
 #include "GridModifierDoor.h"
 #include "Grid.h"
 #include "Components/BoxComponent.h"
+#include "EscapeStalingradZ/misc/DoorIcon.h"
 
 // Sets default values
 AGridModifierDoor::AGridModifierDoor()
@@ -56,6 +57,16 @@ void AGridModifierDoor::OnOverlap(AActor* me, AActor* other)
 		}
 		else {
 			grid->gridTiles[index2].doors.Add(index1, true);
+		}
+		FVector pos = GetActorLocation();
+		ADoorIcon* door = GetWorld()->SpawnActor<ADoorIcon>(doorClass, pos, FRotator(0,0,0));
+		if (door != nullptr) {
+			if (GetActorRotation().Yaw < 45) {
+				door->isRotated = true;
+			}
+			door->index1 = index1;
+			door->index2 = index2;
+			grid->doorsIcon.Add(door);
 		}
 		Destroy();
 	}

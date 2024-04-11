@@ -27,6 +27,9 @@ public:
 
 	FTimerHandle modifierTimer;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Parameters")
+		TSubclassOf<class ADoorIcon> doorClass;
+
 	UFUNCTION()
 		void ActivateCollision();
 	UFUNCTION()

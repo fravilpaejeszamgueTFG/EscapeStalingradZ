@@ -55,6 +55,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class AUserHUD* hud;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Parameters")
+		TSubclassOf<class AAnimatedTextAttack> textClass;
+
 	FTimerHandle WaitTimer;
 
 	UFUNCTION() void SetDices(TArray<int> humanDices, int targetDie, bool isHandToHand);

@@ -6,6 +6,7 @@
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/widget/UserHUD.h"
 #include "EscapeStalingradZ/widget/WPlayerInfo.h"
+#include "EscapeStalingradZ/misc/DoorIcon.h"
 
 void UActionOpenCloseDoor::Execute(AGrid* grid, APlayerCharacter* character)
 {
@@ -51,6 +52,13 @@ void UActionOpenCloseDoor::Action(AGrid* grid, FIntPoint tile, FIntPoint destiny
 					AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 					if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
 						hud->PlayerInfoWidget->SetVisibleActionWidget();
+					}
+					for (ADoorIcon* icon : grid->doorsIcon) {
+						if ((icon->index1 == tile && icon->index2 == destinyTile) ||
+							(icon->index2 == tile && icon->index1 == destinyTile)) {
+							icon->ChangeValueIsOpen();
+							break;
+						}
 					}
 				}
 			}

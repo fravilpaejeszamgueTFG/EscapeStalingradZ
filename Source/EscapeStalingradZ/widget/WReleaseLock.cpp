@@ -8,6 +8,7 @@
 #include "EscapeStalingradZ/turn/Turn.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "UserHUD.h"
+#include "EscapeStalingradZ/misc/StunIcon.h"
 
 UWReleaseLock::UWReleaseLock(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -50,6 +51,7 @@ void UWReleaseLock::OnClickButtonConfirm()
 	SetVisibility(ESlateVisibility::Hidden);
 	if (currentNumber >= targetNumber) {
 		character->isLocked = false;
+		character->stunIcon->SetActorHiddenInGame(true);
 		AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 		if (hud != nullptr) {
 			hud->CreateOrSetPlayerInfo();

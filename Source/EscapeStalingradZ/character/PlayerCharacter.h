@@ -49,6 +49,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) USceneComponent* DefaultSceneRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) class UStaticMeshComponent* mesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) class UWidgetComponent* characterInfo;
 
 	//Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AvailableCharacter) TEnumAsByte<AvailableCharacter> characterChosen;
@@ -100,6 +101,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
 		class UWSearchDie* SearchDieWidget;
+
+	UPROPERTY(VisibleAnywhere, Category = "Icon") class AStunIcon* stunIcon;
+	UPROPERTY(EditDefaultsOnly, Category = "Icon")
+		TSubclassOf<class AStunIcon> stunClass;
 
 	//Funciones
 	UFUNCTION() void SetPreferredWeaponByCharacter();
