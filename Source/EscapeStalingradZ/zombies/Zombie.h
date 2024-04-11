@@ -129,6 +129,7 @@ public:
 	UFUNCTION() void CoveringAttack();
 	UFUNCTION() bool ZombieDirectContact(); //=true si hay un personaje en una casilla adyacente
 	UFUNCTION() void CoveringAttackBeforeLock();
+	UFUNCTION() void FreeCharacterWhenStunOrKillZombie(class APlayerCharacter* chara);
 
 	//PathFinding
 	UFUNCTION() TArray<FIntPoint> FindPath(FIntPoint start, FIntPoint end);
