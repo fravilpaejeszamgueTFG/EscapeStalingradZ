@@ -3,3 +3,10 @@
 
 #include "GI.h"
 
+
+void UGI::Init()
+{
+    Super::Init();
+
+}
+

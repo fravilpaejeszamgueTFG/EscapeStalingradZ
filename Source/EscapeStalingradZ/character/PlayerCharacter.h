@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "EscapeStalingradZ/weapon/Weapon.h"
 #include "EscapeStalingradZ/enum/Enumerates.h"
+#include "EscapeStalingradZ/instances/GI.h"
 #include "PlayerCharacter.generated.h"
 
 USTRUCT(BlueprintType)
@@ -44,8 +45,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) USceneComponent* DefaultSceneRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) class UStaticMeshComponent* mesh;
@@ -62,7 +61,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int medkit = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int mp = 4;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Attack) bool attacked = false;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Player) bool isPrimaryPlayer = true;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Player) bool isPrimaryPlayer = false;
 
 	UPROPERTY(EditAnywhere) FIntPoint startIndex = FIntPoint(7, 6);
 
@@ -143,7 +142,11 @@ public:
 	UFUNCTION() void CreateOrSetDieSearchWidget(int numberOfDie);
 	//setear imagen
 	UFUNCTION(BlueprintImplementableEvent) void SetImage();
-	//inicio turno al cambiar de nivel
+	//betweenScenarios cuando haya mas de un personaje
 	FTimerHandle initialTimer;
-	UFUNCTION() void SetInitialTurn();
+	UFUNCTION() void SetSecondCharacterBetweenScenarios();
+	//setear los atributos del personaje cuando cambia de nivel
+	
+	UFUNCTION() void SetAttributesByPlayerInfoSaved(FPlayerInfoSaved info);
+	UFUNCTION() void SaveAttributesInPlayerInfoSavedGivenIndex(int index);
 };

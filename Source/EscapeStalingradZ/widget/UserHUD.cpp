@@ -9,6 +9,7 @@
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/turn/Turn.h"
 #include "Kismet/GameplayStatics.h"
+#include "WBetweenScenarios.h"
 
 AUserHUD::AUserHUD() 
 {
@@ -23,6 +24,7 @@ void AUserHUD::DrawHUD()
 void AUserHUD::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 void AUserHUD::StartCharacterTurn()
@@ -85,6 +87,7 @@ void AUserHUD::CreateOrSetInventory()
 {
 	if (InventoryWidgetClass) {
 		if (InventoryWidget != nullptr) {
+			InventoryWidget->inBetweenScenarios = false;
 			InventoryWidget->character = character;
 			InventoryWidget->SetTextNumbers();
 			InventoryWidget->SetImages();
@@ -95,6 +98,7 @@ void AUserHUD::CreateOrSetInventory()
 		else {
 			InventoryWidget = CreateWidget<UWInventory>(GetWorld(), InventoryWidgetClass);
 			if (InventoryWidget != nullptr) {
+				InventoryWidget->inBetweenScenarios = false;
 				InventoryWidget->character = character;
 				InventoryWidget->hud = this;
 				InventoryWidget->SetTextNumbers();
@@ -130,5 +134,27 @@ void AUserHUD::CreateSelectCharacterWidget(APlayerCharacter* chara)
 			selectCharacter->hud = this;
 			selectCharacter->AddToViewport();
 		}
+	}
+}
+
+void AUserHUD::SetPrimaryCharacterToBetweenScenarios(APlayerCharacter* chara)
+{
+	if (BetweenScenariosWidgetClass) {
+		betweenScenariosWidget = CreateWidget<UWBetweenScenarios>(GetWorld(), BetweenScenariosWidgetClass);
+		if (betweenScenariosWidget != nullptr) {
+			betweenScenariosWidget->currentCharacter = chara;
+			betweenScenariosWidget->currentCharacterChosen = chara->characterChosen;
+			betweenScenariosWidget->characters.Add(chara);
+			betweenScenariosWidget->hud = this;
+			betweenScenariosWidget->SetInitialImage();
+			betweenScenariosWidget->AddToViewport();
+		}
+	}
+}
+
+void AUserHUD::SetSecondaryCharacterToBetweenScenarios(APlayerCharacter* chara)
+{
+	if (betweenScenariosWidget != nullptr) {
+		betweenScenariosWidget->characters.Add(chara);
 	}
 }
