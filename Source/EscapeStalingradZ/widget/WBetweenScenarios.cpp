@@ -231,4 +231,7 @@ void UWBetweenScenarios::SetHealthAfterChanginCharacter()
 {
 	SetHealthBar();
 	SetHealthText();
+	SetMedKitText();
+	SetFoodText();
+	SetAmmoText();
 }

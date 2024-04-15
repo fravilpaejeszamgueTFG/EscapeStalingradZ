@@ -39,7 +39,6 @@ void APlayerCharacter::BeginPlay()
 	{
 		if (isPrimaryPlayer) {
 			if (GI->playersInfo.Contains(0)) {
-				UE_LOG(LogTemp, Warning, TEXT("GI"));
 				SetAttributesByPlayerInfoSaved(GI->playersInfo[0]);
 				if (GI->playersInfo.Contains(1)) {
 					APlayerCharacter* character2 = GetWorld()->SpawnActor<APlayerCharacter>(FVector(0,0,0), FRotator(0, 0, 0));
@@ -61,11 +60,9 @@ void APlayerCharacter::BeginPlay()
 	}
 	else {
 		if (isPrimaryPlayer) {
-			UE_LOG(LogTemp, Warning, TEXT("between"));
 			hud->SetPrimaryCharacterToBetweenScenarios(this);
 		}
 		else {
-			UE_LOG(LogTemp, Warning, TEXT("notprimaryPlayer"));
 			GetWorldTimerManager().SetTimer(initialTimer, this, &APlayerCharacter::SetSecondCharacterBetweenScenarios, 0.2, false);
 		}
 	}
