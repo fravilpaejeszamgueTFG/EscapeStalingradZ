@@ -11,6 +11,7 @@
 #include "EscapeStalingradZ/widget/UserHUD.h"
 #include "Components/WidgetComponent.h"
 #include "EscapeStalingradZ/misc/StunIcon.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -33,23 +34,39 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetPreferredWeaponByCharacter();
-
-	if (isPrimaryPlayer) {
-		if (GetWorld()->GetName() == "FUBAR") {
-			AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			hud->CreateSelectCharacterWidget(this);
-		} else {
-			GetWorldTimerManager().SetTimer(initialTimer, this, &APlayerCharacter::SetInitialTurn, 0.5, false);
+	UGI* GI = Cast<UGI>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI != nullptr)
+	{
+		if (isPrimaryPlayer) {
+			if (GI->playersInfo.Contains(0)) {
+				SetAttributesByPlayerInfoSaved(GI->playersInfo[0]);
+				if (GI->playersInfo.Contains(1)) {
+					APlayerCharacter* character2 = GetWorld()->SpawnActor<APlayerCharacter>(FVector(0,0,0), FRotator(0, 0, 0));
+				}
+			}
+		}
+		else {
+			if (GI->playersInfo.Contains(1)) {
+				SetAttributesByPlayerInfoSaved(GI->playersInfo[1]);
+			}
 		}
 	}
-}
+	AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
-// Called every frame
-void APlayerCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
+	if (GetWorld()->GetName() == "FUBAR") {
+		if (isPrimaryPlayer) {
+			hud->CreateSelectCharacterWidget(this);
+		}
+	}
+	else {
+		if (isPrimaryPlayer) {
+			hud->SetPrimaryCharacterToBetweenScenarios(this);
+		}
+		else {
+			GetWorldTimerManager().SetTimer(initialTimer, this, &APlayerCharacter::SetSecondCharacterBetweenScenarios, 0.2, false);
+		}
+	}
+	SetPreferredWeaponByCharacter();
 }
 
 void APlayerCharacter::SetPreferredWeaponByCharacter()
@@ -500,8 +517,40 @@ void APlayerCharacter::CreateOrSetDieSearchWidget(int numberOfDie)
 	}
 }
 
-void APlayerCharacter::SetInitialTurn()
+void APlayerCharacter::SetSecondCharacterBetweenScenarios()
 {
 	AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	hud->StartGameAfterSelectCharacter();
+	hud->SetSecondaryCharacterToBetweenScenarios(this);
+}
+
+void APlayerCharacter::SetAttributesByPlayerInfoSaved(FPlayerInfoSaved info)
+{
+	characterChosen = info.characterChosen;
+	health = info.health;
+	ammo = info.ammo;
+	exp = info.exp;
+	food = info.food;
+	medkit = info.medkit;
+	weapon1 = info.weapon1;
+	weapon2 = info.weapon2;
+	weapon3 = info.weapon3;
+	weapon4 = info.weapon4;
+	readyWeapon->SetPropiertiesByName(info.readyWeapon);
+	readySecondaryWeapon->SetPropiertiesByName(info.secondaryWeapon);
+	useReadyWeapon = info.useReadyWeapon;
+}
+
+void APlayerCharacter::SaveAttributesInPlayerInfoSavedGivenIndex(int index)
+{
+	UGI* GI = Cast<UGI>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI != nullptr)
+	{
+		if (GI->playersInfo.Contains(index)) {
+			GI->playersInfo[index] = FPlayerInfoSaved(characterChosen, health, exp, ammo, food, medkit, useReadyWeapon);
+		}
+		else {
+			GI->playersInfo.Add(index, FPlayerInfoSaved(characterChosen, health, exp, ammo, food, medkit, useReadyWeapon));
+		}
+		GI->playersInfo[index].SetWeapons(weapon1, weapon2, weapon3, weapon4, readyWeapon->weaponName, readySecondaryWeapon->weaponName);
+	}
 }

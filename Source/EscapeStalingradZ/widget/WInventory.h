@@ -47,6 +47,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TEnumAsByte<EWeapon> selectedWeapon;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) bool hasSelectedWeapon = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) bool inBetweenScenarios = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character) class APlayerCharacter* character;
 

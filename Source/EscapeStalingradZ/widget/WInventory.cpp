@@ -74,7 +74,9 @@ void UWInventory::OnClickSlotReadyWeapon()
 		character->readyWeapon->SetPropiertiesByName(selectedWeapon);
 		DisableButtons();
 		ResetSelectedWeapon();
-		hud->PlayerInfoWidget->UpdateImages();
+		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+			hud->PlayerInfoWidget->UpdateImages();
+		}
 	}
 }
 
@@ -90,7 +92,9 @@ void UWInventory::OnClickSlotSecondaryWeapon()
 		character->readySecondaryWeapon->SetPropiertiesByName(selectedWeapon);
 		DisableButtons();
 		ResetSelectedWeapon();
-		hud->PlayerInfoWidget->UpdateImages();
+		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+			hud->PlayerInfoWidget->UpdateImages();
+		}
 	}
 }
 
@@ -139,7 +143,7 @@ void UWInventory::SetSelectedWeaponGivenSlotAndWeapon(UButton* SlotNumber, EWeap
 
 void UWInventory::DisableButtons()
 {
-	if (character != nullptr && character->mp >= 2) {
+	if (character != nullptr && (character->mp >= 2 || inBetweenScenarios)) {
 		if (character->weapon1 == EWeapon::None) {
 			Slot1->SetIsEnabled(false);
 		}

@@ -36,7 +36,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool canExitTheRoom = true;
 
+	UPROPERTY(VisibleAnywhere, Category = package)
+		 TArray<class UPackage*> packages;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = actions) class UPlayerActions* actions;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = GameInstance) class UGI* GI;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character) class APlayerCharacter* playerchara;
 
@@ -47,5 +52,9 @@ public:
 	UFUNCTION() void SetMovementWidget();
 
 	UFUNCTION() void HideMovementWidget();
-	
+
+	UFUNCTION() void PrecacheGivenPackage(const FString& name);
+
+	UFUNCTION() void ChangeLevel(int exitNumber);
+
 };

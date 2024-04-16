@@ -43,6 +43,13 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "PlayerInfo")
 		TSubclassOf<class UWSelectCharacter> SelectCharacterWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "BetweenScenario")
+		TSubclassOf<class UWBetweenScenarios> BetweenScenariosWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UWBetweenScenarios* betweenScenariosWidget;
+
+
 	UPROPERTY(VisibleAnywhere)
 		class ATurn* turn;
 
@@ -62,4 +69,8 @@ public:
 		void StartGameAfterSelectCharacter();
 	UFUNCTION()
 		void CreateSelectCharacterWidget(class APlayerCharacter* chara);
+	UFUNCTION()
+		void SetPrimaryCharacterToBetweenScenarios(class APlayerCharacter* chara);
+	UFUNCTION()
+		void SetSecondaryCharacterToBetweenScenarios(class APlayerCharacter* chara);
 };

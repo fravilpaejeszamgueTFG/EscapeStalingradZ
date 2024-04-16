@@ -10,6 +10,8 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "EscapeStalingradZ/player/PlayerActions.h"
+#include "EscapeStalingradZ/widget/UserHUD.h"
+#include "EscapeStalingradZ/turn/Turn.h"
 
 // Sets default values
 AGrid::AGrid()
@@ -702,7 +704,30 @@ void AGrid::EndIfTileIsExit(FIntPoint index)
 		APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 		if (player != nullptr) {
 			player->hasPrimaryObjective = true;
+			AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			if (hud != nullptr && hud->turn != nullptr) {
+				TArray<APlayerCharacter*> characters = hud->turn->characters;
+				bool foundPrimaryPLayer = false;
+				for (int index = 0; index < characters.Num(); index++) {
+					APlayerCharacter* chara = characters[index];
+					if (chara->isPrimaryPlayer) {
+						foundPrimaryPLayer = true;
+						chara->SaveAttributesInPlayerInfoSavedGivenIndex(0);
+					}
+					else if (foundPrimaryPLayer) {
+						chara->SaveAttributesInPlayerInfoSavedGivenIndex(index);
+					}
+					else {
+						chara->SaveAttributesInPlayerInfoSavedGivenIndex(index + 1);
+					}
+				}
+			}
+			if (gridTiles[index].types.Contains(TileType::S1)) {
+				player->ChangeLevel(0);
+			}
+			else {
+				player->ChangeLevel(1);
+			}
 		}
-		//TO-DO cambiar de nivel 
 	}
 }
