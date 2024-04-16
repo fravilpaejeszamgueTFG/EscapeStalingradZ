@@ -39,14 +39,24 @@ void APlayerC::BeginPlay()
 			GI->currentLevel = ScenarioName::WAKEUP;
 			canExitTheRoom = false;
 			PrecacheGivenPackage("/Game/Maps/Stash");
-			//PrecacheGivenPackage("/Game/Maps/WakeUp");
+			PrecacheGivenPackage("/Game/Maps/AFriendWillBleed");
 		}
 		else if (GetWorld()->GetName() == "AFriendWillBleed") {
 			GI->currentLevel = ScenarioName::AFRIEND;
 			canExitTheRoom = false;
+			if (GI->levelsPlayed.Contains(ScenarioName::STASH)) {
+				//PrecacheGivenPackage("/Game/Maps/MoveAlong");
+			}
+			else {
+				PrecacheGivenPackage("/Game/Maps/Stash");
+			}
 		}
 		else if (GetWorld()->GetName() == "Stash") {
 			GI->currentLevel = ScenarioName::STASH;
+			if (!GI->levelsPlayed.Contains(ScenarioName::AFRIEND)) {
+				PrecacheGivenPackage("/Game/Maps/AFriendWillBleed");
+			}
+			//PrecacheGivenPackage("/Game/Maps/MoveAlong");
 		}
 		else if (GetWorld()->GetName() == "MoveAlong") {
 			GI->currentLevel = ScenarioName::MOVEALONG;
@@ -109,14 +119,31 @@ void APlayerC::ChangeLevel(int exitNumber)
 				UGameplayStatics::OpenLevel(this, "Stash", true); //s2
 			}
 			else {
-				//UGameplayStatics::OpenLevel(this, "WakeUp", true); s1
+				UGameplayStatics::OpenLevel(this, "AFriendWillBleed", true); //s1
 			}
 		}
 		else if (GetWorld()->GetName() == "AFriendWillBleed") {
 			GI->levelsPlayed.Add(ScenarioName::AFRIEND);
+			if (GI->levelsPlayed.Contains(ScenarioName::STASH)) {
+				//UGameplayStatics::OpenLevel(this, "MoveAlong", true);
+			}
+			else {
+				UGameplayStatics::OpenLevel(this, "Stash", true);
+			}
 		}
 		else if (GetWorld()->GetName() == "Stash") {
 			GI->levelsPlayed.Add(ScenarioName::STASH);
+			if (GI->levelsPlayed.Contains(ScenarioName::AFRIEND)) {
+				//UGameplayStatics::OpenLevel(this, "MoveAlong", true);
+			}
+			else {
+				if (exitNumber > 0) {
+					UGameplayStatics::OpenLevel(this, "AFriendWillBleed", true); //s2
+				}
+				else {
+					//UGameplayStatics::OpenLevel(this, "MoveAlong", true); //s1
+				}
+			}
 		}
 		else if (GetWorld()->GetName() == "MoveAlong") {
 			GI->levelsPlayed.Add(ScenarioName::MOVEALONG);
