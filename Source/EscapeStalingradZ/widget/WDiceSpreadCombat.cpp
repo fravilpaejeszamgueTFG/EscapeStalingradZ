@@ -115,6 +115,9 @@ void UWDiceSpreadCombat::AttackSpreadFire()
 		if (currentNumber == 2) {
 			character->FriendlyFireGivenZombie(zombie);
 		}
+		if (zombieDied) {
+			character->exp++;
+		}
 		//aqui iria animación de ataque si hay, poner el temporizador el tiempo de la animación
 		GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDiceSpreadCombat::SelectObjetiveSpreadFire, 2, false);
 		UE_LOG(LogTemp, Warning, TEXT("aqui iria la animacion ataque cuerpo a cuerpo/normalFire"));
