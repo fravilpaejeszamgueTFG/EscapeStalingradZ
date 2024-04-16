@@ -38,14 +38,14 @@ void APlayerC::BeginPlay()
 		else if (GetWorld()->GetName() == "WakeUp") {
 			GI->currentLevel = ScenarioName::WAKEUP;
 			canExitTheRoom = false;
-			//PrecacheGivenPackage("/Game/Maps/WakeUp");
+			PrecacheGivenPackage("/Game/Maps/Stash");
 			//PrecacheGivenPackage("/Game/Maps/WakeUp");
 		}
 		else if (GetWorld()->GetName() == "AFriendWillBleed") {
 			GI->currentLevel = ScenarioName::AFRIEND;
 			canExitTheRoom = false;
 		}
-		else if (GetWorld()->GetName() == "STASH") {
+		else if (GetWorld()->GetName() == "Stash") {
 			GI->currentLevel = ScenarioName::STASH;
 		}
 		else if (GetWorld()->GetName() == "MoveAlong") {
@@ -106,7 +106,7 @@ void APlayerC::ChangeLevel(int exitNumber)
 		else if (GetWorld()->GetName() == "WakeUp") {
 			GI->levelsPlayed.Add(ScenarioName::WAKEUP);
 			if (exitNumber > 0) {
-				//UGameplayStatics::OpenLevel(this, "WakeUp", true); s2
+				UGameplayStatics::OpenLevel(this, "Stash", true); //s2
 			}
 			else {
 				//UGameplayStatics::OpenLevel(this, "WakeUp", true); s1
@@ -115,7 +115,7 @@ void APlayerC::ChangeLevel(int exitNumber)
 		else if (GetWorld()->GetName() == "AFriendWillBleed") {
 			GI->levelsPlayed.Add(ScenarioName::AFRIEND);
 		}
-		else if (GetWorld()->GetName() == "STASH") {
+		else if (GetWorld()->GetName() == "Stash") {
 			GI->levelsPlayed.Add(ScenarioName::STASH);
 		}
 		else if (GetWorld()->GetName() == "MoveAlong") {

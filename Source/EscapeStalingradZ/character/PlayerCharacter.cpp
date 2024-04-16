@@ -42,7 +42,10 @@ void APlayerCharacter::BeginPlay()
 			if (GI->playersInfo.Contains(0)) {
 				SetAttributesByPlayerInfoSaved(GI->playersInfo[0]);
 				if (GI->playersInfo.Contains(1)) {
-					APlayerCharacter* character2 = GetWorld()->SpawnActor<APlayerCharacter>(FVector(0,0,0), FRotator(0, 0, 0));
+					APlayerCharacter* character2 = GetWorld()->SpawnActor<APlayerCharacter>(characterClass, FVector(0,0,0), FRotator(0, -90, 0));
+					if (character2 != nullptr) {
+						character2->startIndex = GetStartIndexSecondCharacter();
+					}
 				}
 			}
 		}
@@ -557,5 +560,18 @@ void APlayerCharacter::SaveAttributesInPlayerInfoSavedGivenIndex(int index)
 			GI->playersInfo.Add(index, FPlayerInfoSaved(characterChosen, health, exp, ammo, food, medkit, useReadyWeapon));
 		}
 		GI->playersInfo[index].SetWeapons(weapon1, weapon2, weapon3, weapon4, readyWeapon->weaponName, readySecondaryWeapon->weaponName);
+	}
+}
+
+FIntPoint APlayerCharacter::GetStartIndexSecondCharacter()
+{
+	if (GetWorld()->GetName() == "Stash") {
+		return FIntPoint(3,9);
+	}
+	else if (GetWorld()->GetName() == "AFriendWillBleed") {
+		return FIntPoint(0,3);
+	}
+	else {
+		return FIntPoint(2,9);
 	}
 }

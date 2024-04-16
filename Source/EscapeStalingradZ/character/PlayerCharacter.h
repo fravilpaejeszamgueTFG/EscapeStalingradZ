@@ -108,6 +108,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Parameters")
 		TSubclassOf<class AAnimatedTextAttack> textClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
+		TSubclassOf<class APlayerCharacter> characterClass;
+
 	//Funciones
 	UFUNCTION() void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
@@ -152,4 +155,5 @@ public:
 	
 	UFUNCTION() void SetAttributesByPlayerInfoSaved(FPlayerInfoSaved info);
 	UFUNCTION() void SaveAttributesInPlayerInfoSavedGivenIndex(int index);
+	UFUNCTION() FIntPoint GetStartIndexSecondCharacter();
 };
