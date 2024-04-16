@@ -75,6 +75,7 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 				SetActorLocation(FVector(-9999,-9999,-9999));
 				grid->gridTiles[index].actor = nullptr;
 				SetHealthAndMPPropertiesByZombie();
+				CheckIfAreCharactersInNeighborWhenStunOrKillZombie();
 				return true;
 			}
 		}
@@ -96,6 +97,7 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 					text->SetAnimationText(FText::FromString("Stun"));
 				}
 				isStunned = true;
+				CheckIfAreCharactersInNeighborWhenStunOrKillZombie();
 			}
 		}
 	}
@@ -309,6 +311,19 @@ void AZombie::CoveringAttackBeforeLock()
 			else {
 				characterInContact->ZombieLock(this);
 				turn->nextZombie();
+			}
+		}
+	}
+}
+
+void AZombie::CheckIfAreCharactersInNeighborWhenStunOrKillZombie()
+{
+	FIntPoint index = grid->GetTileIndexFromLocation(GetActorLocation());
+	for (FIntPoint i : grid->GetTileNeighbors(index)) {
+		if (grid->gridTiles[i].actor != nullptr) {
+			APlayerCharacter* chara = Cast<APlayerCharacter>(grid->gridTiles[i].actor);
+			if (chara != nullptr) {
+				FreeCharacterWhenStunOrKillZombie(chara);
 			}
 		}
 	}

@@ -6,6 +6,7 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "EscapeStalingradZ/turn/Turn.h"
+#include "WSelectStartTurn.h"
 
 UWDicesTurn::UWDicesTurn(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -40,13 +41,29 @@ void UWDicesTurn::OnClickButtonConfirm()
 	ButtonConfirm->SetVisibility(ESlateVisibility::Hidden);
 	SetVisibility(ESlateVisibility::Hidden);
 	if (currentNumber > targetNumber) {
-		//TO-DO Elegir jugador activo (otra interfaz...)
-		turn->SetNextCharacter();
+		CreateOrSetSelectStartTurn();
 	}
 	else if (currentNumber == targetNumber) {
 		turn->Initiative();
 	}
 	else {
 		turn->ZombiesStartTurn();
+	}
+}
+
+void UWDicesTurn::CreateOrSetSelectStartTurn()
+{
+	if (selectStartTurnWidgetClass) {
+		if (selectStartTurnWidget != nullptr) {
+			selectStartTurnWidget->turn = turn;
+			selectStartTurnWidget->SetVisibility(ESlateVisibility::Visible);
+		}
+		else {
+			selectStartTurnWidget = CreateWidget<UWSelectStartTurn>(GetWorld(), selectStartTurnWidgetClass);
+			if (selectStartTurnWidget != nullptr) {
+				selectStartTurnWidget->turn = turn;
+				selectStartTurnWidget->AddToViewport();
+			}
+		}
 	}
 }

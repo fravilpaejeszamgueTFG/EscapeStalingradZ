@@ -12,6 +12,7 @@
 #include "Components/WidgetComponent.h"
 #include "EscapeStalingradZ/misc/StunIcon.h"
 #include "Kismet/GameplayStatics.h"
+#include "EscapeStalingradZ/misc/AnimatedTextAttack.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -364,6 +365,10 @@ void APlayerCharacter::FriendlyFire(FIntPoint tileZombie)
 		for (FIntPoint index : LoFs.Find(tileZombie)->tilesLoF) {
 			APlayerCharacter* chara = Cast<APlayerCharacter>(grid->gridTiles[index].actor);
 			if (chara != nullptr) {
+				AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, chara->GetActorLocation(), FRotator(0, 0, 0));
+				if (text != nullptr) {
+					text->SetAnimationText(FText::FromString("Friendly Fire"));
+				}
 				chara->health--;
 				break;
 			}

@@ -34,6 +34,13 @@ public:
 		class UTextBlock* ButtonConfirmText;
 
 	UPROPERTY(VisibleAnywhere) class ATurn* turn;
+	
+	UPROPERTY(VisibleAnywhere)
+		class UWSelectStartTurn* selectStartTurnWidget;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<UWSelectStartTurn> selectStartTurnWidgetClass;
+	
 
 	UPROPERTY(VisibleAnywhere) int currentNumber;
 	UPROPERTY(VisibleAnywhere) int targetNumber;
@@ -45,5 +52,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent) void OnClickButtonRollAnimation();
 	UFUNCTION(BlueprintImplementableEvent) void SetHumanDieImage(int number);
 	UFUNCTION() void OnClickButtonConfirm();
+	UFUNCTION() void CreateOrSetSelectStartTurn();
 	
 };

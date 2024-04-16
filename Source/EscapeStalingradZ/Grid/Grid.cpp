@@ -708,17 +708,17 @@ void AGrid::EndIfTileIsExit(FIntPoint index)
 			if (hud != nullptr && hud->turn != nullptr) {
 				TArray<APlayerCharacter*> characters = hud->turn->characters;
 				bool foundPrimaryPLayer = false;
-				for (int index = 0; index < characters.Num(); index++) {
-					APlayerCharacter* chara = characters[index];
+				for (int i = 0; i < characters.Num(); i++) {
+					APlayerCharacter* chara = characters[i];
 					if (chara->isPrimaryPlayer) {
 						foundPrimaryPLayer = true;
 						chara->SaveAttributesInPlayerInfoSavedGivenIndex(0);
 					}
 					else if (foundPrimaryPLayer) {
-						chara->SaveAttributesInPlayerInfoSavedGivenIndex(index);
+						chara->SaveAttributesInPlayerInfoSavedGivenIndex(i);
 					}
 					else {
-						chara->SaveAttributesInPlayerInfoSavedGivenIndex(index + 1);
+						chara->SaveAttributesInPlayerInfoSavedGivenIndex(i + 1);
 					}
 				}
 			}
