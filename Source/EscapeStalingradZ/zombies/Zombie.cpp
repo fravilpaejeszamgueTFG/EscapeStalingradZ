@@ -9,6 +9,7 @@
 #include "EscapeStalingradZ/turn/Turn.h"
 #include "EscapeStalingradZ/widget/WZombieInfo.h"
 #include "EscapeStalingradZ/misc/AnimatedTextAttack.h"
+#include "EscapeStalingradZ/misc/StunIcon.h"
 
 // Sets default values
 AZombie::AZombie()
@@ -69,13 +70,14 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 			}
 			health--;
 			if (health <= 0) {
-				FIntPoint index = grid->GetTileIndexFromLocation(GetActorLocation());
+				FVector location = GetActorLocation();
+				FIntPoint index = grid->GetTileIndexFromLocation(location);
 				turn->zombiesDied.Add(this);
 				turn->zombies.Remove(this);
 				SetActorLocation(FVector(-9999,-9999,-9999));
 				grid->gridTiles[index].actor = nullptr;
 				SetHealthAndMPPropertiesByZombie();
-				CheckIfAreCharactersInNeighborWhenStunOrKillZombie();
+				CheckIfAreCharactersInNeighborWhenStunOrKillZombie(location);
 				return true;
 			}
 		}
@@ -97,7 +99,7 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 					text->SetAnimationText(FText::FromString("Stun"));
 				}
 				isStunned = true;
-				CheckIfAreCharactersInNeighborWhenStunOrKillZombie();
+				CheckIfAreCharactersInNeighborWhenStunOrKillZombie(GetActorLocation());
 			}
 		}
 	}
@@ -316,9 +318,9 @@ void AZombie::CoveringAttackBeforeLock()
 	}
 }
 
-void AZombie::CheckIfAreCharactersInNeighborWhenStunOrKillZombie()
+void AZombie::CheckIfAreCharactersInNeighborWhenStunOrKillZombie(FVector location)
 {
-	FIntPoint index = grid->GetTileIndexFromLocation(GetActorLocation());
+	FIntPoint index = grid->GetTileIndexFromLocation(location);
 	for (FIntPoint i : grid->GetTileNeighbors(index)) {
 		if (grid->gridTiles[i].actor != nullptr) {
 			APlayerCharacter* chara = Cast<APlayerCharacter>(grid->gridTiles[i].actor);
@@ -334,6 +336,9 @@ void AZombie::FreeCharacterWhenStunOrKillZombie(APlayerCharacter* chara)
 	if (grid != nullptr) {
 		chara->isLocked = false;
 		chara->inDirectContact = false;
+		if (chara->stunIcon != nullptr) {
+			chara->stunIcon->SetActorHiddenInGame(true);
+		}
 		TArray<FIntPoint> neighbors = grid->GetTileNeighbors(grid->GetTileIndexFromLocation(chara->GetActorLocation()));
 		for (FIntPoint n : neighbors) {
 			AZombie* z = Cast<AZombie>(grid->gridTiles[n].actor);
