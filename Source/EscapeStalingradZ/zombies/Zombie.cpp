@@ -80,6 +80,10 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 				CheckIfAreCharactersInNeighborWhenStunOrKillZombie(location);
 				return true;
 			}
+			else {
+				isStunned = true;
+				CheckIfAreCharactersInNeighborWhenStunOrKillZombie(GetActorLocation());
+			}
 		}
 		else {
 			if (typeOfZombie == ZombieType::Armoured) {
@@ -147,6 +151,7 @@ void AZombie::MovementZombie()
 			cost = GetMinimunCostBetweenTwoTiles(tile,
 				grid->GetTileIndexFromLocation(characters[i]->GetActorLocation()));
 			if (cost < min) {
+				min = cost;
 				indice = i;
 			}
 		}
