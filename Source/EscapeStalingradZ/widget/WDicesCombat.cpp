@@ -133,6 +133,7 @@ void UWDicesCombat::AttackInHandToHand()
 	}
 	if (zombieDied) {
 		numberDiceLeft = 0;
+		character->exp++;
 	}
 	//aqui iria animación de ataque si hay, poner el temporizador el tiempo de la animación
 	GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDicesCombat::NextDie, 2, false);
