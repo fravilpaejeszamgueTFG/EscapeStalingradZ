@@ -105,6 +105,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Icon")
 		TSubclassOf<class AStunIcon> stunClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Parameters")
+		TSubclassOf<class AAnimatedTextAttack> textClass;
+
 	//Funciones
 	UFUNCTION() void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
