@@ -12,6 +12,7 @@
 #include "EscapeStalingradZ/player/PlayerActions.h"
 #include "EscapeStalingradZ/widget/UserHUD.h"
 #include "EscapeStalingradZ/turn/Turn.h"
+#include "EscapeStalingradZ/misc/AnimatedTextAttack.h"
 
 // Sets default values
 AGrid::AGrid()
@@ -63,7 +64,7 @@ void AGrid::SpawnGrid(FVector center, FVector tileSize, FVector2D numOfTiles)
 				gridBottomLeftCornerLocation + tileSize * FVector(i, j, 0) + FVector(0,0,0), tileScale / meshSize);
 			instancedMesh->AddInstanceWorldSpace(transform);
 			FIntPoint index = FIntPoint(i, j);
-			ChangeTileData(index, FTileData(index,TileType::Normal,false));
+			ChangeTileData(index, FTileData(index,TileType::Normal));
 		}
 	}
 }
@@ -181,17 +182,15 @@ void AGrid::RemoveTileState(FIntPoint index, TileState state)
 void AGrid::UpdateTileVisual(FIntPoint index)
 {
 	FLinearColor color = GetColorFromState(gridTiles[index].states);
-	if (color != tileAoFColor) {
-		int i = index.X * numberOfTiles.Y + index.Y;
-		instancedMesh->SetCustomDataValue(i, 0, color.R, true);
-		instancedMesh->SetCustomDataValue(i, 1, color.G, true);
-		instancedMesh->SetCustomDataValue(i, 2, color.B, true);
-		if (color != tileNoneColor) {
-			instancedMesh->SetCustomDataValue(i, 3, 0.25, true);
-		}
-		else {
-			instancedMesh->SetCustomDataValue(i, 3, 0, true);
-		}
+	int i = index.X * numberOfTiles.Y + index.Y;
+	instancedMesh->SetCustomDataValue(i, 0, color.R, true);
+	instancedMesh->SetCustomDataValue(i, 1, color.G, true);
+	instancedMesh->SetCustomDataValue(i, 2, color.B, true);
+	if (color != tileNoneColor) {
+		instancedMesh->SetCustomDataValue(i, 3, 0.25, true);
+	}
+	else {
+		instancedMesh->SetCustomDataValue(i, 3, 0, true);
 	}
 }
 
@@ -204,14 +203,11 @@ FLinearColor AGrid::GetColorFromState(TArray<TEnumAsByte<TileState>> states)
 		if (states.Contains(TileState::isReachable)) {
 			return tileReachableColor;
 		}
+		if (states.Contains(TileState::poisoned)) {
+			return tilePoisonedColor;
+		}
 		if (states.Contains(TileState::Selected)) {
 			return tileSelectedColor;
-		}
-		if (states.Contains(TileState::isInAoF)) {
-			return tileAoFColor;
-		}
-		if (states.Contains(TileState::isNeighbor)) {
-			return tileNeighborColor;
 		}
 	}
 	return tileNoneColor;
@@ -535,22 +531,38 @@ void AGrid::deleteStatesFromTiles()
 	for (auto& index : gridTiles)
 	{
 		if (index.Value.states.Num() > 0) {
-			index.Value.states.Empty();
+			if (!index.Value.states.Contains(TileState::poisoned)) {
+				index.Value.states.Empty();
+			}
+			else {
+				index.Value.states.Empty();
+				index.Value.states.Add(TileState::poisoned);
+			}
 			UpdateTileVisual(index.Key);
 		}
 	}
 }
 void AGrid::deleteStatesFromTilesButSelected()
 {
+	bool isPoisoned = false;
 	for (auto& index : gridTiles)
 	{
 		if (index.Value.states.Num() > 0) {
+			if (index.Value.states.Contains(TileState::poisoned)) {
+				isPoisoned = true;
+			}
+			else {
+				isPoisoned = false;
+			}
 			if (!index.Value.states.Contains(TileState::Selected)) {
 				index.Value.states.Empty();
 			}
 			else {
 				index.Value.states.Empty();
 				index.Value.states.Add(TileState::Selected);
+			}
+			if (isPoisoned){
+				index.Value.states.Add(TileState::poisoned);
 			}
 			UpdateTileVisual(index.Key);
 		}
@@ -559,9 +571,16 @@ void AGrid::deleteStatesFromTilesButSelected()
 
 void AGrid::DeleteStatesFromTilesButGiven(TArray<FIntPoint> list)
 {
+	bool isPoisoned = false;
 	for (auto& index : gridTiles)
 	{
 		if (index.Value.states.Num() > 0) {
+			if (index.Value.states.Contains(TileState::poisoned)) {
+				isPoisoned = true;
+			}
+			else {
+				isPoisoned = false;
+			}
 			if (list.Contains(index.Key)) {
 				index.Value.states.Empty();
 				index.Value.states.Add(TileState::Hovered);
@@ -574,6 +593,9 @@ void AGrid::DeleteStatesFromTilesButGiven(TArray<FIntPoint> list)
 					index.Value.states.Empty();
 					index.Value.states.Add(TileState::Selected);
 				}
+			}
+			if (isPoisoned) {
+				index.Value.states.Add(TileState::poisoned);
 			}
 			UpdateTileVisual(index.Key);
 		}
@@ -739,6 +761,77 @@ void AGrid::SetCurrentSearchTileSearched()
 		AActor* oIcon = GetWorld()->SpawnActor<AActor>(searchOClass, pos, FRotator(0, 0, 0));
 		if (oIcon != nullptr) {
 			currentSearchTile = FIntPoint(-1, -1);
+		}
+	}
+}
+
+void AGrid::SetPoisonedTilesGivenCenterTile(FIntPoint index)
+{
+	TArray<FIntPoint> list = GetTileNeighbors(index);
+	list.Add(index);
+	FIntPoint left = FIntPoint(-1, -1);
+	if (index.X > 0) {
+		left = index - FIntPoint(1, 0);
+	}
+	FIntPoint back = FIntPoint(-1, -1);
+	if (index.Y > 0) {
+		back = index - FIntPoint(0, 1);
+	}
+	FIntPoint right = FIntPoint(-1, -1);
+	if (index.X < numberOfTiles.X - 1) {
+		right = index + FIntPoint(1, 0);
+	}
+	FIntPoint forward = FIntPoint(-1, -1);
+	if (index.Y < numberOfTiles.Y - 1) {
+		forward = index + FIntPoint(0, 1);
+	}
+	list.Append(GetTilesDiagonalsGivenNeighbors(index, left, forward, right, back));
+	for (FIntPoint tile : list) {
+		AddTileState(tile, TileState::poisoned);
+	}
+}
+
+TArray<FIntPoint> AGrid::GetTilesDiagonalsGivenNeighbors(FIntPoint index, FIntPoint left, FIntPoint forward, FIntPoint right, FIntPoint back)
+{
+	TArray<FIntPoint> list = TArray<FIntPoint>();
+	if (left != FIntPoint(-1, -1) && back != FIntPoint(-1, -1)) {
+		FIntPoint diag = index - FIntPoint(1, 1);
+		if (CanMoveDiagonal(index, left, back, diag)) {
+			list.Add(diag);
+		}
+	}
+	if (left != FIntPoint(-1, -1) && forward != FIntPoint(-1, -1)) {
+		FIntPoint diag = index + FIntPoint(-1, 1);
+		if (CanMoveDiagonal(index, left, forward, diag)) {
+			list.Add(diag);
+		}
+	}
+	if (right != FIntPoint(-1, -1) && back != FIntPoint(-1, -1)) {
+		FIntPoint diag = index + FIntPoint(1, -1);
+		if (CanMoveDiagonal(index, right, back, diag)) {
+			list.Add(diag);
+		}
+	}
+	if (right != FIntPoint(-1, -1) && forward != FIntPoint(-1, -1)) {
+		FIntPoint diag = index + FIntPoint(1, 1);
+		if (CanMoveDiagonal(index, right, forward, diag)) {
+			list.Add(diag);
+		}
+	}
+	return list;
+}
+
+void AGrid::DamageIfCharacterInPoisonTile(APlayerCharacter* character)
+{
+	if (character != nullptr) {
+		FVector pos = character->GetActorLocation();
+		FIntPoint tile = GetTileIndexFromLocation(pos);
+		if (tile != FIntPoint(-1,-1) && gridTiles[tile].states.Contains(TileState::poisoned)) {
+			AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, pos, FRotator(0, 0, 0));
+			if (text != nullptr) {
+				text->SetAnimationText(FText::FromString("Poisoned"));
+			}
+			character->health--;
 		}
 	}
 }

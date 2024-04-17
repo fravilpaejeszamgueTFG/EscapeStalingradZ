@@ -70,17 +70,7 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 			}
 			health--;
 			if (health <= 0) {
-				FIntPoint index = grid->GetTileIndexFromLocation(pos);
-				turn->zombiesDied.Add(this);
-				turn->zombies.Remove(this);
-				SetActorLocation(FVector(-9999,-9999,-9999));
-				grid->gridTiles[index].actor = nullptr;
-				SetHealthAndMPPropertiesByZombie();
-				CheckIfAreCharactersInNeighborWhenStunOrKillZombie(pos);
-				if (typeOfZombie == ZombieType::Alpha) {
-					AActor* oIcon = GetWorld()->SpawnActor<AActor>(searchOClass, pos, FRotator(0, 0, 0));
-					grid->gridTiles[index].types.Add(TileType::Search);
-				}
+				ZombieKill(pos);
 				return true;
 			}
 			else {
@@ -101,10 +91,13 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 				}
 			}
 			else if (typeOfZombie == ZombieType::Kugelfisch) {
-				//TO-DO hacer que explote
+				ZombieKill(pos);
 				if (text != nullptr) {
-					text->SetAnimationText(FText::FromString("Boom")); //cambiar
+					text->SetAnimationText(FText::FromString("Pop")); //meter sonido
 				}
+				FIntPoint index = grid->GetTileIndexFromLocation(pos);
+				grid->SetPoisonedTilesGivenCenterTile(index);
+				return true;
 			} 
 			else {
 				if (text != nullptr) {
@@ -361,6 +354,21 @@ void AZombie::FreeCharacterWhenStunOrKillZombie(APlayerCharacter* chara)
 			}
 		}
 		characterInContact = nullptr;
+	}
+}
+
+void AZombie::ZombieKill(FVector pos)
+{
+	FIntPoint index = grid->GetTileIndexFromLocation(pos);
+	turn->zombiesDied.Add(this);
+	turn->zombies.Remove(this);
+	SetActorLocation(FVector(-9999, -9999, -9999));
+	grid->gridTiles[index].actor = nullptr;
+	SetHealthAndMPPropertiesByZombie();
+	CheckIfAreCharactersInNeighborWhenStunOrKillZombie(pos);
+	if (typeOfZombie == ZombieType::Alpha) {
+		AActor* oIcon = GetWorld()->SpawnActor<AActor>(searchOClass, pos, FRotator(0, 0, 0));
+		grid->gridTiles[index].types.Add(TileType::Search);
 	}
 }
 

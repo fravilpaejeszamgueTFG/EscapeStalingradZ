@@ -35,6 +35,7 @@ enum TileState
 	isNeighbor		UMETA(DisplayName = "isNeighbor"),
 	isReachable		UMETA(DisplayName = "isReachable"),
 	isInAoF			UMETA(DisplayName = "isInAoF"),
+	poisoned		UMETA(DisplayName = "poisoned"),
 };
 
 UENUM()

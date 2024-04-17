@@ -134,6 +134,7 @@ public:
 	UFUNCTION() void CoveringAttackBeforeLock();
 	UFUNCTION() void CheckIfAreCharactersInNeighborWhenStunOrKillZombie(FVector location);
 	UFUNCTION() void FreeCharacterWhenStunOrKillZombie(class APlayerCharacter* chara);
+	UFUNCTION() void ZombieKill(FVector pos);
 
 	//PathFinding
 	UFUNCTION() TArray<FIntPoint> FindPath(FIntPoint start, FIntPoint end);
