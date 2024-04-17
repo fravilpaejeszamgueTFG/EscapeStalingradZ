@@ -115,8 +115,8 @@ public:
 		void SetPlayerStartLocation(class APlayerCharacter* character);
 	UFUNCTION(BlueprintCallable)
 		void SetZombieStartLocation(class AZombie* zombie);
-	UFUNCTION()
-		FIntPoint GetStartIndex();
+	UFUNCTION(BlueprintCallable)
+		void SetCharacterToFreeStartLocation(class ACharacterToFree* character);
 	UFUNCTION(BlueprintCallable)
 		FVector GetLocationByIndex(FIntPoint index);
 
