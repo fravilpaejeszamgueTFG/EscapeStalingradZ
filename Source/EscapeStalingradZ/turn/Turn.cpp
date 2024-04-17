@@ -313,6 +313,9 @@ void ATurn::EndTurn()
 	if (CurrentObjective != nullptr) {
 		CurrentObjective->SetNumberRoundInImage(roundNumber);
 	}
+	for (APlayerCharacter* chara : characters) {
+		grid->DamageIfCharacterInPoisonTile(chara);
+	}
 	StartTurn();
 }
 

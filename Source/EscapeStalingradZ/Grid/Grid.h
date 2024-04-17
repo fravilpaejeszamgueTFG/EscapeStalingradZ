@@ -18,8 +18,6 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = TileData)
 		TArray<TEnumAsByte<TileType>>  types;
 	UPROPERTY(VisibleAnywhere, Category = TileData)
-		bool  poisoned;
-	UPROPERTY(VisibleAnywhere, Category = TileData)
 		class AActor* actor = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = TileData)
 		TArray<TEnumAsByte<TileState>> states;
@@ -31,14 +29,12 @@ public:
 		TMap<FIntPoint, bool> doors; //si bool = true -> puerta cerrada, si bool = false -> puerta abierta
 
 	FTileData() { 
-		poisoned = false;
 	};
 
-	FTileData(FIntPoint index, TileType type, bool poisoned)
+	FTileData(FIntPoint index, TileType type)
 	{
 		this->index = index;
 		this->types.Add(type);
-		this->poisoned = poisoned;
 	}
 };
 
@@ -73,9 +69,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileNoneColor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileHoveredColor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileSelectedColor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileNeighborColor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tilePoisonedColor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileReachableColor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = colors) FLinearColor tileAoFColor;
 
 	//nombre del mapa
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category = scenario) TEnumAsByte<ScenarioName> name;
@@ -87,6 +82,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Icon")
 		TSubclassOf<class AActor> searchOClass;
 	UPROPERTY(VisibleAnywhere) FIntPoint currentSearchTile = FIntPoint(-1, -1);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Parameters")
+		TSubclassOf<class AAnimatedTextAttack> textClass;
 
 	//functions
 	UFUNCTION(BlueprintCallable) 
@@ -182,4 +180,11 @@ public:
 
 	UFUNCTION()
 		void SetCurrentSearchTileSearched();
+
+	UFUNCTION()
+		void SetPoisonedTilesGivenCenterTile(FIntPoint index);
+	UFUNCTION()
+		TArray<FIntPoint> GetTilesDiagonalsGivenNeighbors(FIntPoint index, FIntPoint left, FIntPoint forward, FIntPoint right, FIntPoint back);
+	UFUNCTION()
+		void DamageIfCharacterInPoisonTile(class APlayerCharacter* character);
 };
