@@ -131,5 +131,6 @@ public:
 	UFUNCTION() void SpawnZombieAfterMoveCharacter(class AZombie* zombie);
 	UFUNCTION() void SpawnZombieBeforeStartGame();
 	UFUNCTION() void ResetZombiesWhenAllAreDead();
+	UFUNCTION() void SetBetaMPWhenAlphaOnBoardGetsHit();
 
 };

@@ -283,14 +283,23 @@ void ATurn::ZombiesStartTurn()
 void ATurn::Initiative()
 {
 	charactersToStartTurn = characters;
-	//empieza jugando el jugador
 	int humanDie = FMath::RandRange(1, 12);
 	int zombieDie = FMath::RandRange(1, 12);
 	int finalZombieDie = zombieDie - 4;
+	bool alphaOnBoard = false;
 	for (AZombie* z : zombies) {
-		if (z->typeOfZombie == ZombieType::Alpha) {
+		if (z->typeOfZombie == ZombieType::Alpha && z->health >= 2) {
 			finalZombieDie += 4;
+			alphaOnBoard = true;
 			break;
+		}
+	}
+	if (alphaOnBoard) {
+		for (AZombie* z : zombies) {
+			if (z->typeOfZombie == ZombieType::Beta) {
+				z->maxmp = 2;
+				z->mp = 2;
+			}
 		}
 	}
 	CreateOrSetTurnDicesWidget(humanDie, finalZombieDie);
@@ -406,6 +415,16 @@ void ATurn::ResetZombiesWhenAllAreDead()
 	if (zombiesToEnterGrid.Num() == 0 && zombies.Num() == 0 && zombiesDied.Num() > 0) {
 		zombiesToEnterGrid = zombiesDied;
 		zombiesDied.Empty();
+	}
+}
+
+void ATurn::SetBetaMPWhenAlphaOnBoardGetsHit()
+{
+	for (AZombie* z : zombies) {
+		if (z->typeOfZombie == ZombieType::Beta) {
+			z->maxmp = 1;
+			z->mp = 1;
+		}
 	}
 }
 
