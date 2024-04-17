@@ -15,6 +15,7 @@
 #include "EscapeStalingradZ/zombies/Zombie.h"
 #include "EscapeStalingradZ/player/actions/ActionSelectTileToMove.h"
 #include "EscapeStalingradZ/widget/WObjectives.h"
+#include "EscapeStalingradZ/misc/StunIcon.h"
 
 // Sets default values
 ATurn::ATurn()
@@ -208,6 +209,9 @@ void ATurn::SpawnZombies()
 								}
 							}
 							characterInTile->isLocked = false;
+							if (characterInTile->stunIcon != nullptr) {
+								characterInTile->stunIcon->SetActorHiddenInGame(true);
+							}
 						}
 						characterInTile->inDirectContact = true;
 						newZombie->characterInContact = characterInTile;

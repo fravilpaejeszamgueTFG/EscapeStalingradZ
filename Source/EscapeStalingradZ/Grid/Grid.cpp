@@ -731,3 +731,14 @@ void AGrid::EndIfTileIsExit(FIntPoint index)
 		}
 	}
 }
+
+void AGrid::SetCurrentSearchTileSearched()
+{
+	if (currentSearchTile != FIntPoint(-1, -1)) {
+		FVector pos = GetLocationByIndex(currentSearchTile);
+		AActor* oIcon = GetWorld()->SpawnActor<AActor>(searchOClass, pos, FRotator(0, 0, 0));
+		if (oIcon != nullptr) {
+			currentSearchTile = FIntPoint(-1, -1);
+		}
+	}
+}

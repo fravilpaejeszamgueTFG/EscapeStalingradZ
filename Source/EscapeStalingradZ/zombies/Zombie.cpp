@@ -70,14 +70,17 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 			}
 			health--;
 			if (health <= 0) {
-				FVector location = GetActorLocation();
-				FIntPoint index = grid->GetTileIndexFromLocation(location);
+				FIntPoint index = grid->GetTileIndexFromLocation(pos);
 				turn->zombiesDied.Add(this);
 				turn->zombies.Remove(this);
 				SetActorLocation(FVector(-9999,-9999,-9999));
 				grid->gridTiles[index].actor = nullptr;
 				SetHealthAndMPPropertiesByZombie();
-				CheckIfAreCharactersInNeighborWhenStunOrKillZombie(location);
+				CheckIfAreCharactersInNeighborWhenStunOrKillZombie(pos);
+				if (typeOfZombie == ZombieType::Alpha) {
+					AActor* oIcon = GetWorld()->SpawnActor<AActor>(searchOClass, pos, FRotator(0, 0, 0));
+					grid->gridTiles[index].types.Add(TileType::Search);
+				}
 				return true;
 			}
 			else {

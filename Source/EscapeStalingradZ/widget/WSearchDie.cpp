@@ -41,6 +41,9 @@ void UWSearchDie::OnClickButtonConfirm()
     DieNumber->SetVisibility(ESlateVisibility::Hidden);
     ButtonRollAnimation->SetVisibility(ESlateVisibility::Visible);
     ButtonConfirm->SetVisibility(ESlateVisibility::Hidden);
+    if (character != nullptr && character->grid != nullptr) {
+        character->grid->SetCurrentSearchTileSearched();
+    }
     APlayerC* player = Cast<APlayerC>(GetWorld()->GetFirstPlayerController());
     if (gridName == ScenarioName::STASH) {
         if (currentNumber > 10) {
