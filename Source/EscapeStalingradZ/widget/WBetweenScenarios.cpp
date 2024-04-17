@@ -66,7 +66,12 @@ void UWBetweenScenarios::OnClickButtonConfirm()
 	SetVisibility(ESlateVisibility::Hidden);
 	RemoveFromParent();
 	if (hud != nullptr) {
-		hud->StartGameAfterSelectCharacter();
+		if (GetWorld()->GetName() == "AFriendWillBleed") {
+			hud->CreateSelectCharacterToFreeWidget(currentCharacter);
+		}
+		else {
+			hud->StartGameAfterSelectCharacter();
+		}
 	}
 	Destruct();
 }

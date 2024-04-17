@@ -6,7 +6,9 @@
 #include "WReleaseLock.h"
 #include "WInventory.h"
 #include "WSelectCharacter.h"
+#include "WSelectCharacterToFree.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
+#include "EscapeStalingradZ/character/CharacterToFree.h"
 #include "EscapeStalingradZ/turn/Turn.h"
 #include "Kismet/GameplayStatics.h"
 #include "WBetweenScenarios.h"
@@ -131,6 +133,19 @@ void AUserHUD::CreateSelectCharacterWidget(APlayerCharacter* chara)
 		UWSelectCharacter* selectCharacter = CreateWidget<UWSelectCharacter>(GetWorld(), SelectCharacterWidgetClass);
 		if (selectCharacter != nullptr) {
 			selectCharacter->character = chara;
+			selectCharacter->hud = this;
+			selectCharacter->AddToViewport();
+		}
+	}
+}
+
+void AUserHUD::CreateSelectCharacterToFreeWidget(APlayerCharacter* chara)
+{
+	if (SelectCharacterToFreeWidgetClass && characterToFree != nullptr) {
+		UWSelectCharacterToFree* selectCharacter = CreateWidget<UWSelectCharacterToFree>(GetWorld(), SelectCharacterToFreeWidgetClass);
+		if (selectCharacter != nullptr) {
+			selectCharacter->SetCharactersAvailable(chara->characterChosen);
+			selectCharacter->character = characterToFree;
 			selectCharacter->hud = this;
 			selectCharacter->AddToViewport();
 		}

@@ -13,6 +13,7 @@
 #include "EscapeStalingradZ/widget/UserHUD.h"
 #include "EscapeStalingradZ/turn/Turn.h"
 #include "EscapeStalingradZ/misc/AnimatedTextAttack.h"
+#include "EscapeStalingradZ/character/CharacterToFree.h"
 
 // Sets default values
 AGrid::AGrid()
@@ -241,10 +242,12 @@ void AGrid::SetZombieStartLocation(AZombie* zombie)
 	gridTiles[index].actor = zombie;
 }
 
-FIntPoint AGrid::GetStartIndex()
+void AGrid::SetCharacterToFreeStartLocation(ACharacterToFree* character)
 {
-	//TO-DO
-	return FIntPoint(7, 6);
+	FIntPoint index = character->startIndex;
+	FVector location = GetLocationByIndex(index);
+	character->SetActorLocation(location);
+	gridTiles[index].actor = character;
 }
 
 FVector AGrid::GetLocationByIndex(FIntPoint index)

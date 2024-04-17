@@ -43,6 +43,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "PlayerInfo")
 		TSubclassOf<class UWSelectCharacter> SelectCharacterWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerInfo")
+		TSubclassOf<class UWSelectCharacterToFree> SelectCharacterToFreeWidgetClass;
+
 	UPROPERTY(EditDefaultsOnly, Category = "BetweenScenario")
 		TSubclassOf<class UWBetweenScenarios> BetweenScenariosWidgetClass;
 
@@ -54,6 +57,7 @@ public:
 		class ATurn* turn;
 
 	UPROPERTY(VisibleAnywhere, Category = Character) class APlayerCharacter* character;
+	UPROPERTY(VisibleAnywhere, Category = Character) class ACharacterToFree* characterToFree;
 
 	UFUNCTION()
 		void StartCharacterTurn();
@@ -69,6 +73,8 @@ public:
 		void StartGameAfterSelectCharacter();
 	UFUNCTION()
 		void CreateSelectCharacterWidget(class APlayerCharacter* chara);
+	UFUNCTION()
+		void CreateSelectCharacterToFreeWidget(class APlayerCharacter* chara);
 	UFUNCTION()
 		void SetPrimaryCharacterToBetweenScenarios(class APlayerCharacter* chara);
 	UFUNCTION()
