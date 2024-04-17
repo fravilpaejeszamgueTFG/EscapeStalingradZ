@@ -84,6 +84,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = characters) TArray<FIntPoint> charactersIndex;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = doors) TArray<class ADoorIcon*> doorsIcon;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Icon")
+		TSubclassOf<class AActor> searchOClass;
+	UPROPERTY(VisibleAnywhere) FIntPoint currentSearchTile = FIntPoint(-1, -1);
+
 	//functions
 	UFUNCTION(BlueprintCallable) 
 		void SpawnGrid(FVector center, FVector tileSize, FVector2D numOfTiles);
@@ -175,4 +179,7 @@ public:
 
 	UFUNCTION()
 		void EndIfTileIsExit(FIntPoint index);
+
+	UFUNCTION()
+		void SetCurrentSearchTileSearched();
 };

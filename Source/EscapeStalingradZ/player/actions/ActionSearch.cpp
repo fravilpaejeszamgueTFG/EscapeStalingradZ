@@ -44,6 +44,7 @@ void UActionSearch::Action(AGrid* grid, FIntPoint tile, FIntPoint destinyTile)
 					}
 					character->SearchAction();
 					grid->gridTiles[destinyTile].types.Remove(TileType::Search);
+					grid->currentSearchTile = destinyTile;
 				}
 			}
 			grid->RemoveTileState(tile, TileState::isReachable);

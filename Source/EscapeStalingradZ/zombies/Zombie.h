@@ -116,6 +116,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Parameters")
 		TSubclassOf<class AAnimatedTextAttack> textClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Icon")
+		TSubclassOf<class AActor> searchOClass;
 	
 	//Funciones
 	void SetHealthAndMPPropertiesByZombie();
