@@ -86,6 +86,11 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 			else {
 				isStunned = true;
 				CheckIfAreCharactersInNeighborWhenStunOrKillZombie(GetActorLocation());
+				if (typeOfZombie == ZombieType::Alpha) {
+					maxmp = 1;
+					mp = 1;
+					turn->SetBetaMPWhenAlphaOnBoardGetsHit();
+				}
 			}
 		}
 		else {
