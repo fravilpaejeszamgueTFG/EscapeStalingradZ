@@ -57,4 +57,6 @@ public:
 
 	UFUNCTION() void ChangeLevel(int exitNumber);
 
+	UFUNCTION() void CompletedPrimaryObjective();
+
 };

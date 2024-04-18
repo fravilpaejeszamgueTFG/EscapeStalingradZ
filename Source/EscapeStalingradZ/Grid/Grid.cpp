@@ -629,6 +629,10 @@ int AGrid::GetCostToEnterNeighbor(FIntPoint index, FIntPoint neighbor)
 			if (zombie != nullptr) {
 				return 100;
 			}
+			ACharacterToFree* chara = Cast<ACharacterToFree>(gridTiles[neighbor].actor);
+			if (chara != nullptr) {
+				return 100;
+			}
 		}
 	}
 	return 1;

@@ -156,4 +156,5 @@ public:
 	UFUNCTION() void SetAttributesByPlayerInfoSaved(FPlayerInfoSaved info);
 	UFUNCTION() void SaveAttributesInPlayerInfoSavedGivenIndex(int index);
 	UFUNCTION() FIntPoint GetStartIndexSecondCharacter();
+	UFUNCTION() void SpawnNewCharacter(AvailableCharacter chosenCharacter);
 };

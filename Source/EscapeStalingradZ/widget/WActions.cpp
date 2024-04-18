@@ -95,6 +95,7 @@ void UWActions::OnClickActions()
 		if (actionWidget != nullptr) {
 			actionWidget->character = character;
 			actionWidget->SetButtonSearchEnabledOrDisabled();
+			actionWidget->SetButtonFreeNewCharacterVisibilityAndEnabledOrDisabled();
 			actionWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 		else {
@@ -105,6 +106,7 @@ void UWActions::OnClickActions()
 				actionWidget->grid = grid;
 				actionWidget->actions = this;
 				actionWidget->SetButtonSearchEnabledOrDisabled();
+				actionWidget->SetButtonFreeNewCharacterVisibilityAndEnabledOrDisabled();
 				actionWidget->AddToViewport();
 			}
 		}

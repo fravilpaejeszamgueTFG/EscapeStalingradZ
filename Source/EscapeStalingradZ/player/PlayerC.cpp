@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "PlayerActions.h"
 #include "UObject/UObjectGlobals.h"
+#include "EscapeStalingradZ/grid/ExitModifier.h"
 
 
 APlayerC::APlayerC()
@@ -149,4 +150,14 @@ void APlayerC::ChangeLevel(int exitNumber)
 			GI->levelsPlayed.Add(ScenarioName::MOVEALONG);
 		}
 	}
+}
+
+void APlayerC::CompletedPrimaryObjective()
+{
+	hasPrimaryObjective = true;
+	canExitTheRoom = true;
+	for (AExitModifier* mod : exits) {
+		mod->SetActorEnableCollision(true);
+	}
+	exits.Empty();
 }

@@ -21,6 +21,8 @@ public:
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(meta = (BindWidget))
+	class UBoton* buttonFreeNewCharacter;
+	UPROPERTY(meta = (BindWidget))
 	class UBoton* buttonRotation;
 	UPROPERTY(meta = (BindWidget))
 	class UBoton* buttonOpenCloseDoor;
@@ -37,10 +39,12 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Command) class UCommand* command;
 	UPROPERTY(VisibleAnywhere) class UWActions* actions;
 
+	UFUNCTION() void OnClickFreeNewCharacter();
 	UFUNCTION() void OnClickRotation();
 	UFUNCTION() void OnClickOpenCloseDoor();
 	UFUNCTION() void OnClickSearch();
 	UFUNCTION() void GoBack();
 	UFUNCTION() void SetButtonSearchEnabledOrDisabled();
+	UFUNCTION() void SetButtonFreeNewCharacterVisibilityAndEnabledOrDisabled();
 	UFUNCTION() bool SearchTileInNeighbor(FIntPoint tile);
 };

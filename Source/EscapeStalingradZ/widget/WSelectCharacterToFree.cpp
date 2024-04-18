@@ -52,6 +52,20 @@ void UWSelectCharacterToFree::OnClickButtonConfirm()
     SetVisibility(ESlateVisibility::Hidden);
     RemoveFromParent();
     if (hud != nullptr) {
+        EWeapon weapon;
+        if (character->characterChosen == AvailableCharacter::Becker) {
+            weapon = EWeapon::MP40;
+        }
+        else if (character->characterChosen == AvailableCharacter::Dasha) {
+            weapon = EWeapon::Nagant;
+        }
+        else if (character->characterChosen == AvailableCharacter::Katyusha) {
+            weapon = EWeapon::MG34;
+        }
+        else {
+            weapon = EWeapon::Axe;
+        }
+        hud->favoriteWeaponCharacterToFree = weapon;
         hud->StartGameAfterSelectCharacter();
     }
 }

@@ -156,6 +156,9 @@ void UWPlayerInfo::SetVisibleActionWidget()
 		if (character->mp == 0) {
 			actionWidget->DisableActions();
 		}
+		if (character->attacked) {
+			actionWidget->DisableAttack();
+		}
 		SetVisibleOptionsWidget();
 	}
 }

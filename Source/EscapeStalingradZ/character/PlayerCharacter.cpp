@@ -13,6 +13,7 @@
 #include "EscapeStalingradZ/misc/StunIcon.h"
 #include "Kismet/GameplayStatics.h"
 #include "EscapeStalingradZ/misc/AnimatedTextAttack.h"
+#include "EscapeStalingradZ/turn/Turn.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -67,7 +68,9 @@ void APlayerCharacter::BeginPlay()
 			hud->SetPrimaryCharacterToBetweenScenarios(this);
 		}
 		else {
-			GetWorldTimerManager().SetTimer(initialTimer, this, &APlayerCharacter::SetSecondCharacterBetweenScenarios, 0.2, false);
+			if (GetWorld()->GetName() != "AFriendWillBleed") {
+				GetWorldTimerManager().SetTimer(initialTimer, this, &APlayerCharacter::SetSecondCharacterBetweenScenarios, 0.2, false);
+			}
 		}
 	}
 	SetPreferredWeaponByCharacter();
@@ -573,5 +576,22 @@ FIntPoint APlayerCharacter::GetStartIndexSecondCharacter()
 	}
 	else {
 		return FIntPoint(2,9);
+	}
+}
+
+void APlayerCharacter::SpawnNewCharacter(AvailableCharacter chosenCharacter)
+{
+	FIntPoint index = GetStartIndexSecondCharacter();
+	FVector pos = grid->GetLocationByIndex(index);
+	APlayerCharacter* character2 = GetWorld()->SpawnActor<APlayerCharacter>(characterClass, pos, FRotator(0, 0, 0));
+	if (character2 != nullptr) {
+		character2->characterChosen = chosenCharacter;
+		character2->startIndex = index;
+		AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		if (hud != nullptr && hud->turn != nullptr) {
+			ATurn* turn = hud->turn;
+			turn->characters.Add(character2);
+			turn->charactersToStartTurn.Add(character2);
+		}
 	}
 }

@@ -10,7 +10,6 @@
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "UserHUD.h"
 #include "WPlayerInfo.h"
-#include "EscapeStalingradZ/grid/ExitModifier.h"
 
 UWSearchDie::UWSearchDie(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -55,12 +54,7 @@ void UWSearchDie::OnClickButtonConfirm()
             AGrid* grid = character->grid;
             FIntPoint tile = grid->GetTileIndexFromLocation(character->GetActorLocation());
             if (tile.X > 1) { // tile.X > 1 -> o, <= 1 -> o2
-                player->hasPrimaryObjective = true;
-                player->canExitTheRoom = true;
-                for (AExitModifier* mod : player->exits) {
-                    mod->SetActorEnableCollision(true);
-                }
-                player->exits.Empty();
+                player->CompletedPrimaryObjective();
             }
             else {
                 player->hasSecondaryObjective = true;
@@ -201,7 +195,9 @@ void UWSearchDie::SetObjectWonToCharacter(ObjectName name, int number)
     }
     else {
         if (character->isPrimaryPlayer) {
-            //TO-DO pillar el otro personaje y conseguir su preferredWeapon para pasarselo a SetWeaponInFreeSlot
+            if (hud != nullptr && hud->favoriteWeaponCharacterToFree != EWeapon::None) {
+                SetWeaponInFreeSlot(hud->favoriteWeaponCharacterToFree);
+            }
         }
         else {
             character->weapon1 = character->PreferredWeapon;
