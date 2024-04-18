@@ -5,6 +5,7 @@
 #include "WActions.h"
 #include "buttons/Boton.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
+#include "EscapeStalingradZ/player/actions/ActionFreeNewCharacter.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementRotation.h"
 #include "EscapeStalingradZ/player/actions/ActionOpenCloseDoor.h"
 #include "EscapeStalingradZ/player/actions/ActionSearch.h"
@@ -22,6 +23,7 @@ void UWOtherActions::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	buttonFreeNewCharacter->OnClicked.AddDynamic(this, &UWOtherActions::OnClickFreeNewCharacter);
 	buttonRotation->OnClicked.AddDynamic(this, &UWOtherActions::OnClickRotation);
 	buttonOpenCloseDoor->OnClicked.AddDynamic(this, &UWOtherActions::OnClickOpenCloseDoor);
 	buttonSearch->OnClicked.AddDynamic(this, &UWOtherActions::OnClickSearch);
@@ -32,6 +34,15 @@ void UWOtherActions::NativeConstruct()
 		controller = player;
 		character = player->playerchara;
 	}
+}
+
+void UWOtherActions::OnClickFreeNewCharacter()
+{
+	grid->deleteStatesFromTilesButSelected();
+	command = NewObject<UActionFreeNewCharacter>(this);
+	command->Execute(grid, character);
+	controller->actions->command = NewObject<UActionFreeNewCharacter>(controller->actions);
+	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
 void UWOtherActions::OnClickRotation()
@@ -93,6 +104,22 @@ void UWOtherActions::SetButtonSearchEnabledOrDisabled()
 	}
 	else {
 		buttonSearch->SetIsEnabled(false);
+	}
+}
+
+void UWOtherActions::SetButtonFreeNewCharacterVisibilityAndEnabledOrDisabled()
+{
+	if (GetWorld()->GetName() == "AFriendWillBleed") {
+		APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		if (player != nullptr && player->canExitTheRoom) {
+			buttonFreeNewCharacter->SetIsEnabled(false);
+		}
+		else {
+			buttonFreeNewCharacter->SetIsEnabled(true);
+		}
+	}
+	else {
+		buttonFreeNewCharacter->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 

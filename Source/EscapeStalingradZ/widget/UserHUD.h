@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "EscapeStalingradZ/enum/Enumerates.h"
 #include "UserHUD.generated.h"
 
 /**
@@ -58,6 +59,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = Character) class APlayerCharacter* character;
 	UPROPERTY(VisibleAnywhere, Category = Character) class ACharacterToFree* characterToFree;
+
+	UPROPERTY(VisibleAnywhere) TEnumAsByte<EWeapon> favoriteWeaponCharacterToFree;
 
 	UFUNCTION()
 		void StartCharacterTurn();
