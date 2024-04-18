@@ -180,6 +180,8 @@ public:
 
 	UFUNCTION()
 		void SetCurrentSearchTileSearched();
+	UFUNCTION()
+		void SetAllSearchTileSearched();
 
 	UFUNCTION()
 		void SetPoisonedTilesGivenCenterTile(FIntPoint index);

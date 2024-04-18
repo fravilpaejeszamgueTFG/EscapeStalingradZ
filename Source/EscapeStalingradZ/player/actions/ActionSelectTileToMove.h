@@ -23,5 +23,7 @@ public:
 	UPROPERTY() class ATurn* turn;
 
 	UPROPERTY() class AZombie* zombie;
+
+	UPROPERTY() bool inSearch = false;
 	
 };

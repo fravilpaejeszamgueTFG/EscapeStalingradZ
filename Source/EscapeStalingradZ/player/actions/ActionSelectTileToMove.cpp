@@ -38,7 +38,12 @@ void UActionSelectTileToMove::Action(AGrid* grid, FIntPoint tile, FIntPoint dest
 					for (FIntPoint i : indices) {
 						grid->RemoveTileState(i, TileState::isReachable);
 					}
-					turn->SpawnZombieAfterMoveCharacter(zombie);
+					if (inSearch) {
+						grid->RemoveTileState(tile, TileState::Selected);
+						grid->AddTileState(destinyTile, TileState::Selected);
+
+					}
+					turn->SpawnZombieAfterMoveCharacter(zombie, inSearch);
 				}
 				else {
 					APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
