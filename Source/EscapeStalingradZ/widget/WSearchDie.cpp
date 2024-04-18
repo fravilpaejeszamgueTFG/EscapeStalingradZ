@@ -8,6 +8,7 @@
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
+#include "EscapeStalingradZ/turn/Turn.h"
 #include "UserHUD.h"
 #include "WPlayerInfo.h"
 
@@ -26,7 +27,21 @@ void UWSearchDie::NativeConstruct()
 
 void UWSearchDie::SetDie(int numberOfDie)
 {
-    currentNumber = numberOfDie;
+    if (gridName == ScenarioName::STASH) {
+        if (numberOfSearch >= 3) {
+            currentNumber = 12;
+        }
+        else {
+            currentNumber = numberOfDie + numberOfSearch;
+        }
+        if (currentNumber > 12) {
+            currentNumber = 12;
+        }
+    }
+    else {
+        currentNumber = numberOfDie;
+    }
+    unhidePlayerInfo = true;
     SetHumanDieImage(currentNumber);
     if (character != nullptr && character->grid != nullptr) {
         gridName = character->grid->name;
@@ -40,35 +55,36 @@ void UWSearchDie::OnClickButtonConfirm()
     DieNumber->SetVisibility(ESlateVisibility::Hidden);
     ButtonRollAnimation->SetVisibility(ESlateVisibility::Visible);
     ButtonConfirm->SetVisibility(ESlateVisibility::Hidden);
+    numberOfSearch++;
     if (character != nullptr && character->grid != nullptr) {
+        searchTileIndex = character->grid->currentSearchTile;
         character->grid->SetCurrentSearchTileSearched();
-    }
-    APlayerC* player = Cast<APlayerC>(GetWorld()->GetFirstPlayerController());
-    if (gridName == ScenarioName::STASH) {
-        if (currentNumber > 10) {
+        APlayerC* player = Cast<APlayerC>(GetWorld()->GetFirstPlayerController());
+        if (gridName == ScenarioName::STASH) {
+            if (currentNumber > 10) {
+                player->hasSecondaryObjective = true;
+                character->grid->SetAllSearchTileSearched();
+            }
+        }
+        else if (gridName == ScenarioName::WAKEUP) {
+             AGrid* grid = character->grid;
+             FIntPoint tile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+             if (tile.X > 1) { // tile.X > 1 -> o, <= 1 -> o2
+                  player->CompletedPrimaryObjective();
+             }
+             else {
+                  player->hasSecondaryObjective = true;
+             }
+        }
+        else {
             player->hasSecondaryObjective = true;
         }
-    }
-    else if (gridName == ScenarioName::WAKEUP) {
-        if (character != nullptr && character->grid != nullptr) {
-            AGrid* grid = character->grid;
-            FIntPoint tile = grid->GetTileIndexFromLocation(character->GetActorLocation());
-            if (tile.X > 1) { // tile.X > 1 -> o, <= 1 -> o2
-                player->CompletedPrimaryObjective();
-            }
-            else {
-                player->hasSecondaryObjective = true;
-            }
-        }
-    }
-    else {
-        player->hasSecondaryObjective = true;
     }
     for (const auto& item : objectsWon) {
         SetObjectWonToCharacter(item.Key, item.Value);
     }
     SetVisibility(ESlateVisibility::Hidden);
-    if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+    if (unhidePlayerInfo && hud != nullptr && hud->PlayerInfoWidget != nullptr) {
         hud->PlayerInfoWidget->UnhidePlayerInfoDuringSearch();
     }
 }
@@ -136,11 +152,21 @@ void UWSearchDie::SetSearchingObjectsWakeUpTimeToDie()
 
 void UWSearchDie::SetSearchingObjectsStash()
 {
-    //TO-DO issue 88
-    objectsWon.Add(ObjectName::Food, 1);
-    objectsWon.Add(ObjectName::MedKit, 1);
-    objectsWon.Add(ObjectName::Ammo, 1);
-    objectsWon.Add(ObjectName::FavWeapon, 1);
+    if (currentNumber < 3) {
+        objectsWon.Add(ObjectName::Zombie);
+    }
+    else if (currentNumber == 9) {
+        objectsWon.Add(ObjectName::Food, 1);
+    }
+    else if (currentNumber == 10) {
+        objectsWon.Add(ObjectName::Ammo, 1);
+    }
+    else if (currentNumber > 10) {
+        objectsWon.Add(ObjectName::FavWeapon, 1);
+        objectsWon.Add(ObjectName::Food, 1);
+        objectsWon.Add(ObjectName::MedKit, 1);
+        objectsWon.Add(ObjectName::Ammo, 2);
+    }
 }
 
 void UWSearchDie::SetSearchingObjectsMoveAlong()
@@ -166,42 +192,65 @@ void UWSearchDie::SetSearchingObjectsMoveAlong()
 
 void UWSearchDie::SetObjectWonToCharacter(ObjectName name, int number)
 {
-    if (name == ObjectName::Ammo) {
-        character->ammo += number;
-        if (character->ammo > 3) {
-            character->ammo = 3;
-        }
-    } 
-    else if (name == ObjectName::Food) {
-        character->food += number;
-        if (character->food > 3) {
-            character->food = 3;
-        }
-    }
-    else if (name == ObjectName::MedKit) {
-        character->medkit += number;
-        if (character->medkit > 3) {
-            character->medkit = 3;
-        }
-    }
-    else if (name == ObjectName::FavWeapon) {
-        character->weapon1 = character->PreferredWeapon;
-    }
-    else if (name == ObjectName::WLuger) {
-        SetWeaponInFreeSlot(EWeapon::Luger);
-    }
-    else if (name == ObjectName::WKnife) {
-        SetWeaponInFreeSlot(EWeapon::Knife);
-    }
-    else {
-        if (character->isPrimaryPlayer) {
-            if (hud != nullptr && hud->favoriteWeaponCharacterToFree != EWeapon::None) {
-                SetWeaponInFreeSlot(hud->favoriteWeaponCharacterToFree);
+    switch (name) {
+        case ObjectName::Ammo:
+            character->ammo += number;
+            if (character->ammo > 3) {
+                character->ammo = 3;
             }
-        }
-        else {
-            character->weapon1 = character->PreferredWeapon;
-        }
+            break;
+        case ObjectName::Food:
+            character->food += number;
+            if (character->food > 3) {
+                character->food = 3;
+            }
+            break;
+        case ObjectName::MedKit:
+            character->medkit += number;
+            if (character->medkit > 3) {
+                character->medkit = 3;
+            }
+            break;
+        case ObjectName::FavWeapon:
+            if (character->isPrimaryPlayer) {
+                character->weapon1 = character->PreferredWeapon;
+            }
+            else {
+                if (hud != nullptr && hud->turn != nullptr) {
+                    for (APlayerCharacter* chara : hud->turn->characters) {
+                        if (chara->isPrimaryPlayer) {
+                            SetWeaponInFreeSlot(chara->PreferredWeapon);
+                            break;
+                        }
+                    }
+                }
+            }
+            break;
+        case ObjectName::WLuger:
+            SetWeaponInFreeSlot(EWeapon::Luger);
+            break;
+        case ObjectName::WKnife:
+            SetWeaponInFreeSlot(EWeapon::Knife);
+            break;
+        case ObjectName::SecondFavWeapon:
+            if (character->isPrimaryPlayer) {
+                if (hud != nullptr && hud->favoriteWeaponCharacterToFree != EWeapon::None) {
+                    SetWeaponInFreeSlot(hud->favoriteWeaponCharacterToFree);
+                }
+            }
+            else {
+                character->weapon1 = character->PreferredWeapon;
+            }
+            break;
+        case ObjectName::Zombie:
+            if (searchTileIndex != FIntPoint(-1,-1)) {
+                FIntPoint tileCharacter = character->grid->GetTileIndexFromLocation(character->GetActorLocation());
+                if (hud != nullptr && hud->turn != nullptr) {
+                    unhidePlayerInfo = false;
+                    hud->turn->SpawnZombieInTile(searchTileIndex);
+                }
+            }
+            break;
     }
 }
 
@@ -224,10 +273,10 @@ int UWSearchDie::GetNumberOfWidgetFromScenarioName()
         return 2;
     }
     else if (gridName == ScenarioName::STASH) {
-        return 0; //TO-DO
+        return 4;
     }
     else {
-        return 4;
+        return 5;
     }
 }
 

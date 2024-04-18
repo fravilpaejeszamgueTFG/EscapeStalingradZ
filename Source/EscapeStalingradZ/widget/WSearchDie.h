@@ -37,6 +37,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere) int currentNumber;
 
+	UPROPERTY(VisibleAnywhere) int numberOfSearch = 0;
+
+	UPROPERTY(VisibleAnywhere) FIntPoint searchTileIndex = FIntPoint(-1,-1);
+
+	UPROPERTY(VisibleAnywhere) bool unhidePlayerInfo = true;
+
 	//nombre del mapa
 	UPROPERTY(BlueprintReadOnly, Category = gridName) TEnumAsByte<ScenarioName> gridName;
 	//nombre del mapa

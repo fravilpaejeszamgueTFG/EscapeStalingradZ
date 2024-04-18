@@ -772,6 +772,21 @@ void AGrid::SetCurrentSearchTileSearched()
 	}
 }
 
+void AGrid::SetAllSearchTileSearched()
+{
+	for (auto& index : gridTiles)
+	{
+		if (index.Value.types.Contains(TileType::Search)) {
+			FVector pos = GetLocationByIndex(index.Key);
+			AActor* oIcon = GetWorld()->SpawnActor<AActor>(searchOClass, pos, FRotator(0, 0, 0));
+			if (oIcon != nullptr) {
+				currentSearchTile = FIntPoint(-1, -1);
+			}
+			index.Value.types.Remove(TileType::Search);
+		}
+	}
+}
+
 void AGrid::SetPoisonedTilesGivenCenterTile(FIntPoint index)
 {
 	TArray<FIntPoint> list = GetTileNeighbors(index);

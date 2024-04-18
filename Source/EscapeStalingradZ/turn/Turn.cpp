@@ -11,6 +11,7 @@
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "EscapeStalingradZ/widget/WSelectMovementType.h"
 #include "EscapeStalingradZ/widget/UserHUD.h"
+#include "EscapeStalingradZ/widget/WPlayerInfo.h"
 #include "EscapeStalingradZ/widget/WDicesTurn.h"
 #include "EscapeStalingradZ/zombies/Zombie.h"
 #include "EscapeStalingradZ/player/actions/ActionSelectTileToMove.h"
@@ -194,36 +195,7 @@ void ATurn::SpawnZombies()
 					EndZombieTurn();
 				}
 				else {
-					APlayerCharacter* characterInTile = Cast<APlayerCharacter>(grid->gridTiles[tile].actor);
-					if (characterInTile != nullptr) {
-						characterInTile->health--; //pasar a una funcion en character que compruebe si muere
-						if (characterInTile->inDirectContact) {
-							FIntPoint t = grid->GetTileIndexFromLocation(characterInTile->GetActorLocation());
-							TArray<FIntPoint> neighbors = grid->GetTileNeighbors(t);
-							for (FIntPoint index : neighbors) {
-								if (grid->gridTiles[index].actor != nullptr) {
-									AZombie* zombie = Cast<AZombie>(grid->gridTiles[index].actor);
-									if (zombie != nullptr && zombie->characterInContact == characterInTile) {
-										zombie->characterInContact = nullptr;
-									}
-								}
-							}
-							characterInTile->isLocked = false;
-							if (characterInTile->stunIcon != nullptr) {
-								characterInTile->stunIcon->SetActorHiddenInGame(true);
-							}
-						}
-						characterInTile->inDirectContact = true;
-						newZombie->characterInContact = characterInTile;
-						UActionSelectTileToMove* command = NewObject<UActionSelectTileToMove>(this);
-						command->Execute(grid, characterInTile);
-						APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-						UActionSelectTileToMove* commandActions = NewObject<UActionSelectTileToMove>(player->actions);
-						commandActions->turn = this;
-						commandActions->zombie = newZombie;
-						player->actions->command = commandActions;
-						player->actions->actionTile = tile;
-					}
+					SpawnZombieInCharacterTile(newZombie, tile, false);
 				}
 			}
 		}
@@ -389,13 +361,18 @@ void ATurn::SpawnWaitingZombies(FIntPoint tile)
 	}
 }
 
-void ATurn::SpawnZombieAfterMoveCharacter(AZombie* zombie)
+void ATurn::SpawnZombieAfterMoveCharacter(AZombie* zombie, bool inSearch)
 {
-	int numRound = roundNumber % spawnZombiesTiles.Num();
-	FIntPoint tile = spawnZombiesTiles[numRound];
 	grid->SetZombieStartLocation(zombie);
 	zombies.Add(zombie);
-	EndZombieTurn();
+	if (inSearch) {
+		if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+			hud->PlayerInfoWidget->UnhidePlayerInfoDuringSearch();
+		}
+	}
+	else {
+		EndZombieTurn();
+	}
 }
 
 void ATurn::SpawnZombieBeforeStartGame()
@@ -415,7 +392,7 @@ void ATurn::SpawnZombieBeforeStartGame()
 
 void ATurn::ResetZombiesWhenAllAreDead()
 {
-	if (zombiesToEnterGrid.Num() == 0 && zombies.Num() == 0 && zombiesDied.Num() > 0) {
+	if (zombiesToEnterGrid.Num() == 0 && zombiesDied.Num() > 0) {
 		zombiesToEnterGrid = zombiesDied;
 		zombiesDied.Empty();
 	}
@@ -427,6 +404,58 @@ void ATurn::SetBetaMPWhenAlphaOnBoardGetsHit()
 		if (z->typeOfZombie == ZombieType::Beta) {
 			z->maxmp = 1;
 			z->mp = 1;
+		}
+	}
+}
+
+void ATurn::SpawnZombieInCharacterTile(AZombie* newZombie, FIntPoint tile, bool inSearch)
+{
+	APlayerCharacter* characterInTile = Cast<APlayerCharacter>(grid->gridTiles[tile].actor);
+	if (characterInTile != nullptr) {
+		characterInTile->health--; //pasar a una funcion en character que compruebe si muere
+		if (characterInTile->inDirectContact) {
+			FIntPoint t = grid->GetTileIndexFromLocation(characterInTile->GetActorLocation());
+			TArray<FIntPoint> neighbors = grid->GetTileNeighbors(t);
+			for (FIntPoint index : neighbors) {
+				if (grid->gridTiles[index].actor != nullptr) {
+					AZombie* zombie = Cast<AZombie>(grid->gridTiles[index].actor);
+					if (zombie != nullptr && zombie->characterInContact == characterInTile) {
+						zombie->characterInContact = nullptr;
+					}
+				}
+			}
+			characterInTile->isLocked = false;
+			if (characterInTile->stunIcon != nullptr) {
+				characterInTile->stunIcon->SetActorHiddenInGame(true);
+			}
+		}
+		characterInTile->inDirectContact = true;
+		newZombie->characterInContact = characterInTile;
+		UActionSelectTileToMove* command = NewObject<UActionSelectTileToMove>(this);
+		command->Execute(grid, characterInTile);
+		APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		UActionSelectTileToMove* commandActions = NewObject<UActionSelectTileToMove>(player->actions);
+		commandActions->turn = this;
+		commandActions->zombie = newZombie;
+		commandActions->inSearch = inSearch;
+		player->actions->command = commandActions;
+		player->actions->actionTile = tile;
+	}
+}
+
+void ATurn::SpawnZombieInTile(FIntPoint tile)
+{
+	if (tile != FIntPoint(-1, -1) && zombiesToEnterGrid.Num() > 0) {
+		AZombie* newZombie = zombiesToEnterGrid[0];
+		zombiesToEnterGrid.Remove(newZombie);
+		newZombie->startIndex = tile;
+		if (grid->gridTiles[tile].actor == nullptr) {
+			grid->SetZombieStartLocation(newZombie);
+			zombies.Add(newZombie);
+			DirectContactInSpawnZombie(tile);
+		}
+		else {
+			SpawnZombieInCharacterTile(newZombie, tile, true);
 		}
 	}
 }

@@ -128,9 +128,11 @@ public:
 	UFUNCTION() void PrepareCharacterForTurn();
 	UFUNCTION() void DirectContactInSpawnZombie(FIntPoint tile);
 	UFUNCTION() void SpawnWaitingZombies(FIntPoint tile);
-	UFUNCTION() void SpawnZombieAfterMoveCharacter(class AZombie* zombie);
+	UFUNCTION() void SpawnZombieAfterMoveCharacter(class AZombie* zombie, bool inSearch);
 	UFUNCTION() void SpawnZombieBeforeStartGame();
 	UFUNCTION() void ResetZombiesWhenAllAreDead();
 	UFUNCTION() void SetBetaMPWhenAlphaOnBoardGetsHit();
+	UFUNCTION() void SpawnZombieInCharacterTile(class AZombie* newZombie, FIntPoint tile, bool inSearch);
+	UFUNCTION() void SpawnZombieInTile(FIntPoint tile);
 
 };

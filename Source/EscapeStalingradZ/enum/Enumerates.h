@@ -48,6 +48,7 @@ enum ObjectName
 	WLuger	   UMETA(DisplayName = "WLuger"),
 	SecondFavWeapon	   UMETA(DisplayName = "SecondFavWeapon"),
 	FavWeapon	   UMETA(DisplayName = "FavWeapon"),
+	Zombie		UMETA(DisplayName = "Zombie"),
 };
 
 UENUM()
