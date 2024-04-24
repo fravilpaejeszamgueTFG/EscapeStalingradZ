@@ -326,7 +326,6 @@ int APlayerCharacter::GetNumberOfHitModifiersAttack(AZombie* zombie)
 	if (!useReadyWeapon) {
 		res += 2;
 	}
-	
 	if (exp >= 10 && useReadyWeapon && readyWeapon->weaponName == PreferredWeapon) {
 		res--;
 	}
