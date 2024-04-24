@@ -152,9 +152,11 @@ public:
 	FTimerHandle initialTimer;
 	UFUNCTION() void SetSecondCharacterBetweenScenarios();
 	//setear los atributos del personaje cuando cambia de nivel
-	
 	UFUNCTION() void SetAttributesByPlayerInfoSaved(FPlayerInfoSaved info);
 	UFUNCTION() void SaveAttributesInPlayerInfoSavedGivenIndex(int index);
+	//segundo personaje
 	UFUNCTION() FIntPoint GetStartIndexSecondCharacter();
 	UFUNCTION() void SpawnNewCharacter(AvailableCharacter chosenCharacter);
+	//cambiar armas después del intercambio de objetos
+	UFUNCTION() void ChangePrimaryAndSecondaryWeaponAfterExchange();
 };

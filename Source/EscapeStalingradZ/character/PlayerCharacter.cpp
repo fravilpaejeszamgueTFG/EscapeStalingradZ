@@ -595,3 +595,21 @@ void APlayerCharacter::SpawnNewCharacter(AvailableCharacter chosenCharacter)
 		}
 	}
 }
+
+void APlayerCharacter::ChangePrimaryAndSecondaryWeaponAfterExchange()
+{
+	TArray<EWeapon> currentsWeapons = TArray<EWeapon>();
+	currentsWeapons.Add(weapon1);
+	currentsWeapons.Add(weapon2);
+	currentsWeapons.Add(weapon3);
+	currentsWeapons.Add(weapon4);
+	if (!currentsWeapons.Contains(readyWeapon->weaponName)) {
+		readyWeapon->SetPropiertiesByName(EWeapon::None);
+	}
+	if (!currentsWeapons.Contains(readySecondaryWeapon->weaponName)) {
+		readySecondaryWeapon->SetPropiertiesByName(EWeapon::None);
+		if (!useReadyWeapon) {
+			useReadyWeapon = true;
+		}
+	}
+}
