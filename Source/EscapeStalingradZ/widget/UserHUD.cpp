@@ -12,6 +12,7 @@
 #include "EscapeStalingradZ/turn/Turn.h"
 #include "Kismet/GameplayStatics.h"
 #include "WBetweenScenarios.h"
+#include "WExchangeEquipment.h"
 
 AUserHUD::AUserHUD() 
 {
@@ -171,5 +172,34 @@ void AUserHUD::SetSecondaryCharacterToBetweenScenarios(APlayerCharacter* chara)
 {
 	if (betweenScenariosWidget != nullptr) {
 		betweenScenariosWidget->characters.Add(chara);
+	}
+}
+
+void AUserHUD::CreateOrSetExchangeEquipment(APlayerCharacter* character1, APlayerCharacter* character2)
+{
+	if (ExchangeEquipmentWidgetClass) {
+		if (ExchangeEquipmentWidget != nullptr) {
+			ExchangeEquipmentWidget->character1 = character1;
+			ExchangeEquipmentWidget->character2 = character2;
+			ExchangeEquipmentWidget->SetTextNumbers();
+			ExchangeEquipmentWidget->SetImages();
+			ExchangeEquipmentWidget->ResetSelectedCharacter();
+			ExchangeEquipmentWidget->DisableButtons();
+			ExchangeEquipmentWidget->SetVisibility(ESlateVisibility::Visible);
+		}
+		else {
+			ExchangeEquipmentWidget = CreateWidget<UWExchangeEquipment>(GetWorld(), ExchangeEquipmentWidgetClass);
+			if (ExchangeEquipmentWidget != nullptr) {
+				ExchangeEquipmentWidget->betweenWidget = betweenScenariosWidget;
+				ExchangeEquipmentWidget->character1 = character1;
+				ExchangeEquipmentWidget->character2 = character2;
+				ExchangeEquipmentWidget->SetTextNumbers();
+				ExchangeEquipmentWidget->SetImages();
+				ExchangeEquipmentWidget->ResetSelectedCharacter();
+				ExchangeEquipmentWidget->DisableButtons();
+				ExchangeEquipmentWidget->SetVisibility(ESlateVisibility::Visible);
+				ExchangeEquipmentWidget->AddToViewport();
+			}
+		}
 	}
 }

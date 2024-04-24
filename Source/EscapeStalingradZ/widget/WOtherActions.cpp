@@ -5,10 +5,12 @@
 #include "WActions.h"
 #include "buttons/Boton.h"
 #include "EscapeStalingradZ/Grid/Grid.h"
+#include "EscapeStalingradZ/turn/Turn.h"
 #include "EscapeStalingradZ/player/actions/ActionFreeNewCharacter.h"
 #include "EscapeStalingradZ/player/actions/ActionMovementRotation.h"
 #include "EscapeStalingradZ/player/actions/ActionOpenCloseDoor.h"
 #include "EscapeStalingradZ/player/actions/ActionSearch.h"
+#include "EscapeStalingradZ/player/actions/ActionExchangeEquipment.h"
 #include "EscapeStalingradZ/player/actions/Command.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/player/PlayerActions.h"
@@ -27,6 +29,7 @@ void UWOtherActions::NativeConstruct()
 	buttonRotation->OnClicked.AddDynamic(this, &UWOtherActions::OnClickRotation);
 	buttonOpenCloseDoor->OnClicked.AddDynamic(this, &UWOtherActions::OnClickOpenCloseDoor);
 	buttonSearch->OnClicked.AddDynamic(this, &UWOtherActions::OnClickSearch);
+	buttonExchangeEquipment->OnClicked.AddDynamic(this, &UWOtherActions::OnClickExchangeEquipment);
 	goBack->OnClicked.AddDynamic(this, &UWOtherActions::GoBack);
 
 	APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
@@ -69,6 +72,15 @@ void UWOtherActions::OnClickSearch()
 	command = NewObject<UActionSearch>(this);
 	command->Execute(grid, character);
 	controller->actions->command = NewObject<UActionSearch>(controller->actions);
+	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
+}
+
+void UWOtherActions::OnClickExchangeEquipment()
+{
+	grid->deleteStatesFromTilesButSelected();
+	command = NewObject<UActionExchangeEquipment>(this);
+	command->Execute(grid, character);
+	controller->actions->command = NewObject<UActionExchangeEquipment>(controller->actions);
 	controller->actions->actionTile = grid->GetTileIndexFromLocation(character->GetActorLocation());
 }
 
@@ -120,6 +132,32 @@ void UWOtherActions::SetButtonFreeNewCharacterVisibilityAndEnabledOrDisabled()
 	}
 	else {
 		buttonFreeNewCharacter->SetVisibility(ESlateVisibility::Hidden);
+	}
+	SetButtonExchangeEquipmentVisibilityAndEnabledOrDisabled();
+}
+
+void UWOtherActions::SetButtonExchangeEquipmentVisibilityAndEnabledOrDisabled()
+{
+	if (turn != nullptr) {
+		if (turn->characters.Num() > 1 && character->mp>=2) {
+			buttonExchangeEquipment->SetVisibility(ESlateVisibility::Visible);
+			bool isEnabled = false;
+			FIntPoint indice = grid->GetTileIndexFromLocation(character->GetActorLocation());
+			FVector fv = character->GetActorForwardVector();
+			FVector rv = character->GetActorRightVector();
+			TArray<FIntPoint> indices = grid->GetFrontTiles(indice, fv, rv);
+			for (FIntPoint l : indices) {
+				APlayerCharacter* chara = Cast<APlayerCharacter>(grid->gridTiles[l].actor);
+				if (chara != nullptr) {
+					isEnabled = true;
+					break;
+				}
+			}
+			buttonExchangeEquipment->SetIsEnabled(isEnabled);
+		}
+		else {
+			buttonExchangeEquipment->SetIsEnabled(false);
+		}
 	}
 }
 

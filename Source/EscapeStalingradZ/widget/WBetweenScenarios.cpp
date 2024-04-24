@@ -132,7 +132,9 @@ void UWBetweenScenarios::OnClickButtonInventory()
 
 void UWBetweenScenarios::OnClickButtonChangeEquipment()
 {
-	
+	if (hud != nullptr) {
+		hud->CreateOrSetExchangeEquipment(currentCharacter, characters[(index + 1) % 2]);
+	}
 }
 
 void UWBetweenScenarios::SetImages(bool moveRight)

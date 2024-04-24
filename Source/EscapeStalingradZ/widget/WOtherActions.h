@@ -23,6 +23,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UBoton* buttonFreeNewCharacter;
 	UPROPERTY(meta = (BindWidget))
+	class UBoton* buttonExchangeEquipment;
+	UPROPERTY(meta = (BindWidget))
 	class UBoton* buttonRotation;
 	UPROPERTY(meta = (BindWidget))
 	class UBoton* buttonOpenCloseDoor;
@@ -43,8 +45,10 @@ public:
 	UFUNCTION() void OnClickRotation();
 	UFUNCTION() void OnClickOpenCloseDoor();
 	UFUNCTION() void OnClickSearch();
+	UFUNCTION() void OnClickExchangeEquipment();
 	UFUNCTION() void GoBack();
 	UFUNCTION() void SetButtonSearchEnabledOrDisabled();
 	UFUNCTION() void SetButtonFreeNewCharacterVisibilityAndEnabledOrDisabled();
+	UFUNCTION() void SetButtonExchangeEquipmentVisibilityAndEnabledOrDisabled();
 	UFUNCTION() bool SearchTileInNeighbor(FIntPoint tile);
 };

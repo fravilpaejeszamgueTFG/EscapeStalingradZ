@@ -53,6 +53,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UWBetweenScenarios* betweenScenariosWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "ExchangeEquipment")
+		TSubclassOf<class UWExchangeEquipment> ExchangeEquipmentWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UWExchangeEquipment* ExchangeEquipmentWidget;
+
 
 	UPROPERTY(VisibleAnywhere)
 		class ATurn* turn;
@@ -82,4 +88,6 @@ public:
 		void SetPrimaryCharacterToBetweenScenarios(class APlayerCharacter* chara);
 	UFUNCTION()
 		void SetSecondaryCharacterToBetweenScenarios(class APlayerCharacter* chara);
+	UFUNCTION()
+		void CreateOrSetExchangeEquipment(class APlayerCharacter* character1, class APlayerCharacter* character2);
 };
