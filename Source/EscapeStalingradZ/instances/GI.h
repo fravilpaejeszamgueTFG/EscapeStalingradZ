@@ -71,5 +71,7 @@ public:
 	UPROPERTY(VisibleAnywhere) TEnumAsByte<ScenarioName> currentLevel;
 
 	UPROPERTY(VisibleAnywhere) TMap<int, FPlayerInfoSaved> playersInfo;
+
+	UPROPERTY(VisibleAnywhere) FName currentSlot;
 	
 };
