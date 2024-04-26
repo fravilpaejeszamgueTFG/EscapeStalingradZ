@@ -8,6 +8,7 @@
 #include "EscapeStalingradZ/instances/GI.h"
 #include "EscapeStalingradZ/instances/SaveGameEscape.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/Border.h"
 
 UWNewOrLoadGame::UWNewOrLoadGame(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -69,9 +70,7 @@ void UWNewOrLoadGame::OnClickButtonGivenSlot(FString slotName)
 	ButtonSlot1->SetVisibility(ESlateVisibility::HitTestInvisible);
 	ButtonSlot2->SetVisibility(ESlateVisibility::HitTestInvisible);
 	ButtonSlot3->SetVisibility(ESlateVisibility::HitTestInvisible);
-	confirmationText->SetVisibility(ESlateVisibility::Visible);
-	ButtonConfirm->SetVisibility(ESlateVisibility::Visible);
-	ButtonBack->SetVisibility(ESlateVisibility::Visible);
+	borderConfirm->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UWNewOrLoadGame::OnClickButtonConfirm()
@@ -87,9 +86,7 @@ void UWNewOrLoadGame::OnClickButtonBack()
 	ButtonSlot1->SetVisibility(ESlateVisibility::Visible);
 	ButtonSlot2->SetVisibility(ESlateVisibility::Visible);
 	ButtonSlot3->SetVisibility(ESlateVisibility::Visible);
-	confirmationText->SetVisibility(ESlateVisibility::Hidden);
-	ButtonConfirm->SetVisibility(ESlateVisibility::Hidden);
-	ButtonBack->SetVisibility(ESlateVisibility::Hidden);
+	borderConfirm->SetVisibility(ESlateVisibility::Hidden);
 }
 
 FText UWNewOrLoadGame::GetCurrentLevelText(ScenarioName scenario)
