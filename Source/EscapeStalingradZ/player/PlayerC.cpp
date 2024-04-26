@@ -37,13 +37,11 @@ void APlayerC::BeginPlay()
 			PrecacheGivenPackage("/Game/Maps/WakeUp");
 		}
 		else if (GetWorld()->GetName() == "WakeUp") {
-			GI->currentLevel = ScenarioName::WAKEUP;
 			canExitTheRoom = false;
 			PrecacheGivenPackage("/Game/Maps/Stash");
 			PrecacheGivenPackage("/Game/Maps/AFriendWillBleed");
 		}
 		else if (GetWorld()->GetName() == "AFriendWillBleed") {
-			GI->currentLevel = ScenarioName::AFRIEND;
 			canExitTheRoom = false;
 			if (GI->levelsPlayed.Contains(ScenarioName::STASH)) {
 				PrecacheGivenPackage("/Game/Maps/MoveAlong");
@@ -53,7 +51,6 @@ void APlayerC::BeginPlay()
 			}
 		}
 		else if (GetWorld()->GetName() == "Stash") {
-			GI->currentLevel = ScenarioName::STASH;
 			if (!GI->levelsPlayed.Contains(ScenarioName::AFRIEND)) {
 				PrecacheGivenPackage("/Game/Maps/AFriendWillBleed");
 			}
@@ -112,42 +109,48 @@ void APlayerC::ChangeLevel(int exitNumber)
 	if (GI != nullptr) {
 		if (GetWorld()->GetName() == "FUBAR") {
 			GI->levelsPlayed.Add(ScenarioName::FUBAR);
+			GI->currentLevel = ScenarioName::WAKEUP;
 			GI->SaveGame();
 			UGameplayStatics::OpenLevel(this, "WakeUp", true);
 		}
 		else if (GetWorld()->GetName() == "WakeUp") {
 			GI->levelsPlayed.Add(ScenarioName::WAKEUP);
-			GI->SaveGame();
 			if (exitNumber > 0) {
+				GI->currentLevel = ScenarioName::STASH;
+				GI->SaveGame();
 				UGameplayStatics::OpenLevel(this, "Stash", true); //s2
 			}
 			else {
+				GI->currentLevel = ScenarioName::AFRIEND;
+				GI->SaveGame();
 				UGameplayStatics::OpenLevel(this, "AFriendWillBleed", true); //s1
 			}
 		}
 		else if (GetWorld()->GetName() == "AFriendWillBleed") {
 			GI->levelsPlayed.Add(ScenarioName::AFRIEND);
-			GI->SaveGame();
 			if (GI->levelsPlayed.Contains(ScenarioName::STASH)) {
+				GI->currentLevel = ScenarioName::MOVEALONG;
+				GI->SaveGame();
 				UGameplayStatics::OpenLevel(this, "MoveAlong", true);
 			}
 			else {
+				GI->currentLevel = ScenarioName::STASH;
+				GI->SaveGame();
 				UGameplayStatics::OpenLevel(this, "Stash", true);
 			}
 		}
 		else if (GetWorld()->GetName() == "Stash") {
 			GI->levelsPlayed.Add(ScenarioName::STASH);
 			GI->SaveGame();
-			if (GI->levelsPlayed.Contains(ScenarioName::AFRIEND)) {
-				UGameplayStatics::OpenLevel(this, "MoveAlong", true);
+			if (exitNumber > 0 && !GI->levelsPlayed.Contains(ScenarioName::AFRIEND)) {
+				GI->currentLevel = ScenarioName::AFRIEND;
+				GI->SaveGame();
+				UGameplayStatics::OpenLevel(this, "AFriendWillBleed", true); //s2
 			}
 			else {
-				if (exitNumber > 0) {
-					UGameplayStatics::OpenLevel(this, "AFriendWillBleed", true); //s2
-				}
-				else {
-					UGameplayStatics::OpenLevel(this, "MoveAlong", true); //s1
-				}
+				GI->currentLevel = ScenarioName::MOVEALONG;
+				GI->SaveGame();
+				UGameplayStatics::OpenLevel(this, "MoveAlong", true); //s1 o paso por AFriend
 			}
 		}
 		else if (GetWorld()->GetName() == "MoveAlong") {

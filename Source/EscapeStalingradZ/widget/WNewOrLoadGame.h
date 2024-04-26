@@ -52,10 +52,19 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UImage* ImageSlot3;
 
+	//confirmacion cargar/empezar partida
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+		class UTextBlock* confirmationText;
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+		class UButton* ButtonConfirm;
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+		class UButton* ButtonBack;
+
 	UPROPERTY(BlueprintReadOnly) bool isNewGame = true;
 
 	UPROPERTY(VisibleAnywhere) class UGI* GI;
-	UPROPERTY(VisibleAnywhere) TArray<class USaveGame*> savedGames;
+	UPROPERTY(VisibleAnywhere) TMap<FString,class USaveGameEscape*> savedGames;
+	UPROPERTY(VisibleAnywhere) FName levelToLoad;
 
 	UPROPERTY(VisibleAnywhere, Category = package)
 		TArray<class UPackage*> packages;
@@ -64,8 +73,16 @@ public:
 	UFUNCTION() void OnClickButtonSlot1();
 	UFUNCTION() void OnClickButtonSlot2();
 	UFUNCTION() void OnClickButtonSlot3();
+	UFUNCTION() void OnClickButtonGivenSlot(FString slotName);
+	UFUNCTION() void OnClickButtonConfirm();
+	UFUNCTION() void OnClickButtonBack();
+	UFUNCTION() FText GetCurrentLevelText(ScenarioName scenario);
 	UFUNCTION() void SetVisibilityTextAndImages();
 	UFUNCTION() void PrecacheGivenPackage(const FString& name);
+	UFUNCTION() void SetVisibilityTextAndImagesByGivenParameters(FString slotName, UTextBlock* newGame, UImage* imagen, UTextBlock* currentLevel, UHorizontalBox* box);
+	UFUNCTION() void SetEnableButtonsInLoadGame(FString slotName, UButton* button);
+	UFUNCTION() void PrecacheMapsInLoad();
+	UFUNCTION() FString GetRouteGivenScenarioName(ScenarioName scenario);
+	UFUNCTION() void SetLevelToLoadGivenScenario(ScenarioName scenario);
 
-	
 };

@@ -39,5 +39,6 @@ public:
 	UFUNCTION() void OnClickButtonSettings();
 	UFUNCTION() void OnClickButtonRules();
 	UFUNCTION() void OnClickButtonExit();
+	UFUNCTION() void EnableLoadButton();
 
 };
