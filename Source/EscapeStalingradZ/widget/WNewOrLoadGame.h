@@ -59,6 +59,8 @@ public:
 		class UButton* ButtonConfirm;
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 		class UButton* ButtonBack;
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+		class UBorder* borderConfirm;
 
 	UPROPERTY(BlueprintReadOnly) bool isNewGame = true;
 

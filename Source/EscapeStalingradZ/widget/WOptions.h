@@ -28,7 +28,14 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class AUserHUD* hud;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Options")
+		TSubclassOf<class UWOptionsMenu> OptionMenuWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UWOptionsMenu* OptionMenuWidget;
+
 
 	UFUNCTION() void OnClickInventory();
+	UFUNCTION() void OnClickOptions();
 	
 };
