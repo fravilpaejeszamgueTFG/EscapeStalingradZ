@@ -375,7 +375,7 @@ void APlayerCharacter::FriendlyFire(FIntPoint tileZombie)
 			if (chara != nullptr) {
 				AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, chara->GetActorLocation(), FRotator(0, 0, 0));
 				if (text != nullptr) {
-					text->SetAnimationText(FText::FromString("Friendly Fire"));
+					text->SetAnimationText(NSLOCTEXT("combat", "FriendyFire", "Friendly Fire"));
 				}
 				chara->health--;
 				break;

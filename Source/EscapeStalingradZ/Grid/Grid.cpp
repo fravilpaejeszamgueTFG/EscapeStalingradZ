@@ -851,7 +851,7 @@ void AGrid::DamageIfCharacterInPoisonTile(APlayerCharacter* character)
 		if (tile != FIntPoint(-1,-1) && gridTiles[tile].states.Contains(TileState::poisoned)) {
 			AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, pos, FRotator(0, 0, 0));
 			if (text != nullptr) {
-				text->SetAnimationText(FText::FromString("Poisoned"));
+				text->SetAnimationText(NSLOCTEXT("combat", "Poisoned", "Poisoned"));
 			}
 			character->health--;
 		}

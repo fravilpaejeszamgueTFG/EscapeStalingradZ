@@ -66,7 +66,7 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 	if (die >= stunNumber) {
 		if (die >= stunNumber + 3) {
 			if (text != nullptr) {
-				text->SetAnimationText(FText::FromString("Hit"));
+				text->SetAnimationText(NSLOCTEXT("combat", "Hit", "Hit"));
 			}
 			health--;
 			if (health <= 0) {
@@ -87,13 +87,13 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 			if (typeOfZombie == ZombieType::Armoured) {
 				isStunned = false;
 				if (text != nullptr) {
-					text->SetAnimationText(FText::FromString("Miss"));
+					text->SetAnimationText(NSLOCTEXT("combat", "Miss", "Miss"));
 				}
 			}
 			else if (typeOfZombie == ZombieType::Kugelfisch) {
 				ZombieKill(pos);
 				if (text != nullptr) {
-					text->SetAnimationText(FText::FromString("Pop")); //meter sonido
+					text->SetAnimationText(NSLOCTEXT("combat", "Pop", "Pop")); //meter sonido
 				}
 				FIntPoint index = grid->GetTileIndexFromLocation(pos);
 				grid->SetPoisonedTilesGivenCenterTile(index);
@@ -101,7 +101,7 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 			} 
 			else {
 				if (text != nullptr) {
-					text->SetAnimationText(FText::FromString("Stun"));
+					text->SetAnimationText(NSLOCTEXT("combat", "Stun", "Stun"));
 				}
 				isStunned = true;
 				CheckIfAreCharactersInNeighborWhenStunOrKillZombie(GetActorLocation());
@@ -110,7 +110,7 @@ bool AZombie::ZombieHit(int die, int stunNumber)
 	}
 	else {
 		if (text != nullptr) {
-			text->SetAnimationText(FText::FromString("Miss"));
+			text->SetAnimationText(NSLOCTEXT("combat", "Miss", "Miss"));
 		}
 	}
 	return false;
