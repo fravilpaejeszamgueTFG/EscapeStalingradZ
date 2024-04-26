@@ -112,10 +112,12 @@ void APlayerC::ChangeLevel(int exitNumber)
 	if (GI != nullptr) {
 		if (GetWorld()->GetName() == "FUBAR") {
 			GI->levelsPlayed.Add(ScenarioName::FUBAR);
+			GI->SaveGame();
 			UGameplayStatics::OpenLevel(this, "WakeUp", true);
 		}
 		else if (GetWorld()->GetName() == "WakeUp") {
 			GI->levelsPlayed.Add(ScenarioName::WAKEUP);
+			GI->SaveGame();
 			if (exitNumber > 0) {
 				UGameplayStatics::OpenLevel(this, "Stash", true); //s2
 			}
@@ -125,6 +127,7 @@ void APlayerC::ChangeLevel(int exitNumber)
 		}
 		else if (GetWorld()->GetName() == "AFriendWillBleed") {
 			GI->levelsPlayed.Add(ScenarioName::AFRIEND);
+			GI->SaveGame();
 			if (GI->levelsPlayed.Contains(ScenarioName::STASH)) {
 				UGameplayStatics::OpenLevel(this, "MoveAlong", true);
 			}
@@ -134,6 +137,7 @@ void APlayerC::ChangeLevel(int exitNumber)
 		}
 		else if (GetWorld()->GetName() == "Stash") {
 			GI->levelsPlayed.Add(ScenarioName::STASH);
+			GI->SaveGame();
 			if (GI->levelsPlayed.Contains(ScenarioName::AFRIEND)) {
 				UGameplayStatics::OpenLevel(this, "MoveAlong", true);
 			}
@@ -148,6 +152,7 @@ void APlayerC::ChangeLevel(int exitNumber)
 		}
 		else if (GetWorld()->GetName() == "MoveAlong") {
 			GI->levelsPlayed.Add(ScenarioName::MOVEALONG);
+			GI->SaveGame();
 		}
 	}
 }

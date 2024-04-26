@@ -72,6 +72,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere) TMap<int, FPlayerInfoSaved> playersInfo;
 
-	UPROPERTY(VisibleAnywhere) FName currentSlot;
+	UPROPERTY(VisibleAnywhere) FString currentSlot;
+
+	UFUNCTION(BlueprintCallable) void SaveGame();  //desde el slot guardado
+	UFUNCTION(BlueprintCallable) void LoadGame();
 	
 };

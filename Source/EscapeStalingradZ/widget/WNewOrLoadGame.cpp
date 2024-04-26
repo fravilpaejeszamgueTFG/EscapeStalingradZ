@@ -28,7 +28,8 @@ void UWNewOrLoadGame::OnClickButtonSlot1()
 	if (GI != nullptr) {
 		if (isNewGame) {
 			//TO-DO comprobar que no haya guardado en ese slot, si lo hay boton de confirmacion para sobreescribir
-			GI->currentSlot = FName("Slot1");
+			GI->currentSlot = FString("Slot1");
+			GI->LoadGame();
 			UGameplayStatics::OpenLevel(this, "FUBAR", true);
 		}
 	}
@@ -38,7 +39,7 @@ void UWNewOrLoadGame::OnClickButtonSlot2()
 {
 	if (GI != nullptr) {
 		if (isNewGame) {
-			GI->currentSlot = FName("Slot2");
+			GI->currentSlot = FString("Slot2");
 			UGameplayStatics::OpenLevel(this, "FUBAR", true);
 		}
 	}
@@ -48,7 +49,7 @@ void UWNewOrLoadGame::OnClickButtonSlot3()
 {
 	if (GI != nullptr) {
 		if (isNewGame) {
-			GI->currentSlot = FName("Slot3");
+			GI->currentSlot = FString("Slot3");
 			UGameplayStatics::OpenLevel(this, "FUBAR", true);
 		}
 	}
