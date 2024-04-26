@@ -20,6 +20,9 @@ void UWMainMenu::NativeConstruct()
 	ButtonSettings->OnClicked.AddDynamic(this, &UWMainMenu::OnClickButtonSettings);
 	ButtonRules->OnClicked.AddDynamic(this, &UWMainMenu::OnClickButtonRules);
 	ButtonExit->OnClicked.AddDynamic(this, &UWMainMenu::OnClickButtonExit);
+
+	ButtonLoadGame->SetIsEnabled(false);
+	EnableLoadButton();
 }
 
 void UWMainMenu::OnClickButtonNewGame()
@@ -29,7 +32,7 @@ void UWMainMenu::OnClickButtonNewGame()
 		if (newGame != nullptr) {
 			newGame->isNewGame = true;
 			newGame->SetVisibilityTextAndImages();
-			newGame->PrecacheGivenPackage("/Game/Maps/FUBAR"); //en el load pasar a funcion
+			newGame->PrecacheGivenPackage("/Game/Maps/FUBAR");
 			newGame->AddToViewport();
 		}
 	}
@@ -37,7 +40,14 @@ void UWMainMenu::OnClickButtonNewGame()
 
 void UWMainMenu::OnClickButtonLoadGame()
 {
-	
+	if (NewOrLoadGameWidgetClass) {
+		UWNewOrLoadGame* newGame = CreateWidget<UWNewOrLoadGame>(GetWorld(), NewOrLoadGameWidgetClass);
+		if (newGame != nullptr) {
+			newGame->isNewGame = false;
+			newGame->SetVisibilityTextAndImages();
+			newGame->AddToViewport();
+		}
+	}
 }
 
 void UWMainMenu::OnClickButtonSettings()
@@ -54,4 +64,15 @@ void UWMainMenu::OnClickButtonExit()
 {
 	UKismetSystemLibrary::QuitGame(GetWorld(),
 		UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Type::Quit, false);
+}
+
+void UWMainMenu::EnableLoadButton()
+{
+	for (int i = 1; i < 4; i++) {
+		FString slotName = FString("Slot").Append(FString::FromInt(i));
+		if (UGameplayStatics::DoesSaveGameExist(slotName, 0)) {
+			ButtonLoadGame->SetIsEnabled(true);
+			break;
+		}
+	}
 }
