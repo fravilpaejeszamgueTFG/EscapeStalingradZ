@@ -17,6 +17,7 @@
 #include "EscapeStalingradZ/player/actions/ActionSelectTileToMove.h"
 #include "EscapeStalingradZ/widget/WObjectives.h"
 #include "EscapeStalingradZ/misc/StunIcon.h"
+#include "EscapeStalingradZ/instances/GI.h"
 
 // Sets default values
 ATurn::ATurn()
@@ -41,6 +42,14 @@ void ATurn::BeginPlay()
 
 	hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	hud->turn = this;
+
+	UGI* GI = Cast<UGI>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI != nullptr) {
+		int numDeathCharacters = GI->numberOfDeathCharacters;
+		for (int i = 0; i < numDeathCharacters; i++) {
+			SpawnInitialZombieCharacters();
+		}
+	}
 
 	GetWorldTimerManager().SetTimer(WaitTimer, this, &ATurn::ActivateCollision, 0.6, false);
 }
@@ -79,18 +88,19 @@ void ATurn::SetNextCharacter()
 	}
 	else {
 		if (isFubar && roundNumber >= 6) {
-			UE_LOG(LogTemp, Warning, TEXT("Fin de partida"));
-		}
-		//Aquí iria un else cuando se haga el fin de la partida
-		hud->HidePlayerInfo();
-		charactersToStartTurn = characters;
-		endTurnHuman = true;
-		if (endTurnZombie) {
-			EndTurn();
+			hud->EndGame();
 		}
 		else {
-			zombiesToStartTurn = zombies;
-			SetNextZombie();
+			hud->HidePlayerInfo();
+			charactersToStartTurn = characters;
+			endTurnHuman = true;
+			if (endTurnZombie) {
+				EndTurn();
+			}
+			else {
+				zombiesToStartTurn = zombies;
+				SetNextZombie();
+			}
 		}	
 	}
 }
@@ -153,7 +163,6 @@ void ATurn::SetNextZombie()
 {
 	if (zombiesToStartTurn.Num() > 0) {
 		selectedZombie = zombiesToStartTurn[0];
-		UE_LOG(LogTemp, Warning, TEXT("Turno zombie empieza"));
 		selectedZombie->characters = characters;
 		selectedZombie->ZombieActions();
 	}
@@ -213,37 +222,12 @@ void ATurn::EndZombieTurn()
 	else {
 		charactersToStartTurn = characters;
 		SetNextCharacter();
-		UE_LOG(LogTemp, Warning, TEXT("Empieza turno humano"));
 	}
 }
 
 void ATurn::StartTurn()
 {
-	if (isFubar) {
-		if (false) { //TO-DO si activa tutorial
-			if (roundNumber == 0) {
-				//TO-DO Hacer tutorial primera ronda (movimientos basicos)
-			}
-			else if (roundNumber == 1) {
-				//TO-DO Hacer tutorial segunda ronda (buscar objeto)
-			}
-			else if (roundNumber == 2) {
-				//TO-DO Hacer tutorial tercera ronda (acciones (rotar,abrir/cerrar puerta))
-			}
-			else if (roundNumber == 3) {
-				//TO-DO Hacer tutorial en cuarta ronda (iniciativa y combate)
-			}
-			else if (roundNumber > 3) {
-				Initiative();
-			}
-		}
-		else {
-			Initiative();
-		}
-	}
-	else {
-		Initiative();
-	}
+	Initiative();
 }
 
 void ATurn::ZombiesStartTurn()
@@ -268,7 +252,7 @@ void ATurn::Initiative()
 	}
 	if (alphaOnBoard) {
 		for (AZombie* z : zombies) {
-			if (z->typeOfZombie == ZombieType::Beta) {
+			if (z->typeOfZombie == ZombieType::Beta || z->typeOfZombie == ZombieType::BetaCharacter) {
 				z->maxmp = 2;
 				z->mp = 2;
 			}
@@ -401,7 +385,7 @@ void ATurn::ResetZombiesWhenAllAreDead()
 void ATurn::SetBetaMPWhenAlphaOnBoardGetsHit()
 {
 	for (AZombie* z : zombies) {
-		if (z->typeOfZombie == ZombieType::Beta) {
+		if (z->typeOfZombie == ZombieType::Beta || z->typeOfZombie == ZombieType::BetaCharacter) {
 			z->maxmp = 1;
 			z->mp = 1;
 		}
@@ -412,7 +396,6 @@ void ATurn::SpawnZombieInCharacterTile(AZombie* newZombie, FIntPoint tile, bool 
 {
 	APlayerCharacter* characterInTile = Cast<APlayerCharacter>(grid->gridTiles[tile].actor);
 	if (characterInTile != nullptr) {
-		characterInTile->health--; //pasar a una funcion en character que compruebe si muere
 		if (characterInTile->inDirectContact) {
 			FIntPoint t = grid->GetTileIndexFromLocation(characterInTile->GetActorLocation());
 			TArray<FIntPoint> neighbors = grid->GetTileNeighbors(t);
@@ -457,6 +440,15 @@ void ATurn::SpawnZombieInTile(FIntPoint tile)
 		else {
 			SpawnZombieInCharacterTile(newZombie, tile, true);
 		}
+	}
+}
+
+void ATurn::SpawnInitialZombieCharacters()
+{
+	AZombie* zombieCharacter = GetWorld()->SpawnActor<AZombie>(zombieClass, GetActorLocation(), FRotator(0, -90, 0));
+	if (zombieCharacter != nullptr) {
+		zombieCharacter->typeOfZombie = ZombieType::BetaCharacter;
+		zombieCharacter->SetHealthAndMPPropertiesByZombie();
 	}
 }
 

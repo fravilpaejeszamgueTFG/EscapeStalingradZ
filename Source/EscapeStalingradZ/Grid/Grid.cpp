@@ -850,10 +850,14 @@ void AGrid::DamageIfCharacterInPoisonTile(APlayerCharacter* character)
 		FIntPoint tile = GetTileIndexFromLocation(pos);
 		if (tile != FIntPoint(-1,-1) && gridTiles[tile].states.Contains(TileState::poisoned)) {
 			AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, pos, FRotator(0, 0, 0));
-			if (text != nullptr) {
-				text->SetAnimationText(NSLOCTEXT("combat", "Poisoned", "Poisoned"));
-			}
 			character->health--;
+			if (text != nullptr) {
+				FString texto = NSLOCTEXT("combat", "Poisoned", "Poisoned, Health").ToString() + "=" + FString::FromInt(character->health);
+				text->SetAnimationText(FText::FromString(texto));
+			}
+			if (character->health <= 0) {
+				character->DeathCharacter();
+			}
 		}
 	}
 }

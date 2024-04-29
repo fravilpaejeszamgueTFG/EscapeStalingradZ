@@ -96,6 +96,7 @@ enum ZombieType
 	Armoured     UMETA(DisplayName = "Armoured"),
 	Kugelfisch   UMETA(DisplayName = "Kugelfisch"),
 	Alpha     UMETA(DisplayName = "Alpha"),
+	BetaCharacter     UMETA(DisplayName = "BetaCharacter"),
 
 };
 

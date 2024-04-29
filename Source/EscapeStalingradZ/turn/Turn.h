@@ -62,6 +62,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category = turn)
 		TArray<FIntPoint> initialSpawnZombiesTiles; //casillas donde deben spawnear zombies al empezar el tablero.
 
+	UPROPERTY(EditDefaultsOnly, Category = "Zombie")
+		TSubclassOf<class AZombie> zombieClass;
+
 	UPROPERTY(VisibleAnywhere)
 		class UWSelectCharacterTurn* turnWidget;
 
@@ -134,5 +137,6 @@ public:
 	UFUNCTION() void SetBetaMPWhenAlphaOnBoardGetsHit();
 	UFUNCTION() void SpawnZombieInCharacterTile(class AZombie* newZombie, FIntPoint tile, bool inSearch);
 	UFUNCTION() void SpawnZombieInTile(FIntPoint tile);
+	UFUNCTION() void SpawnInitialZombieCharacters();
 
 };

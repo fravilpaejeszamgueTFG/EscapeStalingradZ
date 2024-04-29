@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "WBetweenScenarios.h"
 #include "WExchangeEquipment.h"
+#include "WDeathScreen.h"
 
 AUserHUD::AUserHUD() 
 {
@@ -200,6 +201,17 @@ void AUserHUD::CreateOrSetExchangeEquipment(APlayerCharacter* character1, APlaye
 				ExchangeEquipmentWidget->SetVisibility(ESlateVisibility::Visible);
 				ExchangeEquipmentWidget->AddToViewport();
 			}
+		}
+	}
+}
+
+void AUserHUD::EndGame()
+{
+	if (DeathScreenWidgetClass) {
+		UWDeathScreen* deathWidget = CreateWidget<UWDeathScreen>(GetWorld(), DeathScreenWidgetClass);
+		if (deathWidget != nullptr) {
+			deathWidget->AddToViewport();
+			deathWidget->StartAnimation();
 		}
 	}
 }

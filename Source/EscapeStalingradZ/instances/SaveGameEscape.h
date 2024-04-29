@@ -16,9 +16,11 @@ class ESCAPESTALINGRADZ_API USaveGameEscape : public USaveGame
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(VisibleAnywhere) TArray<TEnumAsByte<ScenarioName>> levelsPlayed;
+	UPROPERTY() TArray<TEnumAsByte<ScenarioName>> levelsPlayed;
 
-	UPROPERTY(VisibleAnywhere) TEnumAsByte<ScenarioName> currentLevel;
+	UPROPERTY() TEnumAsByte<ScenarioName> currentLevel;
 
-	UPROPERTY(VisibleAnywhere) TMap<int, FPlayerInfoSaved> playersInfo;
+	UPROPERTY() TMap<int, FPlayerInfoSaved> playersInfo;
+
+	UPROPERTY() int numberOfDeathCharacters = 0;
 };

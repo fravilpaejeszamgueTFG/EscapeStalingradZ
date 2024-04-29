@@ -10,6 +10,7 @@
 #include "EscapeStalingradZ/widget/WZombieInfo.h"
 #include "EscapeStalingradZ/misc/AnimatedTextAttack.h"
 #include "EscapeStalingradZ/misc/StunIcon.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AZombie::AZombie()
@@ -369,6 +370,12 @@ void AZombie::ZombieKill(FVector pos)
 	if (typeOfZombie == ZombieType::Alpha) {
 		AActor* oIcon = GetWorld()->SpawnActor<AActor>(searchOClass, pos, FRotator(0, 0, 0));
 		grid->gridTiles[index].types.Add(TileType::Search);
+	}
+	else if (typeOfZombie == ZombieType::BetaCharacter) {
+		UGI* GI = Cast<UGI>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (GI != nullptr) {
+			GI->numberOfDeathCharacters--;
+		}
 	}
 }
 

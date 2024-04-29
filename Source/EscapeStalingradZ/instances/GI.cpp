@@ -25,6 +25,7 @@ void UGI::SaveGame()
 		saveGameInstance->levelsPlayed = levelsPlayed;
 		saveGameInstance->currentLevel = currentLevel;
 		saveGameInstance->playersInfo = playersInfo;
+		saveGameInstance->numberOfDeathCharacters = numberOfDeathCharacters;
 		UGameplayStatics::SaveGameToSlot(saveGameInstance, currentSlot, 0);
 	}
 }
@@ -37,6 +38,26 @@ void UGI::LoadGame()
 			levelsPlayed = saveGameInstance->levelsPlayed;
 			currentLevel = saveGameInstance->currentLevel;
 			playersInfo = saveGameInstance->playersInfo;
+			numberOfDeathCharacters = saveGameInstance->numberOfDeathCharacters;
 		}
+	}
+}
+
+void UGI::RestartCurrentLevel()
+{
+	if (currentLevel == ScenarioName::FUBAR) {
+		UGameplayStatics::OpenLevel(this, "FUBAR", true);
+	}
+	else if (currentLevel == ScenarioName::AFRIEND) {
+		UGameplayStatics::OpenLevel(this, "AFriendWillBleed", true);
+	}
+	else if (currentLevel == ScenarioName::STASH) {
+		UGameplayStatics::OpenLevel(this, "Stash", true);
+	}
+	else if (currentLevel == ScenarioName::WAKEUP) {
+		UGameplayStatics::OpenLevel(this, "WakeUp", true);
+	}
+	else {
+		UGameplayStatics::OpenLevel(this, "MoveAlong", true);
 	}
 }

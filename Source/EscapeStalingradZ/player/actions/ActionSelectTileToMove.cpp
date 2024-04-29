@@ -8,6 +8,7 @@
 #include "EscapeStalingradZ/player/PlayerActions.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
 #include "EscapeStalingradZ/turn/Turn.h"
+#include "EscapeStalingradZ/widget/UserHUD.h"
 
 void UActionSelectTileToMove::Execute(AGrid* grid, APlayerCharacter* character)
 {
@@ -15,7 +16,10 @@ void UActionSelectTileToMove::Execute(AGrid* grid, APlayerCharacter* character)
 		FIntPoint indice = grid->GetTileIndexFromLocation(character->GetActorLocation());
 		TArray<FIntPoint> indices = grid->GetTileNeighborsThatCanMoveInto(indice);
 		if (indices.Num() == 0) {
-			UE_LOG(LogTemp, Warning, TEXT("Fin partida, personaje muere"));
+			AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			if (hud != nullptr) {
+				hud->EndGame();
+			}
 		}
 		for (FIntPoint l : indices) {
 			grid->AddTileState(l, TileState::isReachable);
@@ -41,9 +45,9 @@ void UActionSelectTileToMove::Action(AGrid* grid, FIntPoint tile, FIntPoint dest
 					if (inSearch) {
 						grid->RemoveTileState(tile, TileState::Selected);
 						grid->AddTileState(destinyTile, TileState::Selected);
-
 					}
 					turn->SpawnZombieAfterMoveCharacter(zombie, inSearch);
+					character->ReceiveDamage();
 				}
 				else {
 					APlayerC* player = Cast<APlayerC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));

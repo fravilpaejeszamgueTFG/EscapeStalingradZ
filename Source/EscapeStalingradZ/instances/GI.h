@@ -74,7 +74,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere) FString currentSlot;
 
+	UPROPERTY(VisibleAnywhere) int numberOfDeathCharacters = 0;
+
 	UFUNCTION(BlueprintCallable) void SaveGame();  //desde el slot guardado
 	UFUNCTION(BlueprintCallable) void LoadGame();
+	UFUNCTION() void RestartCurrentLevel();
 	
 };
