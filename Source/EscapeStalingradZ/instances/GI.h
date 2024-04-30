@@ -55,6 +55,22 @@ public:
 	}
 };
 
+USTRUCT(BlueprintType)
+struct FSettings
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Language)
+		int languageIndex;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = frames)
+		int  fpsIndex = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = resolucion)
+		int  resolutionIndex = 2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = sonido)
+		float volume = 1.0;
+};
+
 /**
  * 
  */
@@ -76,8 +92,22 @@ public:
 
 	UPROPERTY(VisibleAnywhere) int numberOfDeathCharacters = 0;
 
+	UPROPERTY(VisibleAnywhere) FSettings currentSettings;
+
+	UPROPERTY(VisibleAnywhere) FString settingsSlotName = "Settings";
+
+	UPROPERTY() TArray<FString> languages = { TEXT("en"), TEXT("es") };
+	UPROPERTY() TArray<int> commandsFPS = { 30, 60, 144, 1000 } ;
+	UPROPERTY() TArray<int> commandsResolution = { 70, 85, 100 };
+
 	UFUNCTION(BlueprintCallable) void SaveGame();  //desde el slot guardado
 	UFUNCTION(BlueprintCallable) void LoadGame();
+	UFUNCTION(BlueprintCallable) void SaveSettings();
+	UFUNCTION(BlueprintCallable) void LoadSettings();
+	UFUNCTION() void ApplyLanguage();
+	UFUNCTION() void ApplyFPS();
+	UFUNCTION() void ApplyResolution();
+	UFUNCTION() void ApplyVolume();
 	UFUNCTION() void RestartCurrentLevel();
 	
 };

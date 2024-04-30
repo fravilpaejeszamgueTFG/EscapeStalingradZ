@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/Button.h"
 #include "EscapeStalingradZ/instances/GI.h"
-
+#include "UserHUD.h"
 
 UWOptionsMenu::UWOptionsMenu(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -37,7 +37,10 @@ void UWOptionsMenu::OnClickRestartLevel()
 
 void UWOptionsMenu::OnClickSettings()
 {
-	
+	AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if (hud != nullptr) {
+		hud->CreateOrSetSelectSettingsWidget();
+	}
 }
 
 void UWOptionsMenu::OnClickMainMenu()

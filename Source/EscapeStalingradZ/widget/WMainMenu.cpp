@@ -6,6 +6,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "WNewOrLoadGame.h"
+#include "UserHUD.h"
 
 UWMainMenu::UWMainMenu(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -52,7 +53,10 @@ void UWMainMenu::OnClickButtonLoadGame()
 
 void UWMainMenu::OnClickButtonSettings()
 {
-	
+	AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if (hud != nullptr) {
+		hud->CreateOrSetSelectSettingsWidget();
+	}
 }
 
 void UWMainMenu::OnClickButtonRules()

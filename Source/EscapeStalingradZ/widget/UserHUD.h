@@ -62,6 +62,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Death")
 		TSubclassOf<class UWDeathScreen> DeathScreenWidgetClass;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UWSettings* SettingsWidget;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		TSubclassOf<class UWSettings> SettingsWidgetClass;
+
 	UPROPERTY(VisibleAnywhere)
 		class ATurn* turn;
 
@@ -94,4 +100,6 @@ public:
 		void CreateOrSetExchangeEquipment(class APlayerCharacter* character1, class APlayerCharacter* character2);
 	UFUNCTION()
 		void EndGame();
+	UFUNCTION()
+		void CreateOrSetSelectSettingsWidget();
 };
