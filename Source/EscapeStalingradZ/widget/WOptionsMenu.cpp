@@ -31,22 +31,7 @@ void UWOptionsMenu::OnClickRestartLevel()
 {
 	UGI* GI = Cast<UGI>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
-		ScenarioName scenario = GI->currentLevel;
-		if (scenario == ScenarioName::FUBAR) {
-			UGameplayStatics::OpenLevel(this, "FUBAR", true);
-		}
-		else if (scenario == ScenarioName::AFRIEND) {
-			UGameplayStatics::OpenLevel(this, "AFriendWillBleed", true);
-		}
-		else if (scenario == ScenarioName::STASH) {
-			UGameplayStatics::OpenLevel(this, "Stash", true);
-		}
-		else if (scenario == ScenarioName::WAKEUP) {
-			UGameplayStatics::OpenLevel(this, "WakeUp", true);
-		}
-		else {
-			UGameplayStatics::OpenLevel(this, "MoveAlong", true);
-		}
+		GI->RestartCurrentLevel();
 	}
 }
 

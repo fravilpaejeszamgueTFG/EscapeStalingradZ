@@ -59,6 +59,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UWExchangeEquipment* ExchangeEquipmentWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Death")
+		TSubclassOf<class UWDeathScreen> DeathScreenWidgetClass;
 
 	UPROPERTY(VisibleAnywhere)
 		class ATurn* turn;
@@ -90,4 +92,6 @@ public:
 		void SetSecondaryCharacterToBetweenScenarios(class APlayerCharacter* chara);
 	UFUNCTION()
 		void CreateOrSetExchangeEquipment(class APlayerCharacter* character1, class APlayerCharacter* character2);
+	UFUNCTION()
+		void EndGame();
 };

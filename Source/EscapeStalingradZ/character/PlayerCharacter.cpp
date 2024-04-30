@@ -329,6 +329,9 @@ int APlayerCharacter::GetNumberOfHitModifiersAttack(AZombie* zombie)
 	if (exp >= 10 && useReadyWeapon && readyWeapon->weaponName == PreferredWeapon) {
 		res--;
 	}
+	if (zombie->typeOfZombie == ZombieType::BetaCharacter) {
+		res++;
+	}
 	return res;
 }
 
@@ -373,11 +376,15 @@ void APlayerCharacter::FriendlyFire(FIntPoint tileZombie)
 		for (FIntPoint index : LoFs.Find(tileZombie)->tilesLoF) {
 			APlayerCharacter* chara = Cast<APlayerCharacter>(grid->gridTiles[index].actor);
 			if (chara != nullptr) {
+				chara->health--;
 				AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, chara->GetActorLocation(), FRotator(0, 0, 0));
 				if (text != nullptr) {
-					text->SetAnimationText(NSLOCTEXT("combat", "FriendyFire", "Friendly Fire"));
+					FString texto = NSLOCTEXT("combat", "FriendyFire", "Friendly Fire, Health").ToString() + "=" + FString::FromInt(chara->health);
+					text->SetAnimationText(FText::FromString(texto));
 				}
-				chara->health--;
+				if (chara->health <= 0) {
+					chara->DeathCharacter();
+				}
 				break;
 			}
 		}
@@ -487,9 +494,6 @@ void APlayerCharacter::ZombieLock(AZombie* zombie)
 {
 	inDirectContact = true;
 	isLocked = true;
-	if (zombie->mp > 0) {
-		health--;
-	}
 	typeOfCovering = CoveringType::NONE;
 	zombie->characterInContact = this;
 	if (stunIcon == nullptr) {
@@ -503,6 +507,12 @@ void APlayerCharacter::ZombieLock(AZombie* zombie)
 	}
 	FRotator rotacion = GetRotationDirectionToZombie(zombie);
 	SetActorRotation(rotacion);
+	if (zombie->mp > 0) {
+		if (health <= 1) {
+			zombie->characterInContact = nullptr;
+		}
+		ReceiveDamage();
+	}
 }
 
 void APlayerCharacter::SearchAction()
@@ -612,6 +622,50 @@ void APlayerCharacter::ChangePrimaryAndSecondaryWeaponAfterExchange()
 		readySecondaryWeapon->SetPropiertiesByName(EWeapon::None);
 		if (!useReadyWeapon) {
 			useReadyWeapon = true;
+		}
+	}
+}
+
+void APlayerCharacter::ReceiveDamage()
+{
+	health--;
+	AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, GetActorLocation(), FRotator(0, 0, 0));
+	if (text != nullptr) {
+		FString texto = NSLOCTEXT("combat", "Health", "Health").ToString() + "=" + FString::FromInt(health);
+		text->SetAnimationText(FText::FromString(texto));
+	}
+	if (health <= 0) {
+		DeathCharacter();
+	}
+}
+
+void APlayerCharacter::DeathCharacter()
+{
+	AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if (hud != nullptr && hud->turn != nullptr) {
+		ATurn* turn = hud->turn;
+		if (turn->characters.Num() > 1) {
+			UGI* GI = Cast<UGI>(UGameplayStatics::GetGameInstance(GetWorld()));
+			if (GI != nullptr) {
+				FIntPoint tile = grid->GetTileIndexFromLocation(GetActorLocation());
+				turn->characters.Remove(this);
+				turn->charactersToStartTurn.Remove(this);
+				GI->numberOfDeathCharacters++;
+				AZombie* zombieCharacter = GetWorld()->SpawnActor<AZombie>(zombieClass, GetActorLocation(), FRotator(0, -90, 0));
+				if (zombieCharacter != nullptr) {
+					zombieCharacter->typeOfZombie = ZombieType::BetaCharacter;
+					zombieCharacter->SetHealthAndMPPropertiesByZombie();
+					zombieCharacter->turn = turn;
+					turn->zombies.Add(zombieCharacter);
+					turn->DirectContactInSpawnZombie(tile);
+					grid->gridTiles[tile].actor = zombieCharacter;
+				}
+				stunIcon->Destroy();
+				Destroy();
+			}
+		}
+		else {
+			hud->EndGame();
 		}
 	}
 }

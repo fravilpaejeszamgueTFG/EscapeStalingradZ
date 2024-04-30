@@ -111,6 +111,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 		TSubclassOf<class APlayerCharacter> characterClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Zombie")
+		TSubclassOf<class AZombie> zombieClass;
+
 	//Funciones
 	UFUNCTION() void SetPreferredWeaponByCharacter();
 	UFUNCTION() void getArcOfFire();
@@ -159,4 +162,7 @@ public:
 	UFUNCTION() void SpawnNewCharacter(AvailableCharacter chosenCharacter);
 	//cambiar armas después del intercambio de objetos
 	UFUNCTION() void ChangePrimaryAndSecondaryWeaponAfterExchange();
+	//recibir Daño
+	UFUNCTION() void ReceiveDamage();
+	UFUNCTION() void DeathCharacter();
 };
