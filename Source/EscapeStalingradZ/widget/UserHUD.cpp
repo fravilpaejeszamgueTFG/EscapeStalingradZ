@@ -14,6 +14,7 @@
 #include "WBetweenScenarios.h"
 #include "WExchangeEquipment.h"
 #include "WDeathScreen.h"
+#include "WSettings.h"
 
 AUserHUD::AUserHUD() 
 {
@@ -212,6 +213,23 @@ void AUserHUD::EndGame()
 		if (deathWidget != nullptr) {
 			deathWidget->AddToViewport();
 			deathWidget->StartAnimation();
+		}
+	}
+}
+
+void AUserHUD::CreateOrSetSelectSettingsWidget()
+{
+	if (SettingsWidgetClass) {
+		if (SettingsWidget != nullptr) {
+			SettingsWidget->SetVisibility(ESlateVisibility::Visible);
+			SettingsWidget->DisableButtonsInitial();
+		}
+		else {
+			SettingsWidget = CreateWidget<UWSettings>(GetWorld(), SettingsWidgetClass);
+			if (SettingsWidget != nullptr) {
+				SettingsWidget->AddToViewport();
+				SettingsWidget->DisableButtonsInitial();
+			}
 		}
 	}
 }
