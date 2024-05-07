@@ -694,6 +694,17 @@ bool AGrid::CanShootDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right,
 	if (f && r) {
 		return false;
 	}
+	//comprobar que hay pared/puerta en las casillas adyacentes de la casilla origen y destino
+	f = DoorOrWallBetweenTiles(forward, tile);
+	r = DoorOrWallBetweenTiles(right, tile);
+	if (f && r) {
+		return false;
+	}
+	f = DoorOrWallBetweenTiles(forward, backward);
+	r = DoorOrWallBetweenTiles(right, backward);
+	if (f && r) {
+		return false;
+	}
 	return true;
 }
 

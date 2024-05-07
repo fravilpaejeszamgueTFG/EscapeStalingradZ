@@ -13,9 +13,15 @@ void UActionMovementLateral::Execute(AGrid* grid, APlayerCharacter* character)
 	if (grid != nullptr && character != nullptr) {
 		FIntPoint indice = grid->GetTileIndexFromLocation(character->GetActorLocation());
 		int numCasillas = (character->mp)/2;
-		TArray<FIntPoint> indices = grid->GetTilesForwardMovement(indice, character->GetActorRightVector(), numCasillas, character->mp, 2);
-		indices.Append(grid->GetTilesForwardMovement(indice, -(character->GetActorRightVector()), numCasillas, character->mp, 2));
-		for (FIntPoint l : indices) {
+		TArray<FIntPoint> indicesRight = grid->GetTilesForwardMovement(indice, character->GetActorRightVector(), numCasillas, character->mp, 2);
+		TArray<FIntPoint> indicesLeft = grid->GetTilesForwardMovement(indice, -character->GetActorRightVector(), numCasillas, character->mp, 2);
+		for (FIntPoint l : indicesRight) {
+			grid->AddTileState(l, TileState::isReachable);
+			if (grid->HasZombieInNeighbor(l)) {
+				break;
+			}
+		}
+		for (FIntPoint l : indicesLeft) {
 			grid->AddTileState(l, TileState::isReachable);
 			if (grid->HasZombieInNeighbor(l)) {
 				break;
