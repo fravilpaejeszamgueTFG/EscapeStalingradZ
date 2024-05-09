@@ -61,7 +61,7 @@ void UWMainMenu::OnClickButtonSettings()
 
 void UWMainMenu::OnClickButtonRules()
 {
-	
+	FPlatformProcess::LaunchURL(TEXT("https://drive.google.com/drive/folders/1bhMQa8KKhU73msiaPcwUwBzAqTzrmjLt?usp=sharing"), NULL, NULL);
 }
 
 void UWMainMenu::OnClickButtonExit()

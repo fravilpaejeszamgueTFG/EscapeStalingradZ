@@ -71,6 +71,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class ATurn* turn;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Credits")
+		TSubclassOf<class UWCredits> CreditWidgetClass;
+
 	UPROPERTY(VisibleAnywhere, Category = Character) class APlayerCharacter* character;
 	UPROPERTY(VisibleAnywhere, Category = Character) class ACharacterToFree* characterToFree;
 
@@ -102,4 +105,6 @@ public:
 		void EndGame();
 	UFUNCTION()
 		void CreateOrSetSelectSettingsWidget();
+	UFUNCTION()
+		void FinishGame();
 };

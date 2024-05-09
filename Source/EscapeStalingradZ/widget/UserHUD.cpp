@@ -15,6 +15,7 @@
 #include "WExchangeEquipment.h"
 #include "WDeathScreen.h"
 #include "WSettings.h"
+#include "WCredits.h"
 
 AUserHUD::AUserHUD() 
 {
@@ -230,6 +231,16 @@ void AUserHUD::CreateOrSetSelectSettingsWidget()
 				SettingsWidget->AddToViewport();
 				SettingsWidget->DisableButtonsInitial();
 			}
+		}
+	}
+}
+
+void AUserHUD::FinishGame()
+{
+	if (CreditWidgetClass) {
+		UWCredits* creditWidget = CreateWidget<UWCredits>(GetWorld(), CreditWidgetClass);
+		if (creditWidget != nullptr) {
+			creditWidget->AddToViewport();
 		}
 	}
 }

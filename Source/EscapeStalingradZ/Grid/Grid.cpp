@@ -746,19 +746,21 @@ void AGrid::EndIfTileIsExit(FIntPoint index)
 			player->hasPrimaryObjective = true;
 			AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 			if (hud != nullptr && hud->turn != nullptr) {
-				TArray<APlayerCharacter*> characters = hud->turn->characters;
-				bool foundPrimaryPLayer = false;
-				for (int i = 0; i < characters.Num(); i++) {
-					APlayerCharacter* chara = characters[i];
-					if (chara->isPrimaryPlayer) {
-						foundPrimaryPLayer = true;
-						chara->SaveAttributesInPlayerInfoSavedGivenIndex(0);
-					}
-					else if (foundPrimaryPLayer) {
-						chara->SaveAttributesInPlayerInfoSavedGivenIndex(i);
-					}
-					else {
-						chara->SaveAttributesInPlayerInfoSavedGivenIndex(i + 1);
+				if (GetWorld()->GetName() != "MoveAlong") {
+					TArray<APlayerCharacter*> characters = hud->turn->characters;
+					bool foundPrimaryPLayer = false;
+					for (int i = 0; i < characters.Num(); i++) {
+						APlayerCharacter* chara = characters[i];
+						if (chara->isPrimaryPlayer) {
+							foundPrimaryPLayer = true;
+							chara->SaveAttributesInPlayerInfoSavedGivenIndex(0);
+						}
+						else if (foundPrimaryPLayer) {
+							chara->SaveAttributesInPlayerInfoSavedGivenIndex(i);
+						}
+						else {
+							chara->SaveAttributesInPlayerInfoSavedGivenIndex(i + 1);
+						}
 					}
 				}
 			}

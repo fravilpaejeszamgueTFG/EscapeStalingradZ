@@ -9,6 +9,7 @@
 #include "PlayerActions.h"
 #include "UObject/UObjectGlobals.h"
 #include "EscapeStalingradZ/grid/ExitModifier.h"
+#include "EscapeStalingradZ/widget/UserHUD.h"
 
 
 APlayerC::APlayerC()
@@ -154,8 +155,10 @@ void APlayerC::ChangeLevel(int exitNumber)
 			}
 		}
 		else if (GetWorld()->GetName() == "MoveAlong") {
-			GI->levelsPlayed.Add(ScenarioName::MOVEALONG);
-			GI->SaveGame();
+			AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			if (hud != nullptr) {
+				hud->FinishGame();
+			}
 		}
 	}
 }
