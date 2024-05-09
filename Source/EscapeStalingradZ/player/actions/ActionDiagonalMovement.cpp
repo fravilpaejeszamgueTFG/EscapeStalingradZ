@@ -15,9 +15,15 @@ void UActionDiagonalMovement::Execute(AGrid* grid, APlayerCharacter* character)
 		FVector forwardVector = character->GetActorForwardVector();
 		FVector rightVector = character->GetActorRightVector();
 		int numCasillas = (character->mp)/2;
-		TArray<FIntPoint> indices = grid->GetTilesDiagonals(indice, forwardVector, rightVector, numCasillas, character->mp);
-		indices.Append(grid->GetTilesDiagonals(indice, forwardVector,-rightVector, numCasillas, character->mp));
-		for (FIntPoint l : indices) {
+		TArray<FIntPoint> indicesRight = grid->GetTilesDiagonals(indice, forwardVector, rightVector, numCasillas, character->mp);
+		TArray<FIntPoint> indicesLeft = grid->GetTilesDiagonals(indice, forwardVector,-rightVector, numCasillas, character->mp);
+		for (FIntPoint l : indicesRight) {
+			grid->AddTileState(l, TileState::isReachable);
+			if (grid->HasZombieInNeighbor(l)) {
+				break;
+			}
+		}
+		for (FIntPoint l : indicesLeft) {
 			grid->AddTileState(l, TileState::isReachable);
 			if (grid->HasZombieInNeighbor(l)) {
 				break;

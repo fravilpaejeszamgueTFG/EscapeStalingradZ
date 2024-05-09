@@ -694,6 +694,17 @@ bool AGrid::CanShootDiagonal(FIntPoint tile, FIntPoint forward, FIntPoint right,
 	if (f && r) {
 		return false;
 	}
+	//comprobar que hay pared/puerta en las casillas adyacentes de la casilla origen y destino
+	f = DoorOrWallBetweenTiles(forward, tile);
+	r = DoorOrWallBetweenTiles(right, tile);
+	if (f && r) {
+		return false;
+	}
+	f = DoorOrWallBetweenTiles(forward, backward);
+	r = DoorOrWallBetweenTiles(right, backward);
+	if (f && r) {
+		return false;
+	}
 	return true;
 }
 
@@ -735,19 +746,21 @@ void AGrid::EndIfTileIsExit(FIntPoint index)
 			player->hasPrimaryObjective = true;
 			AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 			if (hud != nullptr && hud->turn != nullptr) {
-				TArray<APlayerCharacter*> characters = hud->turn->characters;
-				bool foundPrimaryPLayer = false;
-				for (int i = 0; i < characters.Num(); i++) {
-					APlayerCharacter* chara = characters[i];
-					if (chara->isPrimaryPlayer) {
-						foundPrimaryPLayer = true;
-						chara->SaveAttributesInPlayerInfoSavedGivenIndex(0);
-					}
-					else if (foundPrimaryPLayer) {
-						chara->SaveAttributesInPlayerInfoSavedGivenIndex(i);
-					}
-					else {
-						chara->SaveAttributesInPlayerInfoSavedGivenIndex(i + 1);
+				if (GetWorld()->GetName() != "MoveAlong") {
+					TArray<APlayerCharacter*> characters = hud->turn->characters;
+					bool foundPrimaryPLayer = false;
+					for (int i = 0; i < characters.Num(); i++) {
+						APlayerCharacter* chara = characters[i];
+						if (chara->isPrimaryPlayer) {
+							foundPrimaryPLayer = true;
+							chara->SaveAttributesInPlayerInfoSavedGivenIndex(0);
+						}
+						else if (foundPrimaryPLayer) {
+							chara->SaveAttributesInPlayerInfoSavedGivenIndex(i);
+						}
+						else {
+							chara->SaveAttributesInPlayerInfoSavedGivenIndex(i + 1);
+						}
 					}
 				}
 			}
