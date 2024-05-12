@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "WNewOrLoadGame.h"
 #include "UserHUD.h"
+#include "EscapeStalingradZ/instances/GI.h"
 
 UWMainMenu::UWMainMenu(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -24,6 +25,9 @@ void UWMainMenu::NativeConstruct()
 
 	ButtonLoadGame->SetIsEnabled(false);
 	EnableLoadButton();
+
+	UGI* GI = Cast<UGI>(UGameplayStatics::GetGameInstance(GetWorld()));
+	GI->ResetSaveGameAttributes();
 }
 
 void UWMainMenu::OnClickButtonNewGame()

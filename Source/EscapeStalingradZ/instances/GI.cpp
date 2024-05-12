@@ -130,3 +130,10 @@ void UGI::RestartCurrentLevel()
 		UGameplayStatics::OpenLevel(this, "MoveAlong", true);
 	}
 }
+
+void UGI::ResetSaveGameAttributes()
+{
+	levelsPlayed.Empty();
+	playersInfo.Empty(2);
+	numberOfDeathCharacters = 0;
+}
