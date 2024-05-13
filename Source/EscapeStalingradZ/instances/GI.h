@@ -109,5 +109,6 @@ public:
 	UFUNCTION() void ApplyResolution();
 	UFUNCTION() void ApplyVolume();
 	UFUNCTION() void RestartCurrentLevel();
+	UFUNCTION() void ResetSaveGameAttributes();
 	
 };

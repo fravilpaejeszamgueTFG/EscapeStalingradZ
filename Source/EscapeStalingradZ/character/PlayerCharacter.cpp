@@ -644,7 +644,7 @@ void APlayerCharacter::DeathCharacter()
 	AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if (hud != nullptr && hud->turn != nullptr) {
 		ATurn* turn = hud->turn;
-		if (turn->characters.Num() > 1) {
+		if (turn->characters.Num() > 1 && !isPrimaryPlayer) {
 			UGI* GI = Cast<UGI>(UGameplayStatics::GetGameInstance(GetWorld()));
 			if (GI != nullptr) {
 				FIntPoint tile = grid->GetTileIndexFromLocation(GetActorLocation());

@@ -63,7 +63,6 @@ void UWNewOrLoadGame::OnClickButtonGivenSlot(FString slotName)
 	else {
 		if (savedGames.Contains(slotName)) {
 			confirmationText->SetText(NSLOCTEXT("Loadgame", "LoadSlot", "Load this save slot?"));
-			savedGames[slotName]->currentLevel;
 			SetLevelToLoadGivenScenario(savedGames[slotName]->currentLevel);
 		}
 	}
