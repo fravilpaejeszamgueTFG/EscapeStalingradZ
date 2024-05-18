@@ -826,6 +826,18 @@ void AGrid::SetPoisonedTilesGivenCenterTile(FIntPoint index)
 	}
 }
 
+int AGrid::GetCurrentNumberOfSearchTiles()
+{
+	int res = 0;
+	for (auto& index : gridTiles)
+	{
+		if (index.Value.types.Contains(TileType::Search)) {
+			res++;
+		}
+	}
+	return res;
+}
+
 TArray<FIntPoint> AGrid::GetTilesDiagonalsGivenNeighbors(FIntPoint index, FIntPoint left, FIntPoint forward, FIntPoint right, FIntPoint back)
 {
 	TArray<FIntPoint> list = TArray<FIntPoint>();

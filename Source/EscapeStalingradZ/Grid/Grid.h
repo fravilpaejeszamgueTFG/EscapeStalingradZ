@@ -189,4 +189,6 @@ public:
 		TArray<FIntPoint> GetTilesDiagonalsGivenNeighbors(FIntPoint index, FIntPoint left, FIntPoint forward, FIntPoint right, FIntPoint back);
 	UFUNCTION()
 		void DamageIfCharacterInPoisonTile(class APlayerCharacter* character);
+	UFUNCTION()
+		int GetCurrentNumberOfSearchTiles();
 };

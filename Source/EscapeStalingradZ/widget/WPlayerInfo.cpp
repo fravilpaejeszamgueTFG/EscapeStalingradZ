@@ -2,7 +2,7 @@
 
 #include "WPlayerInfo.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
-#include "EscapeStalingradZ/grid/Grid.h"
+#include "EscapeStalingradZ/Grid/Grid.h"
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Components/Overlay.h"
@@ -11,7 +11,7 @@
 #include "WObjectives.h"
 #include "WOptions.h"
 #include "Styling/SlateTypes.h"
-#include "EscapeStalingradZ/grid/Grid.h"
+#include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/zombies/Zombie.h"
 
 UWPlayerInfo::UWPlayerInfo(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

@@ -6,7 +6,7 @@
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
-#include "UserHud.h"
+#include "UserHUD.h"
 #include "WInventory.h"
 #include "TimerManager.h"
 

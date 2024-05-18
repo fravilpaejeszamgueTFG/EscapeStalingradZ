@@ -2,7 +2,7 @@
 
 
 #include "ActionMovementRotation.h"
-#include "EscapeStalingradZ/grid/Grid.h"
+#include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/widget/UserHUD.h"
 #include "EscapeStalingradZ/widget/WPlayerInfo.h"

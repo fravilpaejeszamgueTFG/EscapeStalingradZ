@@ -114,6 +114,7 @@ void UGI::ApplyVolume()
 
 void UGI::RestartCurrentLevel()
 {
+	numberOfDeathCharacters = 0;
 	if (currentLevel == ScenarioName::FUBAR) {
 		UGameplayStatics::OpenLevel(this, "FUBAR", true);
 	}

@@ -4,7 +4,7 @@
 #include "Zombie.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/WidgetComponent.h"
-#include "EscapeStalingradZ/grid/Grid.h"
+#include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/turn/Turn.h"
 #include "EscapeStalingradZ/widget/WZombieInfo.h"
