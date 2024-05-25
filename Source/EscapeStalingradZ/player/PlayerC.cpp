@@ -1,0 +1,174 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "PlayerC.h"
+#include "Components/WidgetComponent.h"
+#include "EscapeStalingradZ/widget/WSelectMovementType.h"
+#include "EscapeStalingradZ/instances/GI.h"
+#include "Kismet/GameplayStatics.h"
+#include "PlayerActions.h"
+#include "UObject/UObjectGlobals.h"
+#include "EscapeStalingradZ/Grid/ExitModifier.h"
+#include "EscapeStalingradZ/widget/UserHUD.h"
+
+
+APlayerC::APlayerC()
+{
+	actions = CreateDefaultSubobject<UPlayerActions>("actions");
+
+	SetActorHiddenInGame(false);
+}
+
+// Called when the game starts or when spawned
+void APlayerC::BeginPlay()
+{
+	Super::BeginPlay();
+
+	bShowMouseCursor = true;
+
+	EnableInput(this);
+
+	InputComponent->BindAction("LeftMouseButton", IE_Pressed, this, &APlayerC::LeftMouseClick);
+
+	GI = Cast<UGI>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI != nullptr)
+	{
+		if (GetWorld()->GetName() == "FUBAR") {
+			GI->currentLevel = ScenarioName::FUBAR;
+			PrecacheGivenPackage("/Game/Maps/WakeUp");
+		}
+		else if (GetWorld()->GetName() == "WakeUp") {
+			canExitTheRoom = false;
+			PrecacheGivenPackage("/Game/Maps/Stash");
+			PrecacheGivenPackage("/Game/Maps/AFriendWillBleed");
+		}
+		else if (GetWorld()->GetName() == "AFriendWillBleed") {
+			canExitTheRoom = false;
+			if (GI->levelsPlayed.Contains(ScenarioName::STASH)) {
+				PrecacheGivenPackage("/Game/Maps/MoveAlong");
+			}
+			else {
+				PrecacheGivenPackage("/Game/Maps/Stash");
+			}
+		}
+		else if (GetWorld()->GetName() == "Stash") {
+			if (!GI->levelsPlayed.Contains(ScenarioName::AFRIEND)) {
+				PrecacheGivenPackage("/Game/Maps/AFriendWillBleed");
+			}
+			PrecacheGivenPackage("/Game/Maps/MoveAlong");
+		}
+		else if (GetWorld()->GetName() == "MoveAlong") {
+			GI->currentLevel = ScenarioName::MOVEALONG;
+		}
+	}
+}
+
+void APlayerC::LeftMouseClick()
+{
+	actions->LeftMouseClick();
+}
+
+void APlayerC::SetMovementWidget()
+{
+	if (MovementClass) {
+		if (Movement != nullptr) {
+			Movement->character = playerchara;
+			Movement->SetVisibility(ESlateVisibility::Visible);
+		}
+		else {
+			Movement = CreateWidget<UWSelectMovementType>(GetWorld(), MovementClass);
+			if (Movement != nullptr) {
+				Movement->character = playerchara;
+				Movement->AddToViewport();
+			}
+		}
+	}
+}
+
+void APlayerC::HideMovementWidget()
+{
+	Movement->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void APlayerC::PrecacheGivenPackage(const FString& name)
+{
+	// Using LoadPackageAsync to precache the level
+	LoadPackageAsync(name,
+		FLoadPackageAsyncDelegate::CreateLambda([=](const FName& PackageName, UPackage* LoadedPackage, EAsyncLoadingResult::Type Result)
+			{
+				if (Result == EAsyncLoadingResult::Succeeded)
+				{
+					packages.Add(LoadedPackage);
+				}
+			}),
+		0,
+				PKG_ContainsMap);
+}
+
+void APlayerC::ChangeLevel(int exitNumber)
+{
+	if (GI != nullptr) {
+		if (GetWorld()->GetName() == "FUBAR") {
+			GI->levelsPlayed.Add(ScenarioName::FUBAR);
+			GI->currentLevel = ScenarioName::WAKEUP;
+			GI->SaveGame();
+			UGameplayStatics::OpenLevel(this, "WakeUp", true);
+		}
+		else if (GetWorld()->GetName() == "WakeUp") {
+			GI->levelsPlayed.Add(ScenarioName::WAKEUP);
+			if (exitNumber > 0) {
+				GI->currentLevel = ScenarioName::STASH;
+				GI->SaveGame();
+				UGameplayStatics::OpenLevel(this, "Stash", true); //s2
+			}
+			else {
+				GI->currentLevel = ScenarioName::AFRIEND;
+				GI->SaveGame();
+				UGameplayStatics::OpenLevel(this, "AFriendWillBleed", true); //s1
+			}
+		}
+		else if (GetWorld()->GetName() == "AFriendWillBleed") {
+			GI->levelsPlayed.Add(ScenarioName::AFRIEND);
+			if (GI->levelsPlayed.Contains(ScenarioName::STASH)) {
+				GI->currentLevel = ScenarioName::MOVEALONG;
+				GI->SaveGame();
+				UGameplayStatics::OpenLevel(this, "MoveAlong", true);
+			}
+			else {
+				GI->currentLevel = ScenarioName::STASH;
+				GI->SaveGame();
+				UGameplayStatics::OpenLevel(this, "Stash", true);
+			}
+		}
+		else if (GetWorld()->GetName() == "Stash") {
+			GI->levelsPlayed.Add(ScenarioName::STASH);
+			GI->SaveGame();
+			if (exitNumber > 0 && !GI->levelsPlayed.Contains(ScenarioName::AFRIEND)) {
+				GI->currentLevel = ScenarioName::AFRIEND;
+				GI->SaveGame();
+				UGameplayStatics::OpenLevel(this, "AFriendWillBleed", true); //s2
+			}
+			else {
+				GI->currentLevel = ScenarioName::MOVEALONG;
+				GI->SaveGame();
+				UGameplayStatics::OpenLevel(this, "MoveAlong", true); //s1 o paso por AFriend
+			}
+		}
+		else if (GetWorld()->GetName() == "MoveAlong") {
+			AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			if (hud != nullptr) {
+				hud->FinishGame();
+			}
+		}
+	}
+}
+
+void APlayerC::CompletedPrimaryObjective()
+{
+	hasPrimaryObjective = true;
+	canExitTheRoom = true;
+	for (AExitModifier* mod : exits) {
+		mod->SetActorEnableCollision(true);
+	}
+	exits.Empty();
+}
