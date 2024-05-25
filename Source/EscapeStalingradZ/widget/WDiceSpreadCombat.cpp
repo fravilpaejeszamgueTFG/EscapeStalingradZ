@@ -97,7 +97,7 @@ void UWDiceSpreadCombat::AttackSpreadFire()
 		FVector pos = zombie->GetActorLocation();
 		AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, pos, FRotator(0, 0, 0));
 		if (text != nullptr) {
-			text->SetAnimationText(FText::FromString("Fail"));
+			text->SetAnimationText(NSLOCTEXT("combat", "Fail", "Fail"));
 		}
 		bool withoutAmmo = false;
 		if (character->ammo <= 0) {
@@ -120,7 +120,6 @@ void UWDiceSpreadCombat::AttackSpreadFire()
 		}
 		//aqui iria animación de ataque si hay, poner el temporizador el tiempo de la animación
 		GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDiceSpreadCombat::SelectObjetiveSpreadFire, 2, false);
-		UE_LOG(LogTemp, Warning, TEXT("aqui iria la animacion ataque cuerpo a cuerpo/normalFire"));
 	}
 }
 
