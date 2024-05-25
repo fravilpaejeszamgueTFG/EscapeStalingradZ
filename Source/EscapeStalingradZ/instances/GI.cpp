@@ -70,7 +70,6 @@ void UGI::LoadSettings()
 			ApplyLanguage();
 			ApplyFPS();
 			ApplyResolution();
-			ApplyVolume();
 		}
 	}
 }
@@ -90,26 +89,6 @@ void UGI::ApplyResolution()
 {
 	IConsoleVariable* CVar = IConsoleManager::Get().FindConsoleVariable(TEXT("r.ScreenPercentage"));
 	CVar->Set(commandsResolution[currentSettings.resolutionIndex]);
-}
-
-void UGI::ApplyVolume()
-{	
-	/*A probar
-	FAudioDevice* Device = GEngine->GetAudioDevice();
-	if (!Device)
-	{
-		return;
-	}
-
-	for (TMap<USoundClass*, FSoundClassProperties>::TIterator It(Device->SoundClasses); It; ++It)
-	{
-		USoundClass* SoundClass = It.Key();
-		if (SoundClass)
-		{
-			SoundClass->Properties.Volume = currentSettings.volume;
-		}
-	}
-	*/
 }
 
 void UGI::RestartCurrentLevel()
