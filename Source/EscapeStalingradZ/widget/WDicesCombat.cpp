@@ -137,7 +137,6 @@ void UWDicesCombat::AttackInHandToHand()
 	}
 	//aqui iria animación de ataque si hay, poner el temporizador el tiempo de la animación
 	GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDicesCombat::NextDie, 2, false);
-	UE_LOG(LogTemp, Warning, TEXT("aqui iria la animacion ataque cuerpo a cuerpo/normalFire"));
 }
 
 void UWDicesCombat::AttackInFire()
@@ -147,13 +146,12 @@ void UWDicesCombat::AttackInFire()
 		FVector pos = zombie->GetActorLocation();
 		AAnimatedTextAttack* text = GetWorld()->SpawnActor<AAnimatedTextAttack>(textClass, pos, FRotator(0, 0, 0));
 		if (text != nullptr) {
-			text->SetAnimationText(FText::FromString("Fail"));
+			text->SetAnimationText(NSLOCTEXT("combat", "Fail", "Fail"));
 		}
 		if (character->ammo <= 0) {
 			numberDiceLeft = 0;
 		}
 		GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &UWDicesCombat::NextDie, 2, false);
-		UE_LOG(LogTemp, Warning, TEXT("aqui iria la animacion fuego fallido"));
 	}
 	else {
 		AttackInHandToHand();
