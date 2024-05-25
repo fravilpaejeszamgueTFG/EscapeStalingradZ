@@ -2,7 +2,7 @@
 
 
 #include "Command.h"
-#include "EscapeStalingradZ/grid/Grid.h"
+#include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 
 

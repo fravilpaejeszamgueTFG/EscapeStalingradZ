@@ -28,11 +28,12 @@ void UWSearchDie::NativeConstruct()
 void UWSearchDie::SetDie(int numberOfDie)
 {
     if (gridName == ScenarioName::STASH) {
-        if (numberOfSearch >= 3) {
+        int res = character->grid->GetCurrentNumberOfSearchTiles();
+        if (res <= 1) {
             currentNumber = 12;
         }
         else {
-            currentNumber = numberOfDie + numberOfSearch;
+            currentNumber = numberOfDie + (4 - res);
         }
         if (currentNumber > 12) {
             currentNumber = 12;
@@ -55,7 +56,6 @@ void UWSearchDie::OnClickButtonConfirm()
     DieNumber->SetVisibility(ESlateVisibility::Hidden);
     ButtonRollAnimation->SetVisibility(ESlateVisibility::Visible);
     ButtonConfirm->SetVisibility(ESlateVisibility::Hidden);
-    numberOfSearch++;
     if (character != nullptr && character->grid != nullptr) {
         searchTileIndex = character->grid->currentSearchTile;
         character->grid->SetCurrentSearchTileSearched();

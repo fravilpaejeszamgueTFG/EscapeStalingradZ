@@ -2,7 +2,7 @@
 
 
 #include "ActionMovementForward.h"
-#include "EscapeStalingradZ/grid/Grid.h"
+#include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/zombies/Zombie.h"
 #include "EscapeStalingradZ/widget/UserHUD.h"

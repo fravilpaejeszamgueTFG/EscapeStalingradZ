@@ -64,7 +64,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Language)
 		int languageIndex;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = frames)
-		int  fpsIndex = 1;
+		int  fpsIndex = 3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = resolucion)
 		int  resolutionIndex = 2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = sonido)
@@ -107,7 +107,6 @@ public:
 	UFUNCTION() void ApplyLanguage();
 	UFUNCTION() void ApplyFPS();
 	UFUNCTION() void ApplyResolution();
-	UFUNCTION() void ApplyVolume();
 	UFUNCTION() void RestartCurrentLevel();
 	UFUNCTION() void ResetSaveGameAttributes();
 	

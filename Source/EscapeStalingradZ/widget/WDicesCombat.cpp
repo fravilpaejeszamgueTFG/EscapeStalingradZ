@@ -14,7 +14,7 @@
 #include "EscapeStalingradZ/widget/WActions.h"
 #include "TimerManager.h"
 #include "EscapeStalingradZ/turn/Turn.h"
-#include "EscapeStalingradZ/grid/Grid.h"
+#include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/misc/AnimatedTextAttack.h"
 
 UWDicesCombat::UWDicesCombat(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

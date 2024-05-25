@@ -8,7 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "PlayerActions.h"
 #include "UObject/UObjectGlobals.h"
-#include "EscapeStalingradZ/grid/ExitModifier.h"
+#include "EscapeStalingradZ/Grid/ExitModifier.h"
 #include "EscapeStalingradZ/widget/UserHUD.h"
 
 

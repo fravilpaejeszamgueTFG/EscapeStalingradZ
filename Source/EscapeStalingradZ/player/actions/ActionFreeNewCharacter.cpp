@@ -2,7 +2,7 @@
 
 
 #include "ActionFreeNewCharacter.h"
-#include "EscapeStalingradZ/grid/Grid.h"
+#include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/character/CharacterToFree.h"
 #include "EscapeStalingradZ/player/PlayerC.h"
