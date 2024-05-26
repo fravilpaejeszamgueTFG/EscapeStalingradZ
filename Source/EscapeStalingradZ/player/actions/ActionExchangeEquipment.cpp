@@ -5,6 +5,7 @@
 #include "EscapeStalingradZ/Grid/Grid.h"
 #include "EscapeStalingradZ/character/PlayerCharacter.h"
 #include "EscapeStalingradZ/widget/UserHUD.h"
+#include "EscapeStalingradZ/widget/WPlayerInfo.h"
 
 void UActionExchangeEquipment::Execute(AGrid* grid, APlayerCharacter* character)
 {
@@ -37,7 +38,8 @@ void UActionExchangeEquipment::Action(AGrid* grid, FIntPoint tile, FIntPoint des
 					if (chara != nullptr) {
 						character->mp -= 2;
 						AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-						if (hud != nullptr) {
+						if (hud != nullptr && hud->PlayerInfoWidget != nullptr) {
+							hud->PlayerInfoWidget->SetVisibleActionWidget();
 							hud->CreateOrSetExchangeEquipment(character, chara);
 						}
 					}
