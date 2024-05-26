@@ -7,6 +7,7 @@
 #include "EscapeStalingradZ/weapon/Weapon.h"
 #include "Components/TextBlock.h"
 #include "WBetweenScenarios.h"
+#include "UserHUD.h"
 
 UWExchangeEquipment::UWExchangeEquipment(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -278,14 +279,19 @@ void UWExchangeEquipment::OnClickSlotMedKit2()
 
 void UWExchangeEquipment::OnClickGoBack()
 {
+	SetVisibility(ESlateVisibility::Hidden);
 	character1->ChangePrimaryAndSecondaryWeaponAfterExchange();
 	character2->ChangePrimaryAndSecondaryWeaponAfterExchange();
 	if (betweenWidget != nullptr) {
 		betweenWidget->SetFoodText();
 		betweenWidget->SetMedKitText();
 		betweenWidget->SetAmmoText();
+		RemoveFromParent();
+		AUserHUD* hud = Cast<AUserHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		if (hud != nullptr) {
+			hud->ExchangeEquipmentWidget = nullptr;
+		}
 	}
-	SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UWExchangeEquipment::SetTextNumbers()
